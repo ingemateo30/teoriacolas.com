@@ -1,15 +1,30 @@
-import './globals.css'
-import { ReactNode } from 'react'
+import Navbar from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
+import Sidebar from '@/components/layout/Sidebar';
+import './globals.css';
 
 export const metadata = {
-  title: 'Simulador de Teoría de Colas',
-  description: 'Simulaciones interactivas de modelos de colas',
-}
+  title: 'Sistema de Simulación de Teoría de Colas',
+  description: 'Plataforma educativa y simuladora para teoría de colas',
+};
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="es">
-      <body className="min-h-screen bg-gray-50 text-gray-900">{children}</body>
+      <body>
+        <div className="app-container">
+          <Navbar />
+          <div className="main-content">
+            <Sidebar />
+            <main className="content">{children}</main>
+          </div>
+          <Footer />
+        </div>
+      </body>
     </html>
-  )
+  );
 }

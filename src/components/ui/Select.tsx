@@ -1,27 +1,41 @@
-interface Option {
-    value: string
-    label: string
-  }
-  
-  interface SelectProps {
-    options: Option[]
-    value: string
-    onChange: (value: string) => void
-  }
-  
-  export function Select({ options, value, onChange }: SelectProps) {
-    return (
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="border px-3 py-2 rounded w-full"
-      >
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-    )
-  }
+import React from 'react';
+
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+interface SelectProps {
+  id?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  options: SelectOption[];
+  className?: string;
+  disabled?: boolean;
+}
+
+export const Select: React.FC<SelectProps> = ({
+  id,
+  value,
+  onChange,
+  options,
+  className = '',
+  disabled = false
+}) => {
+  return (
+    <select
+      id={id}
+      value={value}
+      onChange={onChange}
+      className={`select ${className}`}
+      disabled={disabled}
+    >
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  );
+};
   

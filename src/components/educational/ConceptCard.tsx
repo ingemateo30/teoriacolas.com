@@ -1,14 +1,53 @@
+import React, { useState } from 'react';
+import { Card } from '@/components/ui/Card';
+
 interface ConceptCardProps {
-    title: string
-    description: string
-  }
+  title: string;
+  description: string;
+  formula?: string;
+  example?: string;
+}
+
+export const ConceptCard: React.FC<ConceptCardProps> = ({
+  title,
+  description,
+  formula,
+  example
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   
-  export function ConceptCard({ title, description }: ConceptCardProps) {
-    return (
-      <div className="border rounded p-4 bg-white shadow">
-        <h3 className="text-lg font-semibold">{title}</h3>
-        <p className="text-sm mt-2">{description}</p>
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+  
+  return (
+    <Card className="concept-card">
+      <div className="concept-header" onClick={toggleExpand}>
+        <h3>{title}</h3>
+        <span className={`expand-icon ${isExpanded ? 'expanded' : ''}`}>
+          {isExpanded ? '−' : '+'}
+        </span>
       </div>
-    )
-  }
-  
+      
+      <div className={`concept-content ${isExpanded ? 'expanded' : ''}`}>
+        <p className="concept-description">{description}</p>
+        
+        {formula && (
+          <div className="concept-formula">
+            <h4>Fórmula:</h4>
+            <div className="formula-container">
+              {formula}
+            </div>
+          </div>
+        )}
+        
+        {example && (
+          <div className="concept-example">
+            <h4>Ejemplo:</h4>
+            <p>{example}</p>
+          </div>
+        )}
+      </div>
+    </Card>
+  );
+};

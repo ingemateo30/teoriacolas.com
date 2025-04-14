@@ -1,12 +1,50 @@
-'use client'
+import { useEffect, useState } from 'react';
 
-import React from 'react'
-
-export function EntityAnimation() {
-  return (
-    <div className="w-full h-12 bg-gray-100 flex items-center overflow-hidden rounded">
-      <div className="bg-green-500 w-4 h-4 rounded-full animate-bounce mx-2"></div>
-      <span className="text-sm text-gray-600">Animación de entidad en la cola (en desarrollo)</span>
-    </div>
-  )
+interface EntityProps {
+  entity: {
+    id: number;
+    status: 'waiting' | 'service' | 'completed';
+    position: number;
+    arrivalTime: number;
+    serverIndex?: number;
+  };
+  isInService?: boolean;
 }
+
+export const EntityAnimation = ({ entity, isInService = false }: EntityProps) => {
+  const [animationState, setAnimationState] = useState('idle');
+  
+  useEffect(() => {
+    // Iniciar animación cuando cambia el estado de la entidad
+    if (entity.status === 'service' && !isInService) {
+      setAnimationState('moving');
+      setTimeout(() => setAnimationState('idle'), 500);
+    } else if (entity.status === 'completed') {
+      setAnimationState('exiting');
+      setTimeout(() => setAnimationState('done'), 500);
+    }
+  }, [entity.status, isInService]);
+  
+  if (animationState === 'done') return null;
+  
+  const entityClasses = `entity ${animationState} ${isInService ? 'in-service' : ''}`;
+  
+  return (
+    <div 
+      className={entityClasses}
+      style={{ 
+        '--entity-position': entity.position,
+        '--server-index': entity.serverIndex || 0
+      } as React.CSSProperties}
+    >
+      <div className="entity-icon">
+        {entity.id}
+      </div>
+      {!isInService && (
+        <div className="waiting-time">
+          {Math.max(0, Date.now() / 1000 - entity.arrivalTime).toFixed(1)}s
+        </div>
+      )}
+    </div>
+  );
+};

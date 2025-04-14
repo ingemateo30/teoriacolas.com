@@ -1,33 +1,45 @@
-import { SimulationParams, SimulationResult, SimulationEvent } from '@/types/simulation'
-import { exponential } from '../generators/exponential'
 
-export function simulateMM1(params: SimulationParams): SimulationResult {
-  const { arrivalRate, serviceRate, duration } = params
-
-  let time = 0
-  let queueLength = 0
-  const events: SimulationEvent[] = []
-
-  while (time < duration) {
-    const arrival = exponential(arrivalRate)
-    const service = exponential(serviceRate)
-
-    time += arrival
-    queueLength += 1
-
-    events.push({ time, queueLength })
-
-    time += service
-    queueLength -= 1
-
-    if (queueLength < 0) queueLength = 0
-
-    events.push({ time, queueLength })
-  }
-
-  return {
-    events,
-    finalTime: time,
-    finalQueueLength: queueLength,
-  }
+export interface MM1Parameters {
+  arrivalRate: number;
+  serviceRate: number;
 }
+
+export interface MM1Results {
+  rho: number;        // Factor de utilización
+  L: number;          // Número medio de clientes en el sistema
+  Lq: number;         // Longitud media de la cola
+  W: number;          // Tiempo medio en el sistema
+  Wq: number;         // Tiempo medio en la cola
+  Pn: number[];       // Probabilidades de estado (número de clientes)
+  P0: number;         // Probabilidad de sistema vacío
+}
+
+export const mm1 = (params: MM1Parameters): MM1Results => {
+  const { arrivalRate, serviceRate } = params;
+  
+  // Validar estabilidad
+  if (arrivalRate >= serviceRate) {
+    throw new Error('El sistema no es estable: λ debe ser menor que μ');
+  }
+  
+  // Cálculo de métricas
+  const rho = arrivalRate / serviceRate;
+  const L = rho / (1 - rho);
+  const Lq = Math.pow(rho, 2) / (1 - rho);
+  const W = 1 / (serviceRate - arrivalRate);
+  const Wq = rho / (serviceRate - arrivalRate);
+  
+  // Probabilidades de estado
+  const P0 = 1 - rho;
+  const Pn = Array(10).fill(0).map((_, i) => P0 * Math.pow(rho, i));
+  
+  return {
+    rho,
+    L,
+    Lq,
+    W,
+    Wq,
+    Pn,
+    P0
+  };
+};
