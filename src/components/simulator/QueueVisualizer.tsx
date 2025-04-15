@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef } from 'react';
 import { useSimulation } from '@/hooks/useSimulation';
 import { Entity, EntityStatus } from '@/types/simulation';

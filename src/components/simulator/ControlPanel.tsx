@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { useSimulation } from '@/hooks/useSimulation';
 import { useMetrics } from '@/hooks/useMetrics';

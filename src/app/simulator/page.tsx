@@ -16,13 +16,18 @@ export default function SimulatorPage() {
       <div className="simulator-container">
         <div className="control-section">
           <ControlPanel />
-          <SimulationControls />
+          <SimulationControls
+            onStart={() => console.log('Simulation started')}
+            onPause={() => console.log('Simulation paused')}
+            onReset={() => console.log('Simulation reset')}
+            simulationState="running"
+          />
         </div>
-        
+
         <div className="visualization-section">
           <QueueVisualizer />
         </div>
-        
+
         <div className="metrics-section">
           <MetricsDisplay />
         </div>

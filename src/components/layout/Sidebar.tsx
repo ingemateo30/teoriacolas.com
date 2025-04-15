@@ -8,7 +8,7 @@ import React from 'react';
 /**
  * Componente Sidebar
  * 
- * Un sidebar elegante y responsivo que proporciona navegación jerárquica
+ * Un sidebar elegante y responsivo que se integra con el Navbar
  * con animaciones fluidas y feedback visual para mejorar la experiencia de usuario.
  */
 export default function Sidebar() {
@@ -110,8 +110,8 @@ export default function Sidebar() {
 
   return (
     <aside className={`
-      hidden lg:block w-64 bg-gradient-to-b from-white to-gray-50 
-      border-r border-gray-200 h-screen sticky top-0 
+      hidden lg:block w-64 bg-white 
+      border-r border-gray-200 h-screen pt-16 sticky top-0 
       transition-all duration-300 ease-in-out
       ${isCollapsed ? "lg:w-20" : "lg:w-64"}
     `}>
@@ -132,22 +132,9 @@ export default function Sidebar() {
         </svg>
       </button>
 
-      <div className="h-full px-3 py-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+      <div className="h-full px-3 py-4 overflow-y-auto">
         {/* Título del sidebar con animación de gradiente */}
-        <div className={`
-          flex items-center mb-6 px-2 py-3 
-          transition-all duration-300 ease-in-out
-          ${isCollapsed ? "justify-center" : "justify-start"}
-        `}>
-          <span className={`
-            font-semibold bg-gradient-to-r from-primary-600 to-blue-600 
-            bg-clip-text text-transparent transition-all duration-300
-            ${isCollapsed ? "text-lg" : "text-xl"}
-          `}>
-            {isCollapsed ? "QS" : "Teoría de Colas"}
-          </span>
-        </div>
-
+  
         {/* Lista de menú */}
         <ul className="space-y-2">
           {menuItems.map((item, index) => (
@@ -162,9 +149,9 @@ export default function Sidebar() {
                       flex items-center w-full p-2 text-base font-normal 
                       rounded-lg transition duration-200 
                       ${isActive(item.href) 
-                        ? "bg-primary-100 text-primary-900 shadow-sm" 
+                        ? "bg-blue-50 text-blue-600 shadow-sm" 
                         : hoveredItem === item.title
-                          ? "text-primary-700 bg-gray-100"
+                          ? "text-blue-500 bg-gray-100"
                           : "text-gray-700 hover:bg-gray-100"
                       }
                       ${isCollapsed ? "justify-center" : "justify-between"}
@@ -174,9 +161,9 @@ export default function Sidebar() {
                   >
                     <div className="flex items-center">
                       <div className={`
-                        ${isActive(item.href) ? "text-primary-600" : "text-gray-500"}
+                        ${isActive(item.href) ? "text-blue-600" : "text-gray-500"}
                         transition-colors duration-200
-                        ${hoveredItem === item.title ? "text-primary-600" : ""}
+                        ${hoveredItem === item.title ? "text-blue-600" : ""}
                       `}>
                         {item.icon}
                       </div>
@@ -221,8 +208,8 @@ export default function Sidebar() {
                               group flex flex-col w-full p-2 pl-10 text-sm font-normal 
                               rounded-lg transition-all duration-200
                               ${isActive(subItem.href)
-                                ? "bg-primary-50 text-primary-900 shadow-sm"
-                                : "text-gray-700 hover:bg-gray-50 hover:text-primary-700"}
+                                ? "bg-blue-50 text-blue-600 shadow-sm"
+                                : "text-gray-700 hover:bg-gray-50 hover:text-blue-500"}
                             `}
                             title={subItem.description}
                           >
@@ -249,17 +236,17 @@ export default function Sidebar() {
                     flex items-center p-2 text-base font-normal rounded-lg 
                     transition-all duration-200
                     ${isActive(item.href)
-                      ? "bg-primary-100 text-primary-900 shadow-sm"
-                      : "text-gray-700 hover:bg-gray-100 hover:text-primary-700"}
+                      ? "bg-blue-50 text-blue-600 shadow-sm"
+                      : "text-gray-700 hover:bg-gray-100 hover:text-blue-500"}
                     ${isCollapsed ? "justify-center" : ""}
                   `}
                   onMouseEnter={() => handleItemHover(item.title)}
                   onMouseLeave={() => handleItemHover(null)}
                 >
                   <div className={`
-                    ${isActive(item.href) ? "text-primary-600" : "text-gray-500"}
+                    ${isActive(item.href) ? "text-blue-600" : "text-gray-500"}
                     transition-colors duration-200
-                    ${hoveredItem === item.title ? "text-primary-600" : ""}
+                    ${hoveredItem === item.title ? "text-blue-600" : ""}
                   `}>
                     {item.icon}
                   </div>
@@ -281,7 +268,7 @@ export default function Sidebar() {
           transition-opacity duration-300
           ${isCollapsed ? "opacity-0 hidden" : "opacity-80"}
         `}>
-          <h4 className="font-medium mb-2 text-primary-700">Notación de Kendall</h4>
+          <h4 className="font-medium mb-2 text-blue-600">Notación de Kendall</h4>
           <p className="mb-1">A/S/c/K/N/D donde:</p>
           <ul className="space-y-1 pl-2">
             <li><span className="font-medium">A</span>: Distribución de llegadas</li>

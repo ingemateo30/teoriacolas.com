@@ -1,29 +1,32 @@
-import Navbar from '@/components/layout/Navbar';
-import Footer  from '@/components/layout/Footer';
-import Sidebar from '@/components/layout/Sidebar';
-import './globals.css';
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export const metadata = {
-  title: 'Sistema de Simulación de Teoría de Colas',
-  description: 'Plataforma educativa y simuladora para teoría de colas',
+  title: "quequesim",
+  description: "Todo acerca de la teoria de colas",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body>
-        <div className="app-container">
-          <Navbar />
-          <div className="main-content">
-            <Sidebar />
-            <main className="content">{children}</main>
-          </div>
-          <Footer />
-        </div>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
       </body>
     </html>
   );
