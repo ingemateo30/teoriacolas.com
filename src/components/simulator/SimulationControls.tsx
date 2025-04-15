@@ -1,7 +1,23 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
+import { SimulationState } from '@/types/simulation';
 
-export const SimulationControls = () => {
+interface SimulationControlsProps {
+  onStart: () => void;
+  onPause: () => void;
+  onReset: () => void;
+  simulationState: SimulationState;
+}
+
+
+export const SimulationControls:React.FC<SimulationControlsProps> = ( {
+  onStart,
+  onPause,
+  onReset,
+  simulationState,
+} ) => {
+  
+
   const [isRunning, setIsRunning] = useState(false);
   const [speed, setSpeed] = useState(1);
   

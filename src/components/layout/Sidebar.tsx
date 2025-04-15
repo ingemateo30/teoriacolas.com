@@ -2,11 +2,35 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
 
+/**
+ * Componente Sidebar
+ * 
+ * Un sidebar elegante y responsivo que proporciona navegación jerárquica
+ * con animaciones fluidas y feedback visual para mejorar la experiencia de usuario.
+ */
 export default function Sidebar() {
   const pathname = usePathname();
+  
+  // Estado para controlar cuál submenú está expandido
+  const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
+  
+  // Estado para manejar si el sidebar está colapsado (para vista móvil)
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  
+  // Estado para manejar efectos visuales en hover
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
+  // Efecto para expandir automáticamente el submenú activo al cargar
+  useEffect(() => {
+    menuItems.forEach(item => {
+      if (item.submenu && item.submenu.some(subItem => pathname === subItem.href)) {
+        setExpandedMenu(item.title);
+      }
+    });
+  }, [pathname]);
 
   const menuItems = [
     {
@@ -27,11 +51,11 @@ export default function Sidebar() {
       ),
       href: "/models",
       submenu: [
-        { title: "M/M/1", href: "/models/mm1" },
-        { title: "M/M/c", href: "/models/mmc" },
-        { title: "M/M/c/K", href: "/models/mmck" },
-        { title: "M/G/1", href: "/models/mg1" },
-        { title: "Redes de Colas", href: "/models/networks" },
+        { title: "M/M/1", href: "/models/mm1", description: "Cola con llegadas y servicios exponenciales, 1 servidor" },
+        { title: "M/M/c", href: "/models/mmc", description: "Cola con llegadas y servicios exponenciales, c servidores" },
+        { title: "M/M/c/K", href: "/models/mmck", description: "Cola con capacidad limitada K" },
+        { title: "M/G/1", href: "/models/mg1", description: "Cola con distribución de servicio general" },
+        { title: "Redes de Colas", href: "/models/networks", description: "Sistemas interconectados de colas" },
       ],
     },
     {
@@ -55,8 +79,8 @@ export default function Sidebar() {
       ),
       href: "/learning",
       submenu: [
-        { title: "Fundamentos", href: "/learning/fundamentals" },
-        { title: "Conceptos Avanzados", href: "/learning/advanced" },
+        { title: "Fundamentos", href: "/learning/fundamentals", description: "Conceptos básicos de teoría de colas" },
+        { title: "Conceptos Avanzados", href: "/learning/advanced", description: "Temas avanzados y aplicaciones" },
       ],
     },
     {
@@ -70,9 +94,6 @@ export default function Sidebar() {
     },
   ];
 
-  // Estado para controlar cuál submenú está expandido
-  const [expandedMenu, setExpandedMenu] = React.useState<string | null>(null);
-
   const toggleSubmenu = (title: string) => {
     setExpandedMenu(expandedMenu === title ? null : title);
   };
@@ -82,12 +103,52 @@ export default function Sidebar() {
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
+  // Maneja el hover de elementos
+  const handleItemHover = (title: string | null) => {
+    setHoveredItem(title);
+  };
+
   return (
-    <aside className="hidden lg:block w-64 bg-white border-r border-gray-200">
-      <div className="h-full px-3 py-4 overflow-y-auto">
-        <div className="flex items-center mb-5 px-2">
-          <span className="self-center text-xl font-semibold">Teoría de Colas</span>
+    <aside className={`
+      hidden lg:block w-64 bg-gradient-to-b from-white to-gray-50 
+      border-r border-gray-200 h-screen sticky top-0 
+      transition-all duration-300 ease-in-out
+      ${isCollapsed ? "lg:w-20" : "lg:w-64"}
+    `}>
+      {/* Botón de colapsar sidebar */}
+      <button 
+        className="absolute -right-3 top-20 bg-white rounded-full p-1 shadow-md hover:shadow-lg transition-shadow duration-300 z-10"
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        aria-label={isCollapsed ? "Expandir sidebar" : "Colapsar sidebar"}
+      >
+        <svg 
+          className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`} 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24" 
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      <div className="h-full px-3 py-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        {/* Título del sidebar con animación de gradiente */}
+        <div className={`
+          flex items-center mb-6 px-2 py-3 
+          transition-all duration-300 ease-in-out
+          ${isCollapsed ? "justify-center" : "justify-start"}
+        `}>
+          <span className={`
+            font-semibold bg-gradient-to-r from-primary-600 to-blue-600 
+            bg-clip-text text-transparent transition-all duration-300
+            ${isCollapsed ? "text-lg" : "text-xl"}
+          `}>
+            {isCollapsed ? "QS" : "Teoría de Colas"}
+          </span>
         </div>
+
+        {/* Lista de menú */}
         <ul className="space-y-2">
           {menuItems.map((item, index) => (
             <li key={index}>
@@ -95,65 +156,143 @@ export default function Sidebar() {
                 <>
                   <button
                     onClick={() => toggleSubmenu(item.title)}
-                    className={`flex items-center w-full p-2 text-base font-normal rounded-lg transition duration-75 ${
-                      isActive(item.href)
-                        ? "bg-primary-100 text-primary-900"
-                        : "text-gray-900 hover:bg-gray-100"
-                    }`}
+                    onMouseEnter={() => handleItemHover(item.title)}
+                    onMouseLeave={() => handleItemHover(null)}
+                    className={`
+                      flex items-center w-full p-2 text-base font-normal 
+                      rounded-lg transition duration-200 
+                      ${isActive(item.href) 
+                        ? "bg-primary-100 text-primary-900 shadow-sm" 
+                        : hoveredItem === item.title
+                          ? "text-primary-700 bg-gray-100"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }
+                      ${isCollapsed ? "justify-center" : "justify-between"}
+                    `}
+                    aria-expanded={expandedMenu === item.title}
+                    aria-controls={`submenu-${item.title}`}
                   >
-                    {item.icon}
-                    <span className="ml-3 flex-1 text-left whitespace-nowrap">{item.title}</span>
-                    <svg
-                      className={`w-4 h-4 transition-transform ${
-                        expandedMenu === item.title ? "transform rotate-180" : ""
-                      }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                    </svg>
+                    <div className="flex items-center">
+                      <div className={`
+                        ${isActive(item.href) ? "text-primary-600" : "text-gray-500"}
+                        transition-colors duration-200
+                        ${hoveredItem === item.title ? "text-primary-600" : ""}
+                      `}>
+                        {item.icon}
+                      </div>
+                      <span className={`
+                        ml-3 transition-opacity duration-200
+                        ${isCollapsed ? "opacity-0 absolute" : "opacity-100"}
+                      `}>
+                        {item.title}
+                      </span>
+                    </div>
+                    
+                    {!isCollapsed && (
+                      <svg
+                        className={`w-4 h-4 transition-transform duration-200 ${
+                          expandedMenu === item.title ? "transform rotate-180" : ""
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    )}
                   </button>
-                  <ul
-                    className={`py-2 space-y-2 ${
-                      expandedMenu === item.title ? "block" : "hidden"
-                    }`}
+                  
+                  {/* Submenú con animación de expansión */}
+                  <div
+                    id={`submenu-${item.title}`}
+                    className={`
+                      overflow-hidden transition-all duration-300 ease-in-out
+                      ${expandedMenu === item.title ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
+                      ${isCollapsed ? "hidden" : ""}
+                    `}
                   >
-                    {item.submenu.map((subItem, subIndex) => (
-                      <li key={subIndex}>
-                        <Link
-                          href={subItem.href}
-                          className={`flex items-center w-full p-2 pl-11 text-sm font-normal rounded-lg transition duration-75 ${
-                            isActive(subItem.href)
-                              ? "bg-primary-100 text-primary-900"
-                              : "text-gray-900 hover:bg-gray-100"
-                          }`}
-                        >
-                          {subItem.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                    <ul className="py-2 space-y-1 pl-2">
+                      {item.submenu.map((subItem, subIndex) => (
+                        <li key={subIndex}>
+                          <Link
+                            href={subItem.href}
+                            className={`
+                              group flex flex-col w-full p-2 pl-10 text-sm font-normal 
+                              rounded-lg transition-all duration-200
+                              ${isActive(subItem.href)
+                                ? "bg-primary-50 text-primary-900 shadow-sm"
+                                : "text-gray-700 hover:bg-gray-50 hover:text-primary-700"}
+                            `}
+                            title={subItem.description}
+                          >
+                            <span className="font-medium">{subItem.title}</span>
+                            {/* Mini descripción con animación de aparición */}
+                            {subItem.description && (
+                              <span className="
+                                text-xs text-gray-500 mt-1 truncate max-w-full
+                                opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                              ">
+                                {subItem.description}
+                              </span>
+                            )}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </>
               ) : (
                 <Link
                   href={item.href}
-                  className={`flex items-center p-2 text-base font-normal rounded-lg ${
-                    isActive(item.href)
-                      ? "bg-primary-100 text-primary-900"
-                      : "text-gray-900 hover:bg-gray-100"
-                  }`}
+                  className={`
+                    flex items-center p-2 text-base font-normal rounded-lg 
+                    transition-all duration-200
+                    ${isActive(item.href)
+                      ? "bg-primary-100 text-primary-900 shadow-sm"
+                      : "text-gray-700 hover:bg-gray-100 hover:text-primary-700"}
+                    ${isCollapsed ? "justify-center" : ""}
+                  `}
+                  onMouseEnter={() => handleItemHover(item.title)}
+                  onMouseLeave={() => handleItemHover(null)}
                 >
-                  {item.icon}
-                  <span className="ml-3">{item.title}</span>
+                  <div className={`
+                    ${isActive(item.href) ? "text-primary-600" : "text-gray-500"}
+                    transition-colors duration-200
+                    ${hoveredItem === item.title ? "text-primary-600" : ""}
+                  `}>
+                    {item.icon}
+                  </div>
+                  <span className={`
+                    ml-3 transition-opacity duration-200
+                    ${isCollapsed ? "opacity-0 absolute" : "opacity-100"}
+                  `}>
+                    {item.title}
+                  </span>
                 </Link>
               )}
             </li>
           ))}
         </ul>
+        
+        {/* Pie del sidebar - Información educativa */}
+        <div className={`
+          mt-10 pt-4 border-t border-gray-200 text-xs text-gray-500
+          transition-opacity duration-300
+          ${isCollapsed ? "opacity-0 hidden" : "opacity-80"}
+        `}>
+          <h4 className="font-medium mb-2 text-primary-700">Notación de Kendall</h4>
+          <p className="mb-1">A/S/c/K/N/D donde:</p>
+          <ul className="space-y-1 pl-2">
+            <li><span className="font-medium">A</span>: Distribución de llegadas</li>
+            <li><span className="font-medium">S</span>: Distribución de servicio</li>
+            <li><span className="font-medium">c</span>: Número de servidores</li>
+            <li><span className="font-medium">K</span>: Capacidad del sistema</li>
+            <li><span className="font-medium">N</span>: Tamaño de la población</li>
+            <li><span className="font-medium">D</span>: Disciplina de la cola</li>
+          </ul>
+        </div>
       </div>
     </aside>
   );
 }
-  

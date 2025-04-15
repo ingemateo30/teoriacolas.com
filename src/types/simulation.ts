@@ -29,8 +29,22 @@ export interface Entity {
   status: EntityStatus;
   serverId: number | null;
   priority?: number;
-  attributes?: Record<string, any>; // Atributos adicionales
+  attributes?: Record<string, any>; 
+  position: number; // Atributos adicionales
 }
+
+export type QueueModel = 
+  | 'MM1' 
+  | 'MMC' 
+  | 'MMCK' 
+  | 'MG1' 
+  | 'GM1' 
+  | 'GG1' 
+  | 'GGCK' 
+  | 'Network';
+
+// Cambia el nombre de ModelType a QueueModel
+export type ModelType = QueueModel;
 
 // Tipos de estado de entidad
 export type EntityStatus = 'arriving' | 'queued' | 'inService' | 'departed' | 'rejected';
@@ -50,7 +64,6 @@ export type EventType = 'arrival' | 'departure' | 'custom';
 export type DistributionType = 'exponential' | 'constant' | 'uniform' | 'normal' | 'erlang' | 'custom';
 
 // Tipos de modelos soportados
-export type ModelType = 'MM1' | 'MMC' | 'MMCK' | 'MG1' | 'GM1' | 'GG1' | 'GGCK' | 'Network';
 
 // Estado de la simulación
 export type SimulationState = 'idle' | 'running' | 'paused' | 'completed';

@@ -8,6 +8,7 @@ interface SliderProps {
   step?: number;
   id?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 export const Slider: React.FC<SliderProps> = ({

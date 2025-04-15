@@ -1,5 +1,5 @@
-import { ControlPanel, QueueVisualizer } from '@/components/simulator';
-import { simulateMM1 } from '@/lib/simulation/models/mm1';
+import { ControlPanel} from '@/components/simulator/ControlPanel';
+import { QueueVisualizer } from '@/components/simulator/QueueVisualizer';
 
 export default function SimulatorPage({
   params,
@@ -12,7 +12,7 @@ export default function SimulatorPage({
         <QueueVisualizer />
       </div>
       <div className="lg:col-span-1">
-        <ControlPanel model={params.modelId} />
+      <ControlPanel modelId={params.modelId} />
       </div>
     </div>
   )

@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSimulationStore } from '@/store/simulationStore';
-import { runSimulationStep } from '@/lib/simulation/core';
 import { 
   SimulationState, 
   Entity, 
@@ -16,6 +15,7 @@ import {
 export function useSimulation() {
   const simulationStore = useSimulationStore();
   const [simulationInterval, setSimulationInterval] = useState<NodeJS.Timeout | null>(null);
+  
   
   // Función para obtener el tiempo para la próxima llegada basada en la distribución
   const getNextArrivalTime = useCallback((currentTime: number, params: SimulationParams) => {
@@ -53,7 +53,7 @@ export function useSimulation() {
       serversBusy, 
       queueLength, 
       queueCapacity 
-    } = simulationStore.getState();
+    } = simulationStore;
     
     switch (event.type) {
       case 'arrival': {
@@ -64,7 +64,8 @@ export function useSimulation() {
           status: 'arriving',
           processingTime: 0,
           waitingTime: 0,
-          serverId: null
+          serverId: null,
+          position: 0 // <--- Add this line
         };
         
         // Programar la próxima llegada
@@ -90,7 +91,7 @@ export function useSimulation() {
           newEntity.serverId = serverId;
           
           // Programar la salida de esta entidad
-          const serviceTime = generateServiceTime(params);
+          const serviceTime = generateServiceTime(params.serviceRate);
           eventQueue.push({
             type: 'departure',
             time: currentTime + serviceTime,
@@ -98,7 +99,7 @@ export function useSimulation() {
             serverId: serverId
           });
           
-          simulationStore.setState({ 
+          simulationStore.setSimulationState({ 
             entities: [...entities, newEntity],
             serversBusy: serversBusy + 1
           });
@@ -189,7 +190,7 @@ export function useSimulation() {
       eventQueue, 
       entities, 
       simulationState
-    } = simulationStore.getState();
+    } = simulationStore;
     
     if (simulationState !== 'running' || eventQueue.length === 0) {
       return;
@@ -208,7 +209,7 @@ export function useSimulation() {
     simulationStore.setState({ 
       currentTime: newTime,
       eventQueue: newEventQueue,
-      totalSteps: simulationStore.getState().totalSteps + 1
+      totalSteps: simulationStore.totalSteps + 1
     });
     
     // Procesar el evento
@@ -225,13 +226,13 @@ export function useSimulation() {
   
   // Iniciar la simulación
   const startSimulation = useCallback(() => {
-    if (simulationStore.getState().simulationState === 'running') {
+    if (simulationStore.simulationState === 'running') {
       return;
     }
     
     // Si no hay eventos, programar la primera llegada
-    if (simulationStore.getState().eventQueue.length === 0) {
-      const params = simulationStore.getState().params;
+    if (simulationStore.eventQueue.length === 0) {
+      const params = simulationStore.params;
       const firstArrival = {
         type: 'arrival' as const,
         time: getNextArrivalTime(0, params),
@@ -251,7 +252,7 @@ export function useSimulation() {
     simulationStore.setState({ simulationState: 'running' });
     
     // Determinar el intervalo basado en la velocidad
-    const speed = simulationStore.getState().simulationSpeed;
+    const speed = simulationStore.simulationSpeed;
     const interval = Math.max(50, 500 / speed);
     
     const intervalId = setInterval(() => {
@@ -293,7 +294,7 @@ export function useSimulation() {
     simulationStore.setState({ simulationSpeed: speed });
     
     // Actualizar intervalo si la simulación está corriendo
-    if (simulationStore.getState().simulationState === 'running' && simulationInterval) {
+    if (simulationStore.simulationState === 'running' && simulationInterval) {
       clearInterval(simulationInterval);
       
       const interval = Math.max(50, 500 / speed);
@@ -328,22 +329,22 @@ export function useSimulation() {
   }, [simulationInterval]);
   
   // Obtener las entidades actuales en el sistema
-  const currentEntities = simulationStore.getState().entities.filter(
+  const currentEntities = simulationStore.entities.filter(
     e => e.status !== 'departed' && e.status !== 'rejected'
   );
   
   return {
-    simulationState: simulationStore.getState().simulationState,
-    currentTime: simulationStore.getState().currentTime,
-    entities: simulationStore.getState().entities,
+    simulationState: simulationStore.simulationState,
+    currentTime: simulationStore.currentTime,
+    entities: simulationStore.entities,
     currentEntities,
-    totalSteps: simulationStore.getState().totalSteps,
-    serverCount: simulationStore.getState().serverCount,
-    queueCapacity: simulationStore.getState().queueCapacity,
-    serversBusy: simulationStore.getState().serversBusy,
-    queueLength: simulationStore.getState().queueLength,
-    simulationSpeed: simulationStore.getState().simulationSpeed,
-    params: simulationStore.getState().params,
+    totalSteps: simulationStore.totalSteps,
+    serverCount: simulationStore.serverCount,
+    queueCapacity: simulationStore.queueCapacity,
+    serversBusy: simulationStore.serversBusy,
+    queueLength: simulationStore.queueLength,
+    simulationSpeed: simulationStore.simulationSpeed,
+    params: simulationStore.params,
     startSimulation,
     pauseSimulation,
     resetSimulation,

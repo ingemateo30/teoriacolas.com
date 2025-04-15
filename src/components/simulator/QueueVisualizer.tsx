@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useSimulation } from '@/hooks/useSimulation';
-import { Entity } from '@/types/simulation';
+import { Entity, EntityStatus } from '@/types/simulation';
 import { EntityAnimation } from './EntityAnimation';
 
 interface QueueVisualizerProps {
@@ -8,6 +8,41 @@ interface QueueVisualizerProps {
   width?: number;
   height?: number;
 }
+
+// Componente adaptador para convertir Entity de la simulación al formato esperado por EntityAnimation
+interface AdaptedEntity {
+  id: number;
+  status: 'waiting' | 'service' | 'completed';
+  position: number;
+  arrivalTime: number;
+  serverIndex?: number;
+}
+
+const adaptEntity = (entity: Entity): AdaptedEntity => {
+  // Mapear el estado de la simulación al estado esperado por EntityAnimation
+  let adaptedStatus: 'waiting' | 'service' | 'completed';
+  switch (entity.status) {
+    case 'queued':
+      adaptedStatus = 'waiting';
+      break;
+    case 'inService':
+      adaptedStatus = 'service';
+      break;
+    case 'departed':
+      adaptedStatus = 'completed';
+      break;
+    default:
+      adaptedStatus = 'waiting';
+  }
+
+  return {
+    id: parseInt(entity.id, 10), // Convertir id string a número
+    status: adaptedStatus,
+    position: entity.position,
+    arrivalTime: entity.arrivalTime,
+    serverIndex: entity.serverId !== null ? entity.serverId : undefined
+  };
+};
 
 export const QueueVisualizer: React.FC<QueueVisualizerProps> = ({
   modelId,
@@ -44,24 +79,29 @@ export const QueueVisualizer: React.FC<QueueVisualizerProps> = ({
             Cola (Capacidad: {queueCapacity === Infinity ? '∞' : queueCapacity})
           </div>
           
-          {currentEntities.filter(entity => entity.status === 'queued').map((entity, index) => (
-            <EntityAnimation 
-              key={entity.id} 
-              entity={entity} 
-              position={index} 
-              isInQueue={true}
-              totalEntities={currentEntities.filter(e => e.status === 'queued').length}
-              containerWidth={queueCapacity === Infinity ? queueWidth : queueWidth * 0.7}
-              size={entitySize}
-            />
-          ))}
+          {currentEntities.filter((entity: Entity) => entity.status === 'queued').map((entity: Entity, index: number) => {
+            const adaptedEntity = adaptEntity(entity);
+            
+            return (
+              <EntityAnimation 
+                key={entity.id} 
+                entity={adaptedEntity}
+                isInQueue={true}
+                isInService={false}
+                position={index} 
+                totalEntities={currentEntities.filter((e: Entity) => e.status === 'queued').length}
+                containerWidth={queueCapacity === Infinity ? queueWidth : queueWidth * 0.7}
+                size={entitySize}
+              />
+            );
+          })}
         </div>
         
         {/* Servidores */}
         <div className="flex ml-4">
           {Array.from({ length: serverCount }).map((_, serverIndex) => {
             const serverEntity = currentEntities.find(
-              entity => entity.status === 'inService' && entity.serverId === serverIndex
+              (entity: Entity) => entity.status === 'inService' && entity.serverId === serverIndex
             );
             
             return (
@@ -76,8 +116,9 @@ export const QueueVisualizer: React.FC<QueueVisualizerProps> = ({
                 
                 {serverEntity && (
                   <EntityAnimation 
-                    entity={serverEntity} 
+                    entity={adaptEntity(serverEntity)}
                     isInQueue={false}
+                    isInService={true}
                     size={entitySize * 1.2}
                   />
                 )}

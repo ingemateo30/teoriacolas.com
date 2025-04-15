@@ -4,6 +4,7 @@ import { useSimulationStore } from '@/store/simulationStore';
 import { Entity, SimulationState } from '@/types/simulation';
 import { calculateUtilization, calculateQueueMetrics } from '@/lib/simulation/utils/metrics';
 
+
 // Definir tipos para las métricas
 interface SimulationMetrics {
   // Métricas generales del sistema
@@ -72,7 +73,7 @@ export function useMetrics() {
       queueLength, 
       totalSteps,
       params
-    } = simulationStore.getState();
+    } = simulationStore;
     
     if (totalSteps === 0 || currentTime === 0) {
       return;
@@ -120,20 +121,20 @@ export function useMetrics() {
       totalWaitingTime / totalDepartures : 0;
     
     // Utilización del sistema
-    const systemUtilization = calculateUtilization(
-      params.arrivalRate, 
-      params.serviceRate, 
-      params.serverCount || 1
-    );
+    const systemUtilization = calculateUtilization({
+      arrivalRate: params.arrivalRate,
+      serviceRate: params.serviceRate,
+      servers: params.serverCount || 1
+    });
     
     // Calcular métricas de cola usando fórmulas teóricas
-    const queueMetrics = calculateQueueMetrics(
-      params.arrivalRate,
-      params.serviceRate,
-      params.serverCount || 1,
-      params.systemCapacity
-    );
-    
+    const queueMetrics = calculateQueueMetrics({
+      arrivalRate: params.arrivalRate,
+      serviceRate: params.serviceRate,
+      servers: params.serverCount || 1,
+      queueCapacity: params.systemCapacity
+    });
+
     // Calcular utilización por servidor (empírica)
     const serverUtilization = Array(serverCount).fill(0).map((_, i) => {
       const serverEntities = allProcessedEntities.filter(e => e.serverId === i);
@@ -162,8 +163,8 @@ export function useMetrics() {
       
       // Entidades actuales en el sistema
       const currentSystemEntities = entities.filter(
-        e => e.status === 'queued' || e.status === 'inService'
-      ).length;
+  (e: Entity) => e.status === 'queued' || e.status === 'inService'
+).length;
       newSystemLengthHistory.push(currentSystemEntities);
       
       // Utilización actual
@@ -249,7 +250,7 @@ export function useMetrics() {
   
   // Efecto para recopilar métricas periódicamente durante la simulación
   useEffect(() => {
-    const simulationState = simulationStore.getState().simulationState;
+    const simulationState = simulationStore.simulationState;
     
     if (simulationState === 'running') {
       const metricsInterval = setInterval(() => {
@@ -263,7 +264,7 @@ export function useMetrics() {
     if (simulationState === 'paused') {
       collectMetrics();
     }
-  }, [collectMetrics, simulationStore.getState().simulationState]);
+  }, [collectMetrics, simulationStore.simulationState]);
   
   return {
     metrics,

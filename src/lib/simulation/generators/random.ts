@@ -140,4 +140,11 @@ export class RandomGenerator {
     public getSeed(): number {
       return this.seed;
     }
+   
+  }
+  export function generateExponentialTime(arrivalRate: number): number {
+    return -Math.log(Math.random()) / arrivalRate;
+  }
+  export function generateServiceTime(serviceRate: number): number {
+    return -Math.log(Math.random()) / serviceRate;
   }

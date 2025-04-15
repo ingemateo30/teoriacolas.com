@@ -39,8 +39,8 @@ const initialState: SimulationStoreState = {
   
   modelType: 'MM1',
   params: {
-    arrivalRate: 1,
-    serviceRate: 2,
+    arrivalRate: 0,
+    serviceRate: 0,
     serverCount: 1,
     systemCapacity: -1, // -1 indica capacidad infinita
     arrivalDistribution: 'exponential',
@@ -60,6 +60,8 @@ export const useSimulationStore = create<SimulationStoreState>(() => ({
   ...initialState
 }));
 
+
+
 // Acciones para el store
 
 // Actualizar el estado de la simulación
@@ -75,14 +77,16 @@ export const updateModelParams = (params: Partial<SimulationParams>) => {
   });
   
   // Actualizar contadores dependientes de los parámetros
-  const serverCount = params.serverCount ?? currentParams.serverCount;
-  const systemCapacity = params.systemCapacity ?? currentParams.systemCapacity;
+  let serverCount = params.serverCount ?? currentParams.serverCount ?? 0;
+  let systemCapacity = params.systemCapacity ?? currentParams.systemCapacity ?? 0;
+
+  
   
   // Capacidad de la cola = capacidad del sistema - número de servidores
   // Si la capacidad del sistema es -1 (infinita), la cola también es infinita
   const queueCapacity = systemCapacity === -1 ? 
     Infinity : 
-    systemCapacity - serverCount;
+    systemCapacity- serverCount;
   
   useSimulationStore.setState({
     serverCount,
