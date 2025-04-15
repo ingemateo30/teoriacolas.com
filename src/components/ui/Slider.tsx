@@ -20,7 +20,7 @@ export const Slider: React.FC<SliderProps> = ({
   id,
   className = ''
 }) => {
-  const [internalValue, setInternalValue] = useState(value);
+  const [internalValue, setInternalValue] = useState(0);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseFloat(e.target.value);

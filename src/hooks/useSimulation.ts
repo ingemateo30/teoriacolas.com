@@ -12,9 +12,28 @@ import {
   generateServiceTime 
 } from '@/lib/simulation/generators/random';
 
+/*************  ✨ Windsurf Command ⭐  *************/
+/**
+ * Custom hook for managing and running a simulation.
+ * 
+ * This hook provides functions to control a simulation, including starting,
+ * pausing, resetting, and changing simulation speed. It also manages the
+ * simulation state, including entities, event queue, and timing.
+ * 
+ * The simulation uses various distribution types to generate arrival and
+ * service times, processes events such as arrivals and departures, and
+ * updates the state accordingly.
+ * 
+ * Returned values include the current simulation state, list of entities,
+ * and control functions.
+ */
+
+/*******  f413e3ef-c546-4cb8-94ef-84131dea8f1f  *******/
 export function useSimulation() {
   const simulationStore = useSimulationStore();
   const [simulationInterval, setSimulationInterval] = useState<NodeJS.Timeout | null>(null);
+  const { setState } = simulationStore;
+  
   
   
   // Función para obtener el tiempo para la próxima llegada basada en la distribución
@@ -99,22 +118,26 @@ export function useSimulation() {
             serverId: serverId
           });
           
-          simulationStore.setSimulationState({ 
-            entities: [...entities, newEntity],
-            serversBusy: serversBusy + 1
-          });
+          if (setState) {
+            setState({ 
+              entities: [...entities, newEntity],
+              serversBusy: serversBusy + 1,
+              simulationState: 'inProgress' // or whatever state you want to set
+            });
+          }
         } else if (queueLength < queueCapacity) {
           // Poner en cola si hay espacio
           newEntity.status = 'queued';
-          simulationStore.setState({ 
-            entities: [...entities, newEntity],
-            queueLength: queueLength + 1
+  setState?.({ 
+    entities: [...entities, newEntity],
+    queueLength: queueLength + 1
           });
         } else {
           // Rechazar si no hay espacio en la cola
           newEntity.status = 'rejected';
-          simulationStore.setState({ 
-            entities: [...entities, newEntity]
+          setState?.({ 
+            entities: [...entities, newEntity],
+            queueLength: queueLength + 1
           });
           // Las entidades rechazadas se eliminarán en el siguiente paso
         }
@@ -150,21 +173,21 @@ export function useSimulation() {
             updatedEntities[queuedEntityIndex] = queuedEntity;
             
             // Programar la salida de esta entidad
-            const serviceTime = generateServiceTime(params);
+            const serviceTime = generateServiceTime(params.serviceRate);
             eventQueue.push({
               type: 'departure',
               time: currentTime + serviceTime,
               entityId: queuedEntity.id,
-              serverId: serverId
-            });
+              serverId: departingEntity.serverId ?? undefined
+            })
             
-            simulationStore.setState({ 
+            setState?.({ 
               entities: updatedEntities,
               queueLength: queueLength - 1
             });
           } else {
             // No hay entidades en la cola, solo liberar el servidor
-            simulationStore.setState({ 
+            setState?.({ 
               entities: updatedEntities,
               serversBusy: serversBusy - 1
             });
@@ -179,7 +202,7 @@ export function useSimulation() {
     
     // Ordenar eventos por tiempo
     const sortedEvents = [...eventQueue].sort((a, b) => a.time - b.time);
-    simulationStore.setState({ eventQueue: sortedEvents });
+    setState?.({ eventQueue: sortedEvents });
     
   }, [getNextArrivalTime]);
   
@@ -206,7 +229,7 @@ export function useSimulation() {
     const newEventQueue = eventQueue.slice(1);
     
     // Actualizar estado de simulación
-    simulationStore.setState({ 
+    setState?.({ 
       currentTime: newTime,
       eventQueue: newEventQueue,
       totalSteps: simulationStore.totalSteps + 1
@@ -220,7 +243,7 @@ export function useSimulation() {
       e.status !== 'departed' && e.status !== 'rejected'
     );
     
-    simulationStore.setState({ entities: currentEntities });
+    setState?.({ entities: currentEntities });
     
   }, [processEvent]);
   
@@ -239,7 +262,7 @@ export function useSimulation() {
         entityId: null
       };
       
-      simulationStore.setState({ 
+      setState?.({ 
         eventQueue: [firstArrival],
         currentTime: 0,
         totalSteps: 0,
@@ -249,7 +272,7 @@ export function useSimulation() {
       });
     }
     
-    simulationStore.setState({ simulationState: 'running' });
+    setState?.({ simulationState: 'running' });
     
     // Determinar el intervalo basado en la velocidad
     const speed = simulationStore.simulationSpeed;
@@ -268,7 +291,7 @@ export function useSimulation() {
       clearInterval(simulationInterval);
       setSimulationInterval(null);
     }
-    simulationStore.setState({ simulationState: 'paused' });
+    setState?.({ simulationState: 'paused' });
   }, [simulationInterval]);
   
   // Reiniciar la simulación
@@ -278,7 +301,7 @@ export function useSimulation() {
       setSimulationInterval(null);
     }
     
-    simulationStore.setState({
+    setState?.({
       simulationState: 'idle',
       currentTime: 0,
       totalSteps: 0,
@@ -291,7 +314,7 @@ export function useSimulation() {
   
   // Cambiar velocidad de simulación
   const changeSimulationSpeed = useCallback((speed: number) => {
-    simulationStore.setState({ simulationSpeed: speed });
+    setState?.({ simulationSpeed: speed });
     
     // Actualizar intervalo si la simulación está corriendo
     if (simulationStore.simulationState === 'running' && simulationInterval) {
@@ -308,10 +331,10 @@ export function useSimulation() {
   
   // Actualizar parámetros de simulación
   const updateParams = useCallback((newParams: SimulationParams) => {
-    simulationStore.setState({ params: newParams });
+    setState?.({ params: newParams });
     
     // Actualizar contadores basados en los parámetros
-    simulationStore.setState({ 
+    setState?.({ 
       serverCount: newParams.serverCount || 1,
       queueCapacity: newParams.systemCapacity ? 
         (newParams.systemCapacity - (newParams.serverCount || 1)) : 

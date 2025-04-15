@@ -1,5 +1,5 @@
 
-import { create } from 'zustand';
+import { create, StateCreator } from 'zustand';
 import { 
   SimulationState, 
   Entity, 
@@ -28,6 +28,8 @@ interface SimulationStoreState {
   serversBusy: number;
   queueLength: number;
   queueCapacity: number;
+
+  setState?: (state: any) => void;
 }
 
 // Estado inicial de la simulación
@@ -56,8 +58,20 @@ const initialState: SimulationStoreState = {
   queueCapacity: Infinity
 };
 
-export const useSimulationStore = create<SimulationStoreState>(() => ({
-  ...initialState
+type SimulationStore = SimulationStoreState & {
+  // Add your action methods here
+  resetSimulation: () => void;
+  updateSomeValue: (value: string) => void;
+  // etc.
+};
+
+export const useSimulationStore = create<SimulationStore>((set) => ({
+  ...initialState,
+  
+  // Implement your actions using the set function
+  resetSimulation: () => set(initialState),
+  updateSomeValue: (value) => set((state) => ({ ...state, someValue: value })),
+  // etc.
 }));
 
 

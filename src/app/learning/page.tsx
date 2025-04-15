@@ -1,53 +1,602 @@
 "use client";
 
 import Link from 'next/link';
-import { Card } from '@/components/ui/Card';
-import { ConceptCard } from '@/components/educational/ConceptCard';
+import { useState } from 'react';
+import Navbar from '@/components/layout/Navbar';
+import Sidebar from '@/components/layout/Sidebar';
+import Footer from '@/components/layout/Footer';
 
 export default function LearningPage() {
+  // Estado para animación y efectos de UI
+  const [activeTab, setActiveTab] = useState<string>('overview');
+  const [expandedSection, setExpandedSection] = useState<string | null>('overview');
+
+  // Cambiar la sección expandida
+  const toggleSection = (section: string) => {
+    setExpandedSection(expandedSection === section ? null : section);
+  };
+
   return (
-    <div className="learning-page">
-      <h1>Centro de Aprendizaje</h1>
-      <p>
-        Explora los fundamentos y conceptos avanzados de la teoría de colas:
-      </p>
+    <div className="flex flex-col min-h-screen bg-white">
+      {/* Navbar - Fijo en la parte superior */}
+      <Navbar />
 
-      <div className="learning-sections">
-        <div className="learning-section">
-          <h2>Fundamentos</h2>
-          <Link href="/learning/fundamentals">
-            <Card className="section-card">
-              <h3>Conceptos Básicos</h3>
-              <p>Introducción a la teoría de colas, notación de Kendall y elementos principales</p>
-            </Card>
-          </Link>
-        </div>
+      {/* Área de contenido principal con sidebar */}
+      <div className="flex flex-1 pt-16"> {/* Añadido pt-16 para compensar la altura del navbar fijo */}
+        {/* Sidebar - Fijo en la izquierda */}
+        <Sidebar />
 
-        <div className="learning-section">
-          <h2>Conceptos Avanzados</h2>
-          <Link href="/learning/advanced">
-            <Card className="section-card">
-              <h3>Modelos Complejos</h3>
-              <p>Redes de colas, teoría de la renovación y procesos estocásticos</p>
-            </Card>
-          </Link>
-        </div>
+        {/* Contenido principal - Ocupa el ancho restante */}
+        <main className="flex-1 bg-gradient-to-b from-white to-gray-50 px-4 py-10 md:px-8 lg:px-16 lg:ml-10">
+          {/* Encabezado de la sección */}
+          <section className="mb-12 text-center max-w-4xl mx-auto">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">
+              Aprendizaje de Teoría de Colas
+            </h1>
 
-        <div className="learning-section">
-          <h2>Casos Prácticos</h2>
-          <div className="concept-cards">
-            <ConceptCard 
-              title="Optimización de Cajas en Supermercado" 
-              description="Análisis de tiempos de espera y número óptimo de servidores" 
-            />
-            <ConceptCard 
-              title="Gestión de Tráfico en Redes" 
-              description="Aplicación de teoría de colas en redes de datos" 
-            />
-          </div>
-        </div>
+            <p className="text-xl text-gray-700 mb-8 leading-relaxed px-4">
+              Explore los conceptos fundamentales y avanzados de la teoría de colas para comprender
+              cómo analizar y optimizar los sistemas de espera en diversos entornos.
+            </p>
+
+            {/* Pestañas de navegación */}
+            <div className="flex flex-wrap justify-center gap-4 mb-10">
+              <button
+                onClick={() => setActiveTab('overview')}
+                className={`px-6 py-3 rounded-md font-medium transition-all duration-300 ${
+                  activeTab === 'overview' 
+                    ? 'bg-primary-600 text-white shadow-md' 
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                Visión General
+              </button>
+              <Link href="/learning/fundamentals" className="px-6 py-3 rounded-md font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-all duration-300">
+                Fundamentos
+              </Link>
+              <Link href="/learning/advanced" className="px-6 py-3 rounded-md font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-all duration-300">
+                Temas Avanzados
+              </Link>
+            </div>
+          </section>
+
+          {/* Sección de Visión General */}
+          <section className="mb-16 max-w-6xl mx-auto">
+            <div
+              className="flex items-center justify-between cursor-pointer mb-6 bg-white px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
+              onClick={() => toggleSection('overview')}
+            >
+              <h2 className="text-2xl font-semibold text-gray-800">
+                ¿Qué es la Teoría de Colas?
+              </h2>
+              <svg
+                className={`w-6 h-6 text-gray-600 transition-transform duration-200 ${expandedSection === 'overview' ? 'transform rotate-180' : ''
+                  }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            <div
+              className={`
+                overflow-hidden transition-all duration-500 ease-in-out
+                ${expandedSection === 'overview' ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
+              `}
+            >
+              <div className="bg-white rounded-xl shadow-md overflow-hidden p-6 md:p-8">
+                <div className="flex flex-col md:flex-row gap-8">
+                  <div className="flex-1">
+                    <p className="text-gray-700 mb-4">
+                      La teoría de colas es una rama de las matemáticas que estudia las líneas de espera dentro de los sistemas. 
+                      Se utiliza para analizar diversos factores como los tiempos de espera, la capacidad del sistema, y la 
+                      eficiencia de servicio en situaciones donde existe una demanda de recursos limitados.
+                    </p>
+                    <p className="text-gray-700 mb-4">
+                      Este campo de estudio se originó a principios del siglo XX con el trabajo del matemático danés 
+                      Agner Krarup Erlang, quien desarrolló los primeros modelos para analizar el tráfico telefónico. 
+                      Desde entonces, la teoría de colas se ha convertido en una herramienta fundamental para la optimización 
+                      de procesos en diversas industrias.
+                    </p>
+                    <p className="text-gray-700">
+                      Los modelos de colas permiten predecir el comportamiento de sistemas con demanda variable, ayudando 
+                      a las organizaciones a tomar decisiones informadas sobre la asignación de recursos, la planificación 
+                      de capacidad y la mejora del servicio al cliente.
+                    </p>
+                  </div>
+                  <div className="flex-1 flex justify-center items-center">
+                    <div className="bg-gray-100 rounded-lg p-6 w-full max-w-md">
+                      <h3 className="text-lg font-medium text-gray-900 mb-4 text-center">Componentes de un Sistema de Colas</h3>
+                      <ul className="space-y-3">
+                        <li className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+                            <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                          </div>
+                          <span className="text-gray-700">Proceso de llegada de clientes</span>
+                        </li>
+                        <li className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+                            <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                          </div>
+                          <span className="text-gray-700">Cola o línea de espera</span>
+                        </li>
+                        <li className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+                            <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                          </div>
+                          <span className="text-gray-700">Disciplina de la cola</span>
+                        </li>
+                        <li className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+                            <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                          </div>
+                          <span className="text-gray-700">Mecanismo de servicio</span>
+                        </li>
+                        <li className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+                            <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                          </div>
+                          <span className="text-gray-700">Salida del sistema</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Sección de Notación Kendall */}
+          <section className="mb-16 max-w-6xl mx-auto">
+            <div
+              className="flex items-center justify-between cursor-pointer mb-6 bg-white px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
+              onClick={() => toggleSection('kendall')}
+            >
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Notación de Kendall
+              </h2>
+              <svg
+                className={`w-6 h-6 text-gray-600 transition-transform duration-200 ${expandedSection === 'kendall' ? 'transform rotate-180' : ''
+                  }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            <div
+              className={`
+                overflow-hidden transition-all duration-500 ease-in-out
+                ${expandedSection === 'kendall' ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
+              `}
+            >
+              <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                <div className="p-6 md:p-8">
+                  <p className="text-gray-700 mb-6">
+                    La notación de Kendall es un sistema estandarizado para describir y clasificar los modelos de colas. 
+                    Fue introducida por David G. Kendall en 1953 y ampliada posteriormente por otros investigadores. 
+                    La forma estándar actual es:
+                  </p>
+                  
+                  <div className="font-mono text-center bg-gray-100 py-4 px-6 rounded-lg border border-gray-300 mb-8 text-2xl shadow-sm">
+                    A/S/c/K/N/D
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                      <h3 className="text-lg font-medium text-gray-900 mb-3">Distribuciones comunes (A y S)</h3>
+                      <ul className="space-y-2">
+                        <li className="flex"><span className="font-medium w-8">M:</span> Markoviana (exponencial)</li>
+                        <li className="flex"><span className="font-medium w-8">D:</span> Determinística</li>
+                        <li className="flex"><span className="font-medium w-8">Ek:</span> Erlang-k</li>
+                        <li className="flex"><span className="font-medium w-8">G:</span> General (cualquier distribución)</li>
+                        <li className="flex"><span className="font-medium w-8">GI:</span> General independiente</li>
+                      </ul>
+                    </div>
+                    
+                    <div>
+                      <ul className="space-y-4 text-gray-700">
+                        <li className="flex items-start">
+                          <span className="font-medium w-8">A:</span> 
+                          <div>
+                            <span>Distribución de llegadas</span>
+                            <p className="text-sm text-gray-500 mt-1">Describe el patrón estadístico de las llegadas al sistema</p>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="font-medium w-8">S:</span> 
+                          <div>
+                            <span>Distribución de servicio</span>
+                            <p className="text-sm text-gray-500 mt-1">Describe la distribución estadística del tiempo de servicio</p>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="font-medium w-8">c:</span> 
+                          <div>
+                            <span>Número de servidores</span>
+                            <p className="text-sm text-gray-500 mt-1">Indica cuántos servidores están disponibles en paralelo</p>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                      <h4 className="font-medium text-gray-900 mb-2">K: Capacidad del sistema</h4>
+                      <p className="text-gray-600 text-sm">Número máximo de clientes que pueden estar en el sistema (en cola + en servicio). Si se omite, se asume infinito.</p>
+                    </div>
+                    
+                    <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                      <h4 className="font-medium text-gray-900 mb-2">N: Tamaño de la población</h4>
+                      <p className="text-gray-600 text-sm">Tamaño total de la población de clientes potenciales. Si se omite, se asume infinito.</p>
+                    </div>
+                    
+                    <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                      <h4 className="font-medium text-gray-900 mb-2">D: Disciplina de la cola</h4>
+                      <p className="text-gray-600 text-sm">Regla que determina qué cliente será servido a continuación. Si se omite, se asume FIFO (primero en entrar, primero en salir).</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Sección de Modelos Comunes */}
+          <section className="mb-16 max-w-6xl mx-auto">
+            <div
+              className="flex items-center justify-between cursor-pointer mb-6 bg-white px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
+              onClick={() => toggleSection('models')}
+            >
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Modelos Comunes
+              </h2>
+              <svg
+                className={`w-6 h-6 text-gray-600 transition-transform duration-200 ${expandedSection === 'models' ? 'transform rotate-180' : ''
+                  }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            <div
+              className={`
+                overflow-hidden transition-all duration-500 ease-in-out
+                ${expandedSection === 'models' ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
+              `}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+                  <div className="bg-primary-50 p-4 border-b border-primary-100">
+                    <h3 className="text-lg font-medium text-primary-900">M/M/1</h3>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-gray-700 mb-3">
+                      El modelo más simple y fundamental. Cuenta con un servidor, llegadas según distribución Poisson y tiempos de servicio exponenciales.
+                    </p>
+                    <div className="bg-gray-50 p-3 rounded-md text-sm">
+                      <strong>Aplicaciones:</strong> Ventanillas únicas, atención telefónica simple, pequeños comercios.
+                    </div>
+                    <Link href="/learning/fundamentals" className="mt-4 inline-block text-primary-600 hover:text-primary-800 font-medium">
+                      Ver detalles →
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+                  <div className="bg-primary-50 p-4 border-b border-primary-100">
+                    <h3 className="text-lg font-medium text-primary-900">M/M/c</h3>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-gray-700 mb-3">
+                      Modelo con múltiples servidores en paralelo, todos atendiendo la misma cola con tasas de servicio idénticas.
+                    </p>
+                    <div className="bg-gray-50 p-3 rounded-md text-sm">
+                      <strong>Aplicaciones:</strong> Centros de atención al cliente, cajas en supermercados, ventanillas bancarias.
+                    </div>
+                    <Link href="/learning/fundamentals" className="mt-4 inline-block text-primary-600 hover:text-primary-800 font-medium">
+                      Ver detalles →
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+                  <div className="bg-primary-50 p-4 border-b border-primary-100">
+                    <h3 className="text-lg font-medium text-primary-900">M/M/c/K</h3>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-gray-700 mb-3">
+                      Extensión del modelo M/M/c con capacidad limitada (K), donde los clientes se rechazan si el sistema está lleno.
+                    </p>
+                    <div className="bg-gray-50 p-3 rounded-md text-sm">
+                      <strong>Aplicaciones:</strong> Salas de espera con capacidad limitada, buffers en redes, centros de llamadas con espera limitada.
+                    </div>
+                    <Link href="/learning/advanced" className="mt-4 inline-block text-primary-600 hover:text-primary-800 font-medium">
+                      Ver detalles →
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+                  <div className="bg-primary-50 p-4 border-b border-primary-100">
+                    <h3 className="text-lg font-medium text-primary-900">M/G/1</h3>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-gray-700 mb-3">
+                      Modelo con un servidor, llegadas según Poisson y tiempos de servicio con distribución general.
+                    </p>
+                    <div className="bg-gray-50 p-3 rounded-md text-sm">
+                      <strong>Aplicaciones:</strong> Procesos con tiempos de servicio variables, como talleres de reparación o consultas médicas.
+                    </div>
+                    <Link href="/learning/advanced" className="mt-4 inline-block text-primary-600 hover:text-primary-800 font-medium">
+                      Ver detalles →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Sección de Ruta de Aprendizaje */}
+          <section className="mb-16 max-w-6xl mx-auto">
+            <div
+              className="flex items-center justify-between cursor-pointer mb-6 bg-white px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
+              onClick={() => toggleSection('path')}
+            >
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Ruta de Aprendizaje
+              </h2>
+              <svg
+                className={`w-6 h-6 text-gray-600 transition-transform duration-200 ${expandedSection === 'path' ? 'transform rotate-180' : ''
+                  }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            <div
+              className={`
+                overflow-hidden transition-all duration-500 ease-in-out
+                ${expandedSection === 'path' ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
+              `}
+            >
+              <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                <div className="relative">
+                  {/* Línea vertical para conectar los elementos */}
+                  <div className="absolute left-8 top-0 bottom-0 w-1 bg-primary-100 z-0 ml-3 md:ml-6"></div>
+                  
+                  <div className="p-6 md:p-8">
+                    {/* Paso 1 */}
+                    <div className="flex mb-8 relative z-10">
+                      <div className="flex-shrink-0 w-16 h-16 md:w-16 md:h-16 rounded-full bg-primary-100 flex items-center justify-center mr-4 md:mr-8 border-4 border-white">
+                        <span className="text-primary-600 font-bold text-xl">1</span>
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-medium text-gray-900 mb-2">Fundamentos</h3>
+                        <p className="text-gray-700 mb-3">
+                          Comience con los conceptos básicos de la teoría de colas, incluyendo:
+                        </p>
+                        <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                          <li>Componentes de un sistema de colas</li>
+                          <li>Notación de Kendall</li>
+                          <li>Modelos básicos: M/M/1 y M/M/c</li>
+                          <li>Parámetros clave: λ, μ, ρ</li>
+                        </ul>
+                        <Link href="/learning/fundamentals" className="mt-4 inline-flex items-center text-primary-600 hover:text-primary-800 font-medium">
+                          Ir a Fundamentos
+                          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
+                        </Link>
+                      </div>
+                    </div>
+                    
+                    {/* Paso 2 */}
+                    <div className="flex mb-8 relative z-10">
+                      <div className="flex-shrink-0 w-16 h-16 md:w-16 md:h-16 rounded-full bg-primary-100 flex items-center justify-center mr-4 md:mr-8 border-4 border-white">
+                        <span className="text-primary-600 font-bold text-xl">2</span>
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-medium text-gray-900 mb-2">Temas Avanzados</h3>
+                        <p className="text-gray-700 mb-3">
+                          Profundice con modelos y técnicas más complejos:
+                        </p>
+                        <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                          <li>Modelos avanzados: M/G/1, M/M/c/K</li>
+                          <li>Redes de colas</li>
+                          <li>Optimización de sistemas</li>
+                          <li>Simulación Monte Carlo</li>
+                        </ul>
+                        <Link href="/learning/advanced" className="mt-4 inline-flex items-center text-primary-600 hover:text-primary-800 font-medium">
+                          Ir a Temas Avanzados
+                          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
+                        </Link>
+                      </div>
+                    </div>
+                    
+                    {/* Paso 3 */}
+                    <div className="flex relative z-10">
+                      <div className="flex-shrink-0 w-16 h-16 md:w-16 md:h-16 rounded-full bg-primary-100 flex items-center justify-center mr-4 md:mr-8 border-4 border-white">
+                        <span className="text-primary-600 font-bold text-xl">3</span>
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-medium text-gray-900 mb-2">Aplicación Práctica</h3>
+                        <p className="text-gray-700 mb-3">
+                          Ponga en práctica sus conocimientos:
+                        </p>
+                        <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                          <li>Simulador interactivo</li>
+                          <li>Estudios de casos prácticos</li>
+                          <li>Análisis de resultados</li>
+                          <li>Optimización de sistemas reales</li>
+                        </ul>
+                        <Link href="/simulator" className="mt-4 inline-flex items-center text-primary-600 hover:text-primary-800 font-medium">
+                          Ir al Simulador
+                          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Sección de Recursos Adicionales */}
+          <section className="mb-16 max-w-6xl mx-auto">
+            <div
+              className="flex items-center justify-between cursor-pointer mb-6 bg-white px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
+              onClick={() => toggleSection('resources')}
+            >
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Recursos Adicionales
+              </h2>
+              <svg
+                className={`w-6 h-6 text-gray-600 transition-transform duration-200 ${expandedSection === 'resources' ? 'transform rotate-180' : ''
+                  }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            <div
+              className={`
+                overflow-hidden transition-all duration-500 ease-in-out
+                ${expandedSection === 'resources' ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
+              `}
+            >
+              <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                <div className="p-6 md:p-8">
+                  <p className="text-gray-700 mb-6">
+                    Explore estos recursos adicionales para profundizar en la teoría de colas:
+                  </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {/* Recurso 1 */}
+                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-5 hover:shadow-md transition-shadow duration-200">
+                      <div className="flex items-center mb-4">
+                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                          <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                          </svg>
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900">Libros Recomendados</h3>
+                      </div>
+                      <ul className="space-y-2 text-gray-700">
+                        <li>"Fundamentos de Teoría de Colas" - Juan M. García</li>
+                        <li>"Queueing Theory: A Linear Algebraic Approach" - Lester Lipsky</li>
+                        <li>"Performance Modeling and Design of Computer Systems" - Mor Harchol-Balter</li>
+                      </ul>
+                    </div>
+
+                    {/* Recurso 2 */}
+                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-5 hover:shadow-md transition-shadow duration-200">
+                      <div className="flex items-center mb-4">
+                        <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                          <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                          </svg>
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900">Recursos Online</h3>
+                      </div>
+                      <ul className="space-y-2 text-gray-700">
+                        <li>Curso "Teoría de Colas Aplicada" - Coursera</li>
+                        <li>Canal de YouTube "Optimización de Procesos"</li>
+                        <li>Foro de discusión "QueueTheory.org"</li>
+                        <li>Biblioteca de simulaciones interactivas</li>
+                      </ul>
+                    </div>
+
+                    {/* Recurso 3 */}
+                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-5 hover:shadow-md transition-shadow duration-200">
+                      <div className="flex items-center mb-4">
+                        <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mr-3">
+                          <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                          </svg>
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900">Herramientas</h3>
+                      </div>
+                      <ul className="space-y-2 text-gray-700">
+                        <li>Calculadora de parámetros de colas</li>
+                        <li>Software de simulación "QueueSim Pro"</li>
+                        <li>Hojas de cálculo preconstruidas</li>
+                        <li>Biblioteca de módulos para Python</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 p-5 bg-primary-50 rounded-lg border border-primary-100">
+                    <h4 className="text-lg font-medium text-primary-900 mb-2">Consejo del Instructor</h4>
+                    <p className="text-gray-700">
+                      "La mejor manera de dominar la teoría de colas es combinar el estudio teórico con la aplicación práctica. 
+                      Comience con modelos simples y vaya aumentando gradualmente la complejidad a medida que se sienta cómodo con los conceptos fundamentales."
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* CTA - Call to Action */}
+          <section className="max-w-4xl mx-auto text-center">
+            <div className="bg-gradient-to-r from-primary-500 to-blue-600 rounded-xl shadow-lg overflow-hidden">
+              <div className="p-8 md:p-12">
+                <h2 className="text-3xl font-bold mb-4 text-white">
+                  ¿Listo para aplicar estos conocimientos?
+                </h2>
+                <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
+                  Ponga en práctica lo aprendido con nuestro simulador interactivo de teoría de colas 
+                  y analice diferentes escenarios en tiempo real.
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                  <Link href="/simulator" className="inline-block bg-white text-primary-600 font-medium py-3 px-6 rounded-lg hover:bg-gray-100 transition-colors duration-200 shadow-md">
+                    Ir al Simulador
+                  </Link>
+                  <Link href="/exercises" className="inline-block bg-primary-700 text-white font-medium py-3 px-6 rounded-lg hover:bg-primary-800 transition-colors duration-200 shadow-md">
+                    Ejercicios Prácticos
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
-  
