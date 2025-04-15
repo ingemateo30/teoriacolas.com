@@ -4,21 +4,21 @@ import Link from 'next/link';
 import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
-
+import Footer from '@/components/layout/Footer';
 
 export default function Homepage() {
-  // State for animation and UI effects
+  // Estado para animación y efectos de UI
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  const [expandedSection, setExpandedSection] = useState<string | number | null>(null);
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
-  // Common queue theory models with descriptions
+  // Modelos comunes de teoría de colas con descripciones
   const queueModels = [
     {
       title: "M/M/1",
       description: "Modelo básico con llegadas Poisson, tiempos de servicio exponenciales y un solo servidor",
       href: "/models/mm1",
       icon: (
-        <svg className="w-12 h-12 mb-3 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-10 h-10 mb-3 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
         </svg>
       )
@@ -28,7 +28,7 @@ export default function Homepage() {
       description: "Sistema con múltiples servidores en paralelo con distribuciones exponenciales",
       href: "/models/mmc",
       icon: (
-        <svg className="w-12 h-12 mb-3 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-10 h-10 mb-3 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
       )
@@ -38,7 +38,7 @@ export default function Homepage() {
       description: "Sistema con capacidad limitada K y c servidores",
       href: "/models/mmck",
       icon: (
-        <svg className="w-12 h-12 mb-3 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-10 h-10 mb-3 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
       )
@@ -48,14 +48,14 @@ export default function Homepage() {
       description: "Modelo con servicio de distribución general y llegadas Poisson",
       href: "/models/mg1",
       icon: (
-        <svg className="w-12 h-12 mb-3 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-10 h-10 mb-3 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
         </svg>
       )
     }
   ];
 
-  // Key concepts with brief descriptions
+  // Conceptos clave con descripciones breves
   const keyConcepts = [
     { title: "Tasa de llegada (λ)", description: "Número promedio de llegadas por unidad de tiempo" },
     { title: "Tasa de servicio (μ)", description: "Número promedio de clientes que pueden ser atendidos por unidad de tiempo" },
@@ -65,35 +65,36 @@ export default function Homepage() {
     { title: "Tiempo total en el sistema (W)", description: "Tiempo promedio total que un cliente pasa en el sistema" }
   ];
 
-  // Toggle section expansion
-  const toggleSection = (section: string | number) => {
+  // Cambiar la sección expandida
+  const toggleSection = (section: string) => {
     setExpandedSection(expandedSection === section ? null : section);
   };
+
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      {/* Navbar - Fixed at the top */}
+      {/* Navbar - Fijo en la parte superior */}
       <Navbar />
 
-      {/* Main content area with sidebar */}
-      <div className="flex flex-1 pt-16">
-        {/* Sidebar - Fixed on the left */}
+      {/* Área de contenido principal con sidebar */}
+      <div className="flex flex-1 pt-16"> {/* Añadido pt-16 para compensar la altura del navbar fijo */}
+        {/* Sidebar - Fijo en la izquierda */}
         <Sidebar />
 
-        {/* Main content - Takes remaining width */}
-        <main className="flex-1 bg-gradient-to-b from-white to-gray-50 px-4 py-8 md:px-8 lg:ml-64">
-          {/* Hero Section */}
+        {/* Contenido principal - Ocupa el ancho restante */}
+        <main className="flex-1 bg-gradient-to-b from-white to-gray-50 px-4 py-10 md:px-8 lg:px-16 lg:ml-10">
+          {/* Sección Hero */}
           <section className="mb-16 text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">
               Teoría de Colas Interactiva
             </h1>
-            
-            <p className="text-xl text-gray-700 mb-8 leading-relaxed">
+
+            <p className="text-xl text-gray-700 mb-8 leading-relaxed px-4">
               Explore, aprenda y simule modelos de teoría de colas con esta plataforma educativa interactiva.
               Comprenda los principios fundamentales que subyacen a los sistemas de espera.
             </p>
-            
-            <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
-              <Link 
+
+            <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
+              <Link
                 href="/simulator"
                 className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 transition duration-300 shadow-md hover:shadow-lg"
               >
@@ -103,9 +104,9 @@ export default function Homepage() {
                 </svg>
                 Iniciar Simulación
               </Link>
-              
-              <Link 
-                href="/learning/fundamentals"
+
+              <Link
+                href="/learning"
                 className="inline-flex items-center justify-center px-6 py-3 border border-primary-300 text-base font-medium rounded-md text-primary-700 bg-white hover:bg-primary-50 transition duration-300 shadow-md hover:shadow-lg"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -116,82 +117,110 @@ export default function Homepage() {
                 Aprender Conceptos
               </Link>
             </div>
-            
-            {/* Animated queue illustration */}
-            <div className="relative h-48 bg-gray-100 rounded-lg shadow-inner overflow-hidden mx-auto max-w-2xl">
+
+            {/* Ilustración animada de cola */}
+            <div className="relative h-64 bg-gray-100 rounded-lg shadow-inner overflow-hidden mx-auto max-w-3xl mb-4">
+              {/* Línea que representa el flujo */}
               <div className="absolute inset-0 flex items-center">
                 <div className="h-px w-full bg-gray-300 z-0"></div>
               </div>
-              
-              {/* Animated dots representing customers in queue */}
-              <div className="absolute left-0 top-0 bottom-0 w-1/2 flex items-center justify-evenly">
+
+              {/* Zona de cola de espera */}
+              <div className="absolute left-0 top-0 bottom-0 w-1/3 flex items-center justify-end">
                 {[...Array(5)].map((_, i) => (
-                  <div 
-                    key={`queue-${i}`} 
-                    className="w-6 h-6 rounded-full bg-primary-500 opacity-80 shadow-md"
+                  <div
+                    key={`queue-${i}`}
+                    className="w-8 h-8 rounded-full bg-primary-500 opacity-80 shadow-md absolute"
                     style={{
-                      animation: `moveInQueue 8s infinite ${i * 1.5}s ease-in-out`,
+                      left: `${i * 40}px`,
+                      animation: `moveInQueue 10s infinite ${i * 2}s linear`,
                     }}
                   ></div>
                 ))}
               </div>
-              
-              {/* Server */}
-              <div className="absolute right-1/4 top-1/2 transform -translate-y-1/2 w-16 h-16 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+
+              {/* Servidor - Centrado */}
+              <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg z-10">
+                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
                 </svg>
               </div>
-              
-              {/* Departed customers */}
-              <div className="absolute right-0 top-0 bottom-0 w-1/4 flex items-center justify-evenly">
+
+              {/* Cliente siendo atendido (parpadeando) */}
+              <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-yellow-400 shadow-lg opacity-80 z-20"
+                style={{ animation: 'blink 1s infinite ease-in-out' }}></div>
+
+              {/* Clientes que salen del sistema */}
+              <div className="absolute right-0 top-0 bottom-0 w-1/3 flex items-center">
                 {[...Array(3)].map((_, i) => (
-                  <div 
-                    key={`departed-${i}`} 
-                    className="w-6 h-6 rounded-full bg-green-500 opacity-80 shadow-md"
+                  <div
+                    key={`departed-${i}`}
+                    className="w-8 h-8 rounded-full bg-green-500 opacity-80 shadow-md absolute"
                     style={{
-                      animation: `moveOutQueue 8s infinite ${i * 2.6}s ease-in-out`,
+                      right: `${(2 - i) * 40 + 20}px`,
+                      animation: `moveOutQueue 10s infinite ${i * 3.3}s linear`,
                     }}
                   ></div>
                 ))}
               </div>
-              
-              {/* Labels */}
-              <div className="absolute bottom-2 left-4 text-xs font-medium text-gray-600">Cola de espera</div>
-              <div className="absolute bottom-2 right-10 text-xs font-medium text-gray-600">Servicio completado</div>
-              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs font-medium text-gray-600">Servidor</div>
+
+              {/* Etiquetas */}
+              <div className="absolute bottom-4 left-6 text-sm font-medium text-gray-700 bg-white px-2 py-1 rounded shadow-sm">Cola de espera</div>
+              <div className="absolute bottom-4 right-6 text-sm font-medium text-gray-700 bg-white px-2 py-1 rounded shadow-sm">Servicio completado</div>
+              <div className="absolute top-4 left-1/2 transform -translate-x-1/2 text-sm font-medium text-gray-700 bg-white px-2 py-1 rounded shadow-sm">Servidor</div>
+
+              {/* Flechas direccionales para mostrar el flujo FIFO */}
+              <div className="absolute top-1/2 left-1/4 transform -translate-y-1/2">
+                <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
+              <div className="absolute top-1/2 right-1/4 transform -translate-y-1/2">
+                <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
             </div>
-            
-            {/* CSS for animations */}
+
+            {/* CSS para animaciones */}
             <style jsx>{`
-              @keyframes moveInQueue {
-                0% { transform: translateX(-50px); opacity: 0; }
-                20% { transform: translateX(0); opacity: 1; }
-                80% { transform: translateX(0); opacity: 1; }
-                100% { transform: translateX(200px); opacity: 0; }
-              }
-              
-              @keyframes moveOutQueue {
-                0% { transform: translateX(0); opacity: 0; }
-                30% { transform: translateX(0); opacity: 1; }
-                100% { transform: translateX(50px); opacity: 0; }
-              }
-            `}</style>
+  @keyframes moveInQueue {
+    0% { transform: translateX(-80px); opacity: 0; }
+    10% { transform: translateX(-40px); opacity: 0.7; }
+    50% { transform: translateX(120px); opacity: 1; }
+    60% { transform: translateX(160px); opacity: 0.7; }
+    70% { transform: translateX(200px); opacity: 0; }
+    100% { transform: translateX(200px); opacity: 0; }
+  }
+  
+  @keyframes moveOutQueue {
+    0% { transform: translateX(-200px); opacity: 0; }
+    30% { transform: translateX(-160px); opacity: 0; }
+    40% { transform: translateX(-120px); opacity: 0.7; }
+    80% { transform: translateX(0px); opacity: 1; }
+    100% { transform: translateX(40px); opacity: 0; }
+  }
+  
+  @keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+  }
+`}</style>
           </section>
-          
-          {/* Models Section */}
-          <section className="mb-16">
-            <div 
-              className="flex items-center cursor-pointer mb-6"
+
+          {/* Sección de Modelos */}
+          <section className="mb-16 max-w-6xl mx-auto">
+            <div
+              className="flex items-center justify-between cursor-pointer mb-6 bg-white px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
               onClick={() => toggleSection('models')}
             >
               <h2 className="text-2xl font-semibold text-gray-800">
                 Modelos Principales
               </h2>
               <svg
-                className={`w-5 h-5 ml-2 transition-transform duration-200 text-gray-600 ${
-                  expandedSection === 'models' ? 'transform rotate-180' : ''
-                }`}
+                className={`w-6 h-6 text-gray-600 transition-transform duration-200 ${expandedSection === 'models' ? 'transform rotate-180' : ''
+                  }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -200,8 +229,8 @@ export default function Homepage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
             </div>
-            
-            <div 
+
+            <div
               className={`
                 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 
                 overflow-hidden transition-all duration-500 ease-in-out
@@ -209,8 +238,8 @@ export default function Homepage() {
               `}
             >
               {queueModels.map((model, index) => (
-                <Link 
-                  href={model.href} 
+                <Link
+                  href={model.href}
                   key={model.title}
                   className={`
                     bg-white rounded-lg p-6 shadow-md transition-all duration-300 
@@ -221,28 +250,27 @@ export default function Homepage() {
                   onMouseLeave={() => setHoveredCard(null)}
                 >
                   <div className="flex flex-col items-center text-center">
-                    <div className="mb-2">{model.icon}</div>
+                    <div className="mb-3 p-3 rounded-full bg-primary-50">{model.icon}</div>
                     <h3 className="text-xl font-medium text-gray-900 mb-2">{model.title}</h3>
-                    <p className="text-gray-600 text-sm">{model.description}</p>
+                    <p className="text-gray-600">{model.description}</p>
                   </div>
                 </Link>
               ))}
             </div>
           </section>
-          
-          {/* Key Concepts Section */}
-          <section className="mb-16">
-            <div 
-              className="flex items-center cursor-pointer mb-6"
+
+          {/* Sección de Conceptos Clave */}
+          <section className="mb-16 max-w-6xl mx-auto">
+            <div
+              className="flex items-center justify-between cursor-pointer mb-6 bg-white px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
               onClick={() => toggleSection('concepts')}
             >
               <h2 className="text-2xl font-semibold text-gray-800">
                 Conceptos Clave
               </h2>
               <svg
-                className={`w-5 h-5 ml-2 transition-transform duration-200 text-gray-600 ${
-                  expandedSection === 'concepts' ? 'transform rotate-180' : ''
-                }`}
+                className={`w-6 h-6 text-gray-600 transition-transform duration-200 ${expandedSection === 'concepts' ? 'transform rotate-180' : ''
+                  }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -251,39 +279,38 @@ export default function Homepage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
             </div>
-            
-            <div 
+
+            <div
               className={`
-                grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4
+                grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5
                 overflow-hidden transition-all duration-500 ease-in-out
                 ${expandedSection === 'concepts' || expandedSection === null ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
               `}
             >
-              {keyConcepts.map((concept, index) => (
-                <div 
+              {keyConcepts.map((concept) => (
+                <div
                   key={concept.title}
-                  className="bg-white rounded-lg p-4 shadow border-l-4 border-primary-500 hover:border-primary-600 transition-all duration-200"
+                  className="bg-white rounded-lg p-5 shadow border-l-4 border-primary-500 hover:border-primary-600 transition-all duration-200"
                 >
-                  <h3 className="text-lg font-medium text-gray-900 mb-1">{concept.title}</h3>
-                  <p className="text-gray-600 text-sm">{concept.description}</p>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">{concept.title}</h3>
+                  <p className="text-gray-600">{concept.description}</p>
                 </div>
               ))}
             </div>
           </section>
-          
-          {/* Quick Start Section */}
-          <section className="mb-16">
-            <div 
-              className="flex items-center cursor-pointer mb-6"
+
+          {/* Sección de Inicio Rápido */}
+          <section className="mb-16 max-w-6xl mx-auto">
+            <div
+              className="flex items-center justify-between cursor-pointer mb-6 bg-white px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
               onClick={() => toggleSection('quickstart')}
             >
               <h2 className="text-2xl font-semibold text-gray-800">
                 Inicio Rápido
               </h2>
               <svg
-                className={`w-5 h-5 ml-2 transition-transform duration-200 text-gray-600 ${
-                  expandedSection === 'quickstart' ? 'transform rotate-180' : ''
-                }`}
+                className={`w-6 h-6 text-gray-600 transition-transform duration-200 ${expandedSection === 'quickstart' ? 'transform rotate-180' : ''
+                  }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -292,78 +319,77 @@ export default function Homepage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
             </div>
-            
-            <div 
+
+            <div
               className={`
                 overflow-hidden transition-all duration-500 ease-in-out
                 ${expandedSection === 'quickstart' || expandedSection === null ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
               `}
             >
-              <div className="flex flex-col md:flex-row justify-between items-center bg-white rounded-xl shadow-md p-6 border border-gray-100">
-                <div className="flex-1 mb-6 md:mb-0 md:mr-6">
-                  <h3 className="text-xl font-medium text-gray-900 mb-4">En 3 simples pasos:</h3>
-                  <ul className="space-y-4">
+              <div className="flex flex-col md:flex-row justify-between items-stretch bg-white rounded-xl shadow-md overflow-hidden">
+                <div className="flex-1 p-6 md:p-8">
+                  <h3 className="text-xl font-medium text-gray-900 mb-6">En 3 simples pasos:</h3>
+                  <ul className="space-y-6">
                     <li className="flex items-start">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 text-primary-800 mr-3 flex-shrink-0">
+                      <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-100 text-primary-800 mr-4 flex-shrink-0 font-semibold">
                         1
                       </div>
                       <div>
-                        <h4 className="font-medium">Selecciona un modelo de cola</h4>
-                        <p className="text-sm text-gray-600">Escoge entre varios modelos según tus necesidades</p>
+                        <h4 className="font-medium text-lg mb-1">Selecciona un modelo de cola</h4>
+                        <p className="text-gray-600">Escoge entre varios modelos según tus necesidades</p>
                       </div>
                     </li>
                     <li className="flex items-start">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 text-primary-800 mr-3 flex-shrink-0">
+                      <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-100 text-primary-800 mr-4 flex-shrink-0 font-semibold">
                         2
                       </div>
                       <div>
-                        <h4 className="font-medium">Configura los parámetros</h4>
-                        <p className="text-sm text-gray-600">Ajusta tasas de llegada, servicio y otros parámetros</p>
+                        <h4 className="font-medium text-lg mb-1">Configura los parámetros</h4>
+                        <p className="text-gray-600">Ajusta tasas de llegada, servicio y otros parámetros</p>
                       </div>
                     </li>
                     <li className="flex items-start">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 text-primary-800 mr-3 flex-shrink-0">
+                      <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-100 text-primary-800 mr-4 flex-shrink-0 font-semibold">
                         3
                       </div>
                       <div>
-                        <h4 className="font-medium">Inicia la simulación</h4>
-                        <p className="text-sm text-gray-600">Observa resultados en tiempo real y analiza estadísticas</p>
+                        <h4 className="font-medium text-lg mb-1">Inicia la simulación</h4>
+                        <p className="text-gray-600">Observa resultados en tiempo real y analiza estadísticas</p>
                       </div>
                     </li>
                   </ul>
                 </div>
-                
-                <div className="bg-gray-50 rounded-lg p-5 flex-1 border border-gray-200">
-                  <h4 className="font-medium text-center mb-3 text-gray-700">Notación de Kendall</h4>
-                  <div className="font-mono text-center bg-white py-2 px-4 rounded border border-gray-300 mb-3 text-lg">
+
+                <div className="bg-gray-50 p-6 md:p-8 flex-1 border-t md:border-t-0 md:border-l border-gray-200">
+                  <h4 className="font-medium text-center mb-4 text-lg text-gray-800">Notación de Kendall</h4>
+                  <div className="font-mono text-center bg-white py-3 px-4 rounded-lg border border-gray-300 mb-5 text-xl shadow-sm">
                     A/S/c/K/N/D
                   </div>
-                  <ul className="text-sm space-y-1 text-gray-600">
-                    <li><span className="font-medium">A</span>: Distribución de llegadas</li>
-                    <li><span className="font-medium">S</span>: Distribución de servicio</li>
-                    <li><span className="font-medium">c</span>: Número de servidores</li>
-                    <li><span className="font-medium">K</span>: Capacidad del sistema</li>
-                    <li><span className="font-medium">N</span>: Tamaño de la población</li>
-                    <li><span className="font-medium">D</span>: Disciplina de la cola</li>
+                  <ul className="space-y-2 text-gray-700">
+                    <li className="flex"><span className="font-medium w-8">A:</span> Distribución de llegadas</li>
+                    <li className="flex"><span className="font-medium w-8">S:</span> Distribución de servicio</li>
+                    <li className="flex"><span className="font-medium w-8">c:</span> Número de servidores</li>
+                    <li className="flex"><span className="font-medium w-8">K:</span> Capacidad del sistema</li>
+                    <li className="flex"><span className="font-medium w-8">N:</span> Tamaño de la población</li>
+                    <li className="flex"><span className="font-medium w-8">D:</span> Disciplina de la cola</li>
                   </ul>
                 </div>
               </div>
             </div>
           </section>
-          
-          {/* Application section */}
-          <section className="mb-16">
-            <div 
-              className="flex items-center cursor-pointer mb-6"
+
+          {/* Sección de Aplicaciones */}
+          <section className="mb-16 max-w-6xl mx-auto">
+            <div
+              className="flex items-center justify-between cursor-pointer mb-6 bg-white px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
               onClick={() => toggleSection('applications')}
             >
               <h2 className="text-2xl font-semibold text-gray-800">
                 Aplicaciones Prácticas
               </h2>
               <svg
-                className={`w-5 h-5 ml-2 transition-transform duration-200 text-gray-600 ${
-                  expandedSection === 'applications' ? 'transform rotate-180' : ''
-                }`}
+                className={`w-6 h-6 text-gray-600 transition-transform duration-200 ${expandedSection === 'applications' ? 'transform rotate-180' : ''
+                  }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -372,38 +398,38 @@ export default function Homepage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
             </div>
-            
-            <div 
+
+            <div
               className={`
                 overflow-hidden transition-all duration-500 ease-in-out
                 ${expandedSection === 'applications' || expandedSection === null ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
               `}
             >
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 flex flex-col">
-                  <div className="bg-primary-50 p-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 flex flex-col h-full">
+                  <div className="bg-primary-50 p-4 border-b border-primary-100">
                     <h3 className="text-lg font-medium text-primary-900">Centros de Contacto</h3>
                   </div>
-                  <div className="p-4 flex-grow">
-                    <p className="text-gray-600 text-sm">Optimización de personal y estimación de tiempos de espera para mejorar la satisfacción del cliente.</p>
+                  <div className="p-5 flex-grow">
+                    <p className="text-gray-700">Optimización de personal y estimación de tiempos de espera para mejorar la satisfacción del cliente.</p>
                   </div>
                 </div>
-                
-                <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 flex flex-col">
-                  <div className="bg-primary-50 p-4">
+
+                <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 flex flex-col h-full">
+                  <div className="bg-primary-50 p-4 border-b border-primary-100">
                     <h3 className="text-lg font-medium text-primary-900">Redes Informáticas</h3>
                   </div>
-                  <div className="p-4 flex-grow">
-                    <p className="text-gray-600 text-sm">Análisis de congestión, rendimiento de servidores y planificación de capacidad para redes.</p>
+                  <div className="p-5 flex-grow">
+                    <p className="text-gray-700">Análisis de congestión, rendimiento de servidores y planificación de capacidad para redes.</p>
                   </div>
                 </div>
-                
-                <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 flex flex-col">
-                  <div className="bg-primary-50 p-4">
+
+                <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 flex flex-col h-full">
+                  <div className="bg-primary-50 p-4 border-b border-primary-100">
                     <h3 className="text-lg font-medium text-primary-900">Servicios de Salud</h3>
                   </div>
-                  <div className="p-4 flex-grow">
-                    <p className="text-gray-600 text-sm">Gestión de pacientes en salas de emergencia, asignación de camas y programación de citas.</p>
+                  <div className="p-5 flex-grow">
+                    <p className="text-gray-700">Gestión de pacientes en salas de emergencia, asignación de camas y programación de citas.</p>
                   </div>
                 </div>
               </div>
@@ -411,6 +437,7 @@ export default function Homepage() {
           </section>
         </main>
       </div>
+      <Footer />
     </div>
   );
 }

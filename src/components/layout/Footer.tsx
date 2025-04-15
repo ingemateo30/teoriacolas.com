@@ -36,7 +36,7 @@ export default function Footer() {
                 QueueSim
               </span>
               <div className="ml-3 text-xs px-2 py-1 bg-primary-100 text-primary-800 rounded-full">
-                v2.5
+                v1.0
               </div>
             </div>
             <p className="mt-2 text-sm text-gray-600 max-w-md text-center md:text-left">
