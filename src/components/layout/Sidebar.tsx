@@ -6,9 +6,9 @@ import { useState, useEffect } from 'react';
 import React from 'react';
 
 /**
- * Componente Sidebar
+ * Componente Sidebar con Modo Oscuro
  * 
- * Un sidebar elegante y responsivo que se integra con el Navbar
+ * Un sidebar elegante y responsivo que se integra con el Navbar en modo oscuro
  * con animaciones fluidas y feedback visual para mejorar la experiencia de usuario.
  */
 export default function Sidebar() {
@@ -90,7 +90,7 @@ export default function Sidebar() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
         </svg>
       ),
-      href: "/laboratory",
+      href: "/calculator",
     },
   ];
 
@@ -110,19 +110,19 @@ export default function Sidebar() {
 
   return (
     <aside className={`
-      hidden lg:block w-64 bg-white 
-      border-r border-gray-200 h-screen pt-16 sticky top-0 
+      hidden lg:block w-64 bg-gray-900 
+      border-r border-gray-700 h-screen pt-16 sticky top-0 
       transition-all duration-300 ease-in-out
       ${isCollapsed ? "lg:w-20" : "lg:w-64"}
     `}>
       {/* Botón de colapsar sidebar */}
       <button 
-        className="absolute -right-3 top-20 bg-white rounded-full p-1 shadow-md hover:shadow-lg transition-shadow duration-300 z-10"
+        className="absolute -right-3 top-20 bg-gray-800 text-gray-300 rounded-full p-1 shadow-md hover:shadow-lg transition-shadow duration-300 z-10"
         onClick={() => setIsCollapsed(!isCollapsed)}
         aria-label={isCollapsed ? "Expandir sidebar" : "Colapsar sidebar"}
       >
         <svg 
-          className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`} 
+          className={`w-4 h-4 transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`} 
           fill="none" 
           stroke="currentColor" 
           viewBox="0 0 24 24" 
@@ -133,8 +133,6 @@ export default function Sidebar() {
       </button>
 
       <div className="h-full px-3 py-4 overflow-y-auto">
-        {/* Título del sidebar con animación de gradiente */}
-  
         {/* Lista de menú */}
         <ul className="space-y-2">
           {menuItems.map((item, index) => (
@@ -149,10 +147,10 @@ export default function Sidebar() {
                       flex items-center w-full p-2 text-base font-normal 
                       rounded-lg transition duration-200 
                       ${isActive(item.href) 
-                        ? "bg-blue-50 text-blue-600 shadow-sm" 
+                        ? "bg-gray-800 text-blue-400 shadow-sm" 
                         : hoveredItem === item.title
-                          ? "text-blue-500 bg-gray-100"
-                          : "text-gray-700 hover:bg-gray-100"
+                          ? "text-blue-300 bg-gray-800"
+                          : "text-gray-300 hover:bg-gray-800"
                       }
                       ${isCollapsed ? "justify-center" : "justify-between"}
                     `}
@@ -161,9 +159,9 @@ export default function Sidebar() {
                   >
                     <div className="flex items-center">
                       <div className={`
-                        ${isActive(item.href) ? "text-blue-600" : "text-gray-500"}
+                        ${isActive(item.href) ? "text-blue-400" : "text-gray-400"}
                         transition-colors duration-200
-                        ${hoveredItem === item.title ? "text-blue-600" : ""}
+                        ${hoveredItem === item.title ? "text-blue-300" : ""}
                       `}>
                         {item.icon}
                       </div>
@@ -208,8 +206,8 @@ export default function Sidebar() {
                               group flex flex-col w-full p-2 pl-10 text-sm font-normal 
                               rounded-lg transition-all duration-200
                               ${isActive(subItem.href)
-                                ? "bg-blue-50 text-blue-600 shadow-sm"
-                                : "text-gray-700 hover:bg-gray-50 hover:text-blue-500"}
+                                ? "bg-gray-800 text-blue-400 shadow-sm"
+                                : "text-gray-300 hover:bg-gray-800 hover:text-blue-300"}
                             `}
                             title={subItem.description}
                           >
@@ -217,7 +215,7 @@ export default function Sidebar() {
                             {/* Mini descripción con animación de aparición */}
                             {subItem.description && (
                               <span className="
-                                text-xs text-gray-500 mt-1 truncate max-w-full
+                                text-xs text-gray-400 mt-1 truncate max-w-full
                                 opacity-0 group-hover:opacity-100 transition-opacity duration-300
                               ">
                                 {subItem.description}
@@ -236,17 +234,17 @@ export default function Sidebar() {
                     flex items-center p-2 text-base font-normal rounded-lg 
                     transition-all duration-200
                     ${isActive(item.href)
-                      ? "bg-blue-50 text-blue-600 shadow-sm"
-                      : "text-gray-700 hover:bg-gray-100 hover:text-blue-500"}
+                      ? "bg-gray-800 text-blue-400 shadow-sm"
+                      : "text-gray-300 hover:bg-gray-800 hover:text-blue-300"}
                     ${isCollapsed ? "justify-center" : ""}
                   `}
                   onMouseEnter={() => handleItemHover(item.title)}
                   onMouseLeave={() => handleItemHover(null)}
                 >
                   <div className={`
-                    ${isActive(item.href) ? "text-blue-600" : "text-gray-500"}
+                    ${isActive(item.href) ? "text-blue-400" : "text-gray-400"}
                     transition-colors duration-200
-                    ${hoveredItem === item.title ? "text-blue-600" : ""}
+                    ${hoveredItem === item.title ? "text-blue-300" : ""}
                   `}>
                     {item.icon}
                   </div>
@@ -264,11 +262,11 @@ export default function Sidebar() {
         
         {/* Pie del sidebar - Información educativa */}
         <div className={`
-          mt-10 pt-4 border-t border-gray-200 text-xs text-gray-500
+          mt-10 pt-4 border-t border-gray-700 text-xs text-gray-400
           transition-opacity duration-300
           ${isCollapsed ? "opacity-0 hidden" : "opacity-80"}
         `}>
-          <h4 className="font-medium mb-2 text-blue-600">Notación de Kendall</h4>
+          <h4 className="font-medium mb-2 text-blue-400">Notación de Kendall</h4>
           <p className="mb-1">A/S/c/K/N/D donde:</p>
           <ul className="space-y-1 pl-2">
             <li><span className="font-medium">A</span>: Distribución de llegadas</li>
