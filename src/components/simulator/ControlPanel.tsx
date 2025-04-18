@@ -6,16 +6,14 @@ import { useMetrics } from '@/hooks/useMetrics';
 import { Button } from '@/components/ui/Button';
 import { Slider } from '@/components/ui/Slider';
 import { Select } from '@/components/ui/Select';
-import { SimulationControls } from './SimulationControls';
+import SimulationControls  from './SimulationControls';
 import {
   getModelDefaultParams,
   getModelParamLimits,
   validateModelParams
 } from '@/lib/simulation/utils/validation';
 import {
-  SimulationParams,
-  QueueModel,
-  DistributionType,
+  SimulationParameters
 } from '@/types/simulation';
 
 interface ControlPanelProps {

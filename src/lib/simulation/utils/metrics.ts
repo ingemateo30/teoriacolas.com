@@ -1,116 +1,225 @@
+import { SimulationEntity, QueueMetrics, SimulationParameters } from '@/types/simulation';
 
-// lib/simulation/utils/metrics.ts
-
-interface QueueMetrics {
-    utilization: number;
-    avgQueueLength: number;
-    avgWaitTime: number;
-    avgSystemCustomers: number;
-    probabilityWait: number;
-    L: number;
-    Lq: number;
-  }
+export function calculateMetrics(
+  entities: SimulationEntity[],
+  currentTime: number,
+  params: SimulationParameters
+): QueueMetrics {
+  // Contar entidades por estado
+  const waiting = entities.filter(e => e.status === 'waiting').length;
+  const processing = entities.filter(e => e.status === 'processing').length;
   
-  interface UtilizationParams {
-    arrivalRate: number;    // λ - Tasa de llegadas
-    serviceRate: number;    // μ - Tasa de servicio
-    servers?: number;       // s - Número de servidores (opcional)
-  }
+  // Calcular tiempos de espera y sistema para entidades en proceso
+  let totalWaitingTime = 0;
+  let totalSystemTime = 0;
+  let completedCount = 0;
   
-  interface QueueMetricsParams extends UtilizationParams {
-    queueCapacity?: number; // K - Capacidad máxima del sistema
-  }
-  
-  /**
-   * Calcula la utilización del sistema (ρ)
-   * @param params Parámetros del sistema de colas
-   * @returns Utilización del sistema (0 a 1)
-   */
-  export function calculateUtilization(params: UtilizationParams): number {
-    const { arrivalRate, serviceRate, servers = 1 } = params;
-    
-    // Validaciones básicas
-    if (arrivalRate < 0 || serviceRate < 0) {
-      throw new Error('Las tasas deben ser valores positivos');
-    }
-  
-    const utilization = arrivalRate / (servers * serviceRate);
-  
-    if (utilization > 1) {
-      throw new Error('El sistema es inestable (ρ > 1). Aumente los servidores o la tasa de servicio.');
-    }
-  
-    return utilization;
-  }
-  
-  /**
-   * Calcula métricas clave para diferentes modelos de colas
-   * @param params Parámetros del sistema
-   * @returns Objeto con métricas calculadas
-   */
-  export function calculateQueueMetrics(params: QueueMetricsParams): QueueMetrics {
-    const { arrivalRate, serviceRate, servers = 1, queueCapacity } = params;
-    const utilization = calculateUtilization(params);
-    
-    // Validar parámetros
-    if (servers < 1 || !Number.isInteger(servers)) {
-      throw new Error('El número de servidores debe ser un entero positivo');
-    }
-  
-    let metrics: Partial<QueueMetrics> = { utilization };
-  
-    // Modelo M/M/1
-    if (servers === 1 && !queueCapacity) {
-      metrics.avgQueueLength = (arrivalRate ** 2) / (serviceRate * (serviceRate - arrivalRate));
-      metrics.avgWaitTime = metrics.avgQueueLength / arrivalRate;
-      metrics.avgSystemCustomers = arrivalRate / (serviceRate - arrivalRate);
-      metrics.probabilityWait = utilization;
-    }
-    // Modelo M/M/s
-    else if (servers > 1 && !queueCapacity) {
-      const factorial = (n: number): number => n <= 1 ? 1 : n * factorial(n - 1);
-      const rho = utilization;
-      const p0 = 1 / (([...Array(servers).keys()]
-        .reduce((sum, k) => sum + (arrivalRate/serviceRate) ** k / factorial(k), 0) +
-        (arrivalRate/serviceRate) ** servers / (factorial(servers) * (1 - rho))));
-  
-      metrics.avgQueueLength = (p0 * (arrivalRate/serviceRate) ** servers * rho) / 
-        (factorial(servers) * (1 - rho) ** 2);
-      metrics.avgWaitTime = metrics.avgQueueLength / arrivalRate;
-      metrics.avgSystemCustomers = metrics.avgQueueLength + arrivalRate / serviceRate;
-      metrics.probabilityWait = (p0 * (arrivalRate/serviceRate) ** servers) / 
-        (factorial(servers) * (1 - rho));
-    }
-    // Modelo M/M/1/K
-    else if (queueCapacity) {
-      const K = queueCapacity;
-      const rho = utilization;
+  // Para entidades procesadas completamente (que tienen todos los tiempos)
+  entities.forEach(entity => {
+    if (entity.status === 'processing' && entity.serviceStartTime) {
+      // Entidades que están siendo atendidas
+      const waitTime = entity.serviceStartTime - entity.arrivalTime;
+      totalWaitingTime += waitTime;
       
-      if (rho === 1) {
-        metrics.avgQueueLength = K * (K - 1) / (2 * (K + 1));
-        metrics.avgSystemCustomers = K / 2;
-      } else {
-        metrics.avgQueueLength = rho / (1 - rho) - 
-          ((K + 1) * rho ** (K + 1)) / (1 - rho ** (K + 1));
-        metrics.avgSystemCustomers = metrics.avgQueueLength + rho;
+      // Para el tiempo de sistema, usamos el tiempo actual como referencia
+      const systemTime = currentTime - entity.arrivalTime;
+      totalSystemTime += systemTime;
+      completedCount++;
+    } else if (entity.status === 'waiting') {
+      // Para entidades en espera, el tiempo de espera es hasta ahora
+      const waitTime = currentTime - entity.arrivalTime;
+      totalWaitingTime += waitTime;
+      totalSystemTime += waitTime; // Aún no tienen tiempo de servicio
+    }
+  });
+  
+  // Calcular promedios
+  const avgWaitingTime = completedCount > 0 ? totalWaitingTime / entities.length : 0;
+  const avgSystemTime = completedCount > 0 ? totalSystemTime / entities.length : 0;
+  
+  // Calcular utilización de servidores
+  const serverUtilization = params.servers > 0 ? processing / params.servers : 0;
+  
+  // Calcular throughput (tasa de salida)
+  // En estado estable, debería acercarse a la tasa de llegada si el sistema es estable
+  const throughput = currentTime > 0 ? completedCount / currentTime : 0;
+  
+  // Tamaño medio de la cola
+  const avgQueueLength = waiting;
+  
+  // Crear histogramas para distribuciones
+  const waitingTimeDistribution = entities
+    .filter(e => e.serviceStartTime)
+    .map(e => e.serviceStartTime! - e.arrivalTime);
+  
+  const systemTimeDistribution = entities
+    .filter(e => e.departureTime)
+    .map(e => e.departureTime! - e.arrivalTime);
+  
+  return {
+    avgWaitingTime,
+    avgSystemTime,
+    avgQueueLength,
+    serverUtilization,
+    throughput,
+    waitingTimeDistribution,
+    systemTimeDistribution
+  };
+}
+
+// Función para calcular métricas teóricas según el modelo seleccionado
+export function calculateTheoreticalMetrics(params: SimulationParameters): QueueMetrics {
+  const { model, arrivalRate, serviceRate, servers, capacity } = params;
+  
+  // Factor de utilización del sistema
+  const rho = arrivalRate / (serviceRate * servers);
+  
+  let avgWaitingTime = 0;
+  let avgSystemTime = 0;
+  let avgQueueLength = 0;
+  let serverUtilization = 0;
+  let throughput = 0;
+  
+  switch (model) {
+    case 'MM1': {
+      // M/M/1 model formulas
+      serverUtilization = rho;
+      avgQueueLength = rho * rho / (1 - rho);
+      avgWaitingTime = avgQueueLength / arrivalRate;
+      avgSystemTime = avgWaitingTime + 1 / serviceRate;
+      throughput = arrivalRate;
+      break;
+    }
+    case 'MMC': {
+      // M/M/c model formulas (aproximación)
+      serverUtilization = rho;
+      
+      // Probabilidad de que todos los servidores estén ocupados (fórmula de Erlang-C)
+      const p0 = calculateErlangCP0(arrivalRate, serviceRate, servers);
+      const erlangC = calculateErlangC(arrivalRate, serviceRate, servers, p0);
+      
+      avgWaitingTime = erlangC / (servers * serviceRate - arrivalRate);
+      avgSystemTime = avgWaitingTime + 1 / serviceRate;
+      avgQueueLength = arrivalRate * avgWaitingTime;
+      throughput = arrivalRate;
+      break;
+    }
+    case 'MMCK': {
+      // M/M/c/K model (capacidad limitada)
+      // Implementación básica, se puede mejorar con fórmulas más precisas
+      if (capacity === -1) { // Infinito
+        return calculateTheoreticalMetrics({...params, model: 'MMC'});
       }
       
-      metrics.avgWaitTime = metrics.avgQueueLength / (arrivalRate * (1 - (rho ** K)));
-      metrics.probabilityWait = 1 - (1 - rho) / (1 - rho ** (K + 1));
+      // Factor de carga
+      const a = arrivalRate / serviceRate;
+      
+      // Probabilidades de estado
+      const p = calculateMMCKProbabilities(a, servers, capacity);
+      
+      // Cálculo de métricas
+      let L = 0; // Número esperado en el sistema
+      for (let n = 0; n <= capacity; n++) {
+        L += n * p[n];
+      }
+      
+      // Probabilidad de rechazo (sistema lleno)
+      const pK = p[capacity];
+      
+      // Tasa efectiva de llegada
+      const lambdaEff = arrivalRate * (1 - pK);
+      
+      serverUtilization = (lambdaEff / serviceRate) / servers;
+      avgQueueLength = L - (1 - p[0]) * servers;
+      avgSystemTime = L / lambdaEff;
+      avgWaitingTime = avgSystemTime - 1 / serviceRate;
+      throughput = lambdaEff;
+      break;
     }
-  
-    return metrics as QueueMetrics;
+    case 'MG1':
+    case 'GM1':
+    case 'GG1':
+      // Estos modelos requieren más información sobre las distribuciones
+      // Para una aproximación simple, utilizamos fórmulas de M/G/1 aproximado
+      serverUtilization = rho;
+      
+      // Asumimos un coeficiente de variación para las distribuciones
+      const cv = 1.0; // 1.0 para exponencial, puede ser diferente
+      
+      avgWaitingTime = (rho * (1 + cv * cv) / (2 * (1 - rho))) / serviceRate;
+      avgSystemTime = avgWaitingTime + 1 / serviceRate;
+      avgQueueLength = arrivalRate * avgWaitingTime;
+      throughput = arrivalRate;
+      break;
   }
   
-  // Funciones auxiliares para modelos específicos
-  export function mm1Metrics(params: Omit<QueueMetricsParams, 'servers' | 'queueCapacity'>): QueueMetrics {
-    return calculateQueueMetrics({ ...params, servers: 1 });
+  return {
+    avgWaitingTime,
+    avgSystemTime,
+    avgQueueLength,
+    serverUtilization,
+    throughput
+  };
+}
+
+// Funciones auxiliares para cálculos específicos
+
+// Calcula P0 para la fórmula de Erlang-C
+function calculateErlangCP0(arrivalRate: number, serviceRate: number, servers: number): number {
+  const a = arrivalRate / serviceRate;
+  let sum = 0;
+  
+  // Suma para n de 0 a c-1
+  for (let n = 0; n < servers; n++) {
+    sum += Math.pow(a, n) / factorial(n);
   }
   
-  export function mmcMetrics(params: Omit<QueueMetricsParams, 'queueCapacity'>): QueueMetrics {
-    return calculateQueueMetrics(params);
+  // Término para n = c
+  sum += Math.pow(a, servers) / (factorial(servers) * (1 - a / servers));
+  
+  return 1 / sum;
+}
+
+// Calcula la fórmula de Erlang-C
+function calculateErlangC(arrivalRate: number, serviceRate: number, servers: number, p0: number): number {
+  const a = arrivalRate / serviceRate;
+  const numerator = Math.pow(a, servers) * p0;
+  const denominator = factorial(servers) * Math.pow(1 - a / servers, 2);
+  
+  return numerator / denominator;
+}
+
+// Calcula probabilidades para el modelo M/M/c/K
+function calculateMMCKProbabilities(a: number, c: number, k: number): number[] {
+  const p: number[] = [];
+  let sum = 0;
+  
+  // Calcular probabilidades para n = 0 a n = c
+  for (let n = 0; n <= c; n++) {
+    p[n] = Math.pow(a, n) / factorial(n);
+    sum += p[n];
   }
   
-  export function mm1kMetrics(params: QueueMetricsParams & { queueCapacity: number }): QueueMetrics {
-    return calculateQueueMetrics(params);
+  // Calcular probabilidades para n = c+1 a n = k
+  for (let n = c + 1; n <= k; n++) {
+    p[n] = Math.pow(a, n) / (factorial(c) * Math.pow(c, n - c));
+    sum += p[n];
   }
+  
+  // Normalizar
+  for (let n = 0; n <= k; n++) {
+    p[n] /= sum;
+  }
+  
+  return p;
+}
+
+// Función factorial
+function factorial(n: number): number {
+  if (n === 0 || n === 1) return 1;
+  let result = 1;
+  for (let i = 2; i <= n; i++) {
+    result *= i;
+  }
+  return result;
+}

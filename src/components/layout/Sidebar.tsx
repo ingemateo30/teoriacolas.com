@@ -49,13 +49,13 @@ export default function Sidebar() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
         </svg>
       ),
-      href: "/models",
+      href: "/simulator",
       submenu: [
-        { title: "M/M/1", href: "/models/mm1", description: "Cola con llegadas y servicios exponenciales, 1 servidor" },
-        { title: "M/M/c", href: "/models/mmc", description: "Cola con llegadas y servicios exponenciales, c servidores" },
-        { title: "M/M/c/K", href: "/models/mmck", description: "Cola con capacidad limitada K" },
-        { title: "M/G/1", href: "/models/mg1", description: "Cola con distribución de servicio general" },
-        { title: "Redes de Colas", href: "/models/networks", description: "Sistemas interconectados de colas" },
+        { title: "M/M/1", href: "/simulator/mm1", description: "Cola con llegadas y servicios exponenciales, 1 servidor" },
+        { title: "M/M/c", href: "/simulator/mmc", description: "Cola con llegadas y servicios exponenciales, c servidores" },
+        { title: "M/M/c/K", href: "/simulator/mmck", description: "Cola con capacidad limitada K" },
+        { title: "M/G/1", href: "/simulator/mg1", description: "Cola con distribución de servicio general" },
+        { title: "Redes de Colas", href: "/simulator/networks", description: "Sistemas interconectados de colas" },
       ],
     },
     {
@@ -267,10 +267,10 @@ export default function Sidebar() {
           ${isCollapsed ? "opacity-0 hidden" : "opacity-80"}
         `}>
           <h4 className="font-medium mb-2 text-blue-400">Notación de Kendall</h4>
-          <p className="mb-1">A/S/c/K/N/D donde:</p>
+          <p className="mb-1">A/B/c/K/N/D donde:</p>
           <ul className="space-y-1 pl-2">
             <li><span className="font-medium">A</span>: Distribución de llegadas</li>
-            <li><span className="font-medium">S</span>: Distribución de servicio</li>
+            <li><span className="font-medium">B</span>: Distribución de servicio</li>
             <li><span className="font-medium">c</span>: Número de servidores</li>
             <li><span className="font-medium">K</span>: Capacidad del sistema</li>
             <li><span className="font-medium">N</span>: Tamaño de la población</li>

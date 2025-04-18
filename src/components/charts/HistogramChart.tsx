@@ -1,81 +1,141 @@
-import { useEffect, useRef } from 'react';
+'use client';
+
+import React, { useMemo } from 'react';
+import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface HistogramChartProps {
   data: number[];
   bins?: number;
-  width?: number;
+  color?: string;
+  xLabel?: string;
+  yLabel?: string;
   height?: number;
 }
 
-export const HistogramChart = ({
+/**
+ * Componente HistogramChart con Modo Oscuro
+ * 
+ * Muestra distribuciones de datos mediante histogramas interactivos
+ * Usa una paleta de colores optimizada para modo oscuro
+ * Compatible con el tema oscuro general de la aplicación
+ */
+const HistogramChart: React.FC<HistogramChartProps> = ({
   data,
-  bins = 8,
-  width = 300,
-  height = 200
-}: HistogramChartProps) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  
-  useEffect(() => {
-    if (!canvasRef.current || data.length === 0) return;
-    
-    const ctx = canvasRef.current.getContext('2d');
-    if (!ctx) return;
-    
-    // Limpiar el canvas
-    ctx.clearRect(0, 0, width, height);
-    
-    // Calcular histograma
+  bins = 10,
+  color = '#60a5fa', // Color azul más adaptado al tema oscuro
+  xLabel,
+  yLabel,
+  height = 300,
+}) => {
+  // Generar datos del histograma
+  const histogramData = useMemo(() => {
+    if (!data || data.length === 0) return [];
+    // Encontrar min y max para los límites
     const min = Math.min(...data);
     const max = Math.max(...data);
-    const range = max - min;
-    const binWidth = range / bins;
-    
-    const histogram = Array(bins).fill(0);
-    
-    data.forEach(value => {
-      const binIndex = Math.min(bins - 1, Math.floor((value - min) / binWidth));
-      histogram[binIndex]++;
-    });
-    
-    const maxFreq = Math.max(...histogram);
-    
-    // Dibujar barras
-    const barWidth = (width - 50) / bins;
-    
-    histogram.forEach((freq, i) => {
-      const x = 40 + i * barWidth;
-      const barHeight = (freq / maxFreq) * (height - 40);
-      const y = height - 20 - barHeight;
-      
-      ctx.fillStyle = '#0070f3';
-      ctx.fillRect(x, y, barWidth - 2, barHeight);
-      
-      // Etiqueta del bin
+   
+    // Crear bins
+    const binWidth = (max - min) / bins;
+    const histBins = Array(bins).fill(0).map((_, i) => {
       const binStart = min + i * binWidth;
-      ctx.fillStyle = '#333';
-      ctx.font = '10px Arial';
-      ctx.fillText(binStart.toFixed(1), x, height - 5);
+      const binEnd = binStart + binWidth;
+      return {
+        binStart,
+        binEnd,
+        label: `${binStart.toFixed(2)}-${binEnd.toFixed(2)}`,
+        count: 0,
+        x: (binStart + binEnd) / 2,
+      };
     });
-    
-    // Etiquetas de los ejes
-    ctx.fillStyle = '#333';
-    ctx.font = '12px Arial';
-    ctx.fillText('Valor', width / 2, height);
-    ctx.save();
-    ctx.translate(15, height / 2);
-    ctx.rotate(-Math.PI / 2);
-    ctx.fillText('Frecuencia', 0, 0);
-    ctx.restore();
-    
-  }, [data, bins, width, height]);
-  
+   
+    // Contar valores en cada bin
+    data.forEach(value => {
+      const binIndex = Math.min(Math.floor((value - min) / binWidth), bins - 1);
+      if (binIndex >= 0) {
+        histBins[binIndex].count++;
+      }
+    });
+   
+    return histBins;
+  }, [data, bins]);
+ 
+  // Formatear valores del eje según sea necesario
+  const formatXAxis = (value: any) => {
+    return Number(value).toFixed(2);
+  };
+
+  // Colores personalizados para el tema oscuro
+  const darkThemeColors = {
+    grid: '#374151', // gris más oscuro para la cuadrícula
+    text: '#d1d5db', // texto claro
+    background: '#1f2937', // fondo oscuro
+    tooltip: '#111827', // fondo del tooltip
+  };
+
+  // Si no hay datos, mostrar mensaje
+  if (!data || data.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-64 bg-gray-800 rounded-md border border-gray-700">
+        <p className="text-gray-400">No hay datos disponibles</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="histogram-chart">
-      <canvas
-        ref={canvasRef}
-        width={width}
-        height={height}
-      />
+    <div className="w-full bg-gray-900 p-4 rounded-lg border border-gray-800 shadow-md">
+      <ResponsiveContainer width="100%" height={height}>
+        <BarChart
+          data={histogramData}
+          margin={{
+            top: 10,
+            right: 30,
+            left: 20,
+            bottom: 30,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" stroke={darkThemeColors.grid} />
+          <XAxis
+            dataKey="x"
+            tickFormatter={formatXAxis}
+            stroke={darkThemeColors.text}
+            label={{ 
+              value: xLabel, 
+              position: 'insideBottomRight', 
+              offset: -10,
+              fill: darkThemeColors.text 
+            }}
+            tick={{ fill: darkThemeColors.text }}
+          />
+          <YAxis
+            stroke={darkThemeColors.text}
+            label={{ 
+              value: yLabel, 
+              angle: -90, 
+              position: 'insideLeft',
+              fill: darkThemeColors.text 
+            }}
+            tick={{ fill: darkThemeColors.text }}
+          />
+          <Tooltip
+            formatter={(value) => [`${value}`, 'Frecuencia']}
+            labelFormatter={(label) => `Rango: ${histogramData.find(item => item.x === label)?.label || ''}`}
+            contentStyle={{ 
+              backgroundColor: darkThemeColors.tooltip,
+              border: '1px solid #4b5563',
+              borderRadius: '0.375rem',
+              color: darkThemeColors.text
+            }}
+          />
+          <Bar 
+            dataKey="count" 
+            fill={color} 
+            radius={[4, 4, 0, 0]}
+            className="hover:opacity-80 transition-opacity"
+          />
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 };
+
+export default HistogramChart;

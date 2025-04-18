@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { Slider } from '@/components/ui/Slider';
 import FormulaDisplay from '@/components/educational/FormulaDisplay';
-import { MetricsDisplay } from '@/components/charts/MetricsDisplay';
 import PnDistributionChart from '@/components/calculator/PnDistributionChart';
 import { calculateQueueMetrics } from '@/lib/math/queueCalculations';
 

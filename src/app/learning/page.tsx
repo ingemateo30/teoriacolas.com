@@ -44,8 +44,8 @@ export default function LearningPage() {
               <button
                 onClick={() => setActiveTab('overview')}
                 className={`px-6 py-3 rounded-md font-medium transition-all duration-300 ${activeTab === 'overview'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700'
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700'
                   }`}
               >
                 Visión General
@@ -358,216 +358,120 @@ export default function LearningPage() {
 
           {/* Sección de Ruta de Aprendizaje */}
           <section className="mb-16 max-w-6xl mx-auto">
-            <div
-              className="flex items-center justify-between cursor-pointer mb-6 bg-gray-800 px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
-              onClick={() => toggleSection('path')}
-            >
-              <h2 className="text-2xl font-semibold text-gray-100">
-                Ruta de Aprendizaje
-              </h2>
-              <svg
-                className={`w-6 h-6 text-gray-400 transition-transform duration-200 ${expandedSection === 'path' ? 'transform rotate-180' : ''
-                  }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
+  <div
+    className="flex items-center justify-between cursor-pointer mb-6 bg-gray-800 px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
+    onClick={() => toggleSection('path')}
+  >
+    <h2 className="text-2xl font-semibold text-gray-100">
+      Ruta de Aprendizaje
+    </h2>
+    <svg
+      className={`w-6 h-6 text-gray-400 transition-transform duration-200 ${expandedSection === 'path' ? 'transform rotate-180' : ''}`}
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </div>
 
-            <div
-              className={`
-                overflow-hidden transition-all duration-500 ease-in-out
-                ${expandedSection === 'path' ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
-              `}
-            >
-              <div className="bg-gray-800 rounded-xl shadow-md overflow-hidden">
-                <div className="relative">
-                  {/* Línea vertical para conectar los elementos */}
-                  <div className="absolute left-8 top-0 bottom-0 w-1 bg-blue-900 z-0 ml-3 md:ml-6"></div>
-
-                  <div className="p-6 md:p-8">
-                    {/* Paso 1 */}
-                    <div className="flex mb-8 relative z-10">
-                      <div className="flex-shrink-0 w-16 h-16 md:w-16 md:h-16 rounded-full bg-blue-900 flex items-center justify-center mr-4 md:mr-8 border-4 border-gray-800">
-                        <span className="text-blue-100 font-bold text-xl">1</span>
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-medium text-gray-100 mb-2">Fundamentos</h3>
-                        <p className="text-gray-300 mb-3">
-                          Comience con los conceptos básicos de la teoría de colas, incluyendo:
-                        </p>
-                        <ul className="list-disc pl-5 text-gray-300 space-y-1">
-                          <li>Componentes de un sistema de colas</li>
-                          <li>Notación de Kendall</li>
-                          <li>Modelos básicos: M/M/1 y M/M/c</li>
-                          <li>Parámetros clave: λ, μ, ρ</li>
-                        </ul>
-                        <Link href="/learning/fundamentals" className="mt-4 inline-flex items-center text-blue-400 hover:text-blue-300 font-medium">
-                          Ir a Fundamentos
-                          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                          </svg>
-                        </Link>
-                      </div>
-                    </div>
-
-                    {/* Paso 2 */}
-                    <div className="flex mb-8 relative z-10">
-                      <div className="flex-shrink-0 w-16 h-16 md:w-16 md:h-16 rounded-full bg-blue-900 flex items-center justify-center mr-4 md:mr-8 border-4 border-gray-800">
-                        <span className="text-blue-100 font-bold text-xl">2</span>
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-medium text-gray-100 mb-2">Temas Avanzados</h3>
-                        <p className="text-gray-300 mb-3">
-                          Profundice con modelos y técnicas más complejos:
-                        </p>
-                        <ul className="list-disc pl-5 text-gray-300 space-y-1">
-                          <li>Modelos avanzados: M/G/1, M/M/c/K</li>
-                          <li>Redes de colas</li>
-                          <li>Optimización de sistemas</li>
-                          <li>Simulación Monte Carlo</li>
-                        </ul>
-                        <Link href="/learning/advanced" className="mt-4 inline-flex items-center text-blue-400 hover:text-blue-300 font-medium">
-                          Ir a Temas Avanzados
-                          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                          </svg>
-                        </Link>
-                      </div>
-                    </div>
-
-                    {/* Paso 3 */}
-                    <div className="flex relative z-10">
-                      <div className="flex-shrink-0 w-16 h-16 md:w-16 md:h-16 rounded-full bg-blue-900 flex items-center justify-center mr-4 md:mr-8 border-4 border-gray-800">
-                        <span className="text-blue-100 font-bold text-xl">3</span>
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-medium text-gray-100 mb-2">Aplicación Práctica</h3>
-                        <p className="text-gray-300 mb-3">
-                          Ponga en práctica sus conocimientos:
-                        </p>
-                        <ul className="list-disc pl-5 text-gray-300 space-y-1">
-                          <li>Simulador interactivo</li>
-                          <li>Estudios de casos prácticos</li>
-                          <li>Análisis de resultados</li>
-                          <li>Optimización de sistemas reales</li>
-                        </ul>
-                        <Link href="/simulator" className="mt-4 inline-flex items-center text-blue-400 hover:text-blue-300 font-medium">
-                          Ir al Simulador
-                          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                          </svg>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Sección de Recursos Adicionales */}
-          {/* Sección de Recursos Adicionales - Modo Oscuro */}
-          <section className="mb-16 max-w-6xl mx-auto">
-            <div
-              className="flex items-center justify-between cursor-pointer mb-6 bg-gray-800 px-4 py-3 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
-              onClick={() => toggleSection('resources')}
-            >
-              <h2 className="text-2xl font-semibold text-gray-100">
-                Recursos Adicionales
-              </h2>
-              <svg
-                className={`w-6 h-6 text-gray-300 transition-transform duration-200 ${expandedSection === 'resources' ? 'transform rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-
-            <div
-              className={`
-      overflow-hidden transition-all duration-500 ease-in-out
-      ${expandedSection === 'resources' ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
+  {/* Contenido de la sección */}
+  <div
+    className={`
+      transition-all duration-300 ease-in-out
+      ${expandedSection === 'path' 
+        ? 'max-h-full opacity-100 visible' 
+        : 'max-h-0 opacity-0 invisible overflow-hidden'}
     `}
-            >
-              <div className="bg-gray-800 rounded-xl shadow-md overflow-hidden">
-                <div className="p-6 md:p-8">
-                  <p className="text-gray-300 mb-6">
-                    Explore estos recursos adicionales para profundizar en la teoría de colas:
-                  </p>
+  >
+    <div className="bg-gray-800 rounded-xl shadow-md overflow-hidden">
+      <div className="relative">
+        {/* Línea vertical para conectar los elementos */}
+        <div className="absolute left-8 top-0 bottom-0 w-1 bg-blue-900 z-0 ml-3 md:ml-6"></div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* Recurso 1 */}
-                    <div className="bg-gray-900 border border-gray-700 rounded-lg shadow-sm p-5 hover:shadow-md transition-shadow duration-200">
-                      <div className="flex items-center mb-4">
-                        <div className="w-10 h-10 rounded-full bg-blue-900 flex items-center justify-center mr-3">
-                          <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                          </svg>
-                        </div>
-                        <h3 className="text-lg font-medium text-gray-100">Libros Recomendados</h3>
-                      </div>
-                      <ul className="space-y-2 text-gray-300">
-                        <li>"Fundamentos de Teoría de Colas" - Juan M. García</li>
-                        <li>"Queueing Theory: A Linear Algebraic Approach" - Lester Lipsky</li>
-                        <li>"Performance Modeling and Design of Computer Systems" - Mor Harchol-Balter</li>
-                      </ul>
-                    </div>
-
-                    {/* Recurso 2 */}
-                    <div className="bg-gray-900 border border-gray-700 rounded-lg shadow-sm p-5 hover:shadow-md transition-shadow duration-200">
-                      <div className="flex items-center mb-4">
-                        <div className="w-10 h-10 rounded-full bg-green-900 flex items-center justify-center mr-3">
-                          <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                          </svg>
-                        </div>
-                        <h3 className="text-lg font-medium text-gray-100">Recursos Online</h3>
-                      </div>
-                      <ul className="space-y-2 text-gray-300">
-                        <li>Curso "Teoría de Colas Aplicada" - Coursera</li>
-                        <li>Canal de YouTube "Optimización de Procesos"</li>
-                        <li>Foro de discusión "QueueTheory.org"</li>
-                        <li>Biblioteca de simulaciones interactivas</li>
-                      </ul>
-                    </div>
-
-                    {/* Recurso 3 */}
-                    <div className="bg-gray-900 border border-gray-700 rounded-lg shadow-sm p-5 hover:shadow-md transition-shadow duration-200">
-                      <div className="flex items-center mb-4">
-                        <div className="w-10 h-10 rounded-full bg-purple-900 flex items-center justify-center mr-3">
-                          <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                          </svg>
-                        </div>
-                        <h3 className="text-lg font-medium text-gray-100">Herramientas</h3>
-                      </div>
-                      <ul className="space-y-2 text-gray-300">
-                        <li>Calculadora de parámetros de colas</li>
-                        <li>Software de simulación "QueueSim Pro"</li>
-                        <li>Hojas de cálculo preconstruidas</li>
-                        <li>Biblioteca de módulos para Python</li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 p-5 bg-gray-700 rounded-lg border border-gray-600">
-                    <h4 className="text-lg font-medium text-blue-300 mb-2">Consejo del Instructor</h4>
-                    <p className="text-gray-300">
-                      "La mejor manera de dominar la teoría de colas es combinar el estudio teórico con la aplicación práctica.
-                      Comience con modelos simples y vaya aumentando gradualmente la complejidad a medida que se sienta cómodo con los conceptos fundamentales."
-                    </p>
-                  </div>
-                </div>
-              </div>
+        <div className="p-6 md:p-8">
+          {/* Paso 1 */}
+          <div className="flex mb-8 relative z-10">
+            <div className="flex-shrink-0 w-16 h-16 md:w-16 md:h-16 rounded-full bg-blue-900 flex items-center justify-center mr-4 md:mr-8 border-4 border-gray-800">
+              <span className="text-blue-100 font-bold text-xl">1</span>
             </div>
-          </section>
+            <div>
+              <h3 className="text-xl font-medium text-gray-100 mb-2">Fundamentos</h3>
+              <p className="text-gray-300 mb-3">
+                Comience con los conceptos básicos de la teoría de colas, incluyendo:
+              </p>
+              <ul className="list-disc pl-5 text-gray-300 space-y-1">
+                <li>Componentes de un sistema de colas</li>
+                <li>Notación de Kendall</li>
+                <li>Modelos básicos: M/M/1 y M/M/c</li>
+                <li>Parámetros clave: λ, μ, ρ</li>
+              </ul>
+              <Link href="/learning/fundamentals" className="mt-4 inline-flex items-center text-blue-400 hover:text-blue-300 font-medium">
+                Ir a Fundamentos
+                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+
+          {/* Paso 2 */}
+          <div className="flex mb-8 relative z-10">
+            <div className="flex-shrink-0 w-16 h-16 md:w-16 md:h-16 rounded-full bg-blue-900 flex items-center justify-center mr-4 md:mr-8 border-4 border-gray-800">
+              <span className="text-blue-100 font-bold text-xl">2</span>
+            </div>
+            <div>
+              <h3 className="text-xl font-medium text-gray-100 mb-2">Temas Avanzados</h3>
+              <p className="text-gray-300 mb-3">
+                Profundice con modelos y técnicas más complejos:
+              </p>
+              <ul className="list-disc pl-5 text-gray-300 space-y-1">
+                <li>Modelos avanzados: M/G/1, M/M/c/K</li>
+                <li>Redes de colas</li>
+                <li>Optimización de sistemas</li>
+                <li>Simulación Monte Carlo</li>
+              </ul>
+              <Link href="/learning/advanced" className="mt-4 inline-flex items-center text-blue-400 hover:text-blue-300 font-medium">
+                Ir a Temas Avanzados
+                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+
+          {/* Paso 3 */}
+          <div className="flex relative z-10">
+            <div className="flex-shrink-0 w-16 h-16 md:w-16 md:h-16 rounded-full bg-blue-900 flex items-center justify-center mr-4 md:mr-8 border-4 border-gray-800">
+              <span className="text-blue-100 font-bold text-xl">3</span>
+            </div>
+            <div>
+              <h3 className="text-xl font-medium text-gray-100 mb-2">Aplicación Práctica</h3>
+              <p className="text-gray-300 mb-3">
+                Ponga en práctica sus conocimientos:
+              </p>
+              <ul className="list-disc pl-5 text-gray-300 space-y-1">
+                <li>Simulador interactivo</li>
+                <li>Estudios de casos prácticos</li>
+                <li>Análisis de resultados</li>
+                <li>Optimización de sistemas reales</li>
+              </ul>
+              <Link href="/simulator" className="mt-4 inline-flex items-center text-blue-400 hover:text-blue-300 font-medium">
+                Ir al Simulador
+                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+          {/* Sección de Recursos Adicionales */}
+         
         </main>
       </div>
 

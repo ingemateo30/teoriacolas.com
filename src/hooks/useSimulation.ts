@@ -1,378 +1,282 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSimulationStore } from '@/store/simulationStore';
-import { 
-  SimulationState, 
-  Entity, 
-  SimulationParams, 
-  Event,
-  ModelType
-} from '@/types/simulation';
-import { 
-  generateExponentialTime, 
-  generateServiceTime 
-} from '@/lib/simulation/generators/random';
+import { SimulationParameters, SimulationEntity, SimulationState, QueueMetrics } from '@/types/simulation';
+import { generateExponential } from '@/lib/simulation/generators/exponential';
+import { generatePoisson } from '@/lib/simulation/generators/poisson';
+import { calculateMetrics } from '@/lib/simulation/utils/metrics';
 
-/*************  ✨ Windsurf Command ⭐  *************/
-/**
- * Custom hook for managing and running a simulation.
- * 
- * This hook provides functions to control a simulation, including starting,
- * pausing, resetting, and changing simulation speed. It also manages the
- * simulation state, including entities, event queue, and timing.
- * 
- * The simulation uses various distribution types to generate arrival and
- * service times, processes events such as arrivals and departures, and
- * updates the state accordingly.
- * 
- * Returned values include the current simulation state, list of entities,
- * and control functions.
- */
+export function useSimulation(initialParams: SimulationParameters) {
+  const {
+    simulationState,
+    setSimulationState,
+    setEntities,
+    setMetrics,
+    setCurrentTime,
+    resetSimulation
+  } = useSimulationStore();
+  
+  const [params, setParams] = useState<SimulationParameters>(initialParams);
+  const animationRef = useRef<number | null>(null);
+  const lastUpdateTimeRef = useRef<number>(0);
+  const entitiesRef = useRef<SimulationEntity[]>([]);
+  const eventsQueueRef = useRef<{ time: number; type: 'arrival' | 'departure'; entityId: number }[]>([]);
+  const idCounterRef = useRef<number>(0);
+  const metricsIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-/*******  f413e3ef-c546-4cb8-94ef-84131dea8f1f  *******/
-export function useSimulation() {
-  const simulationStore = useSimulationStore();
-  const [simulationInterval, setSimulationInterval] = useState<NodeJS.Timeout | null>(null);
-  const { setState } = simulationStore;
-  
-  
-  
-  // Función para obtener el tiempo para la próxima llegada basada en la distribución
-  const getNextArrivalTime = useCallback((currentTime: number, params: SimulationParams) => {
-    const { arrivalDistribution, arrivalRate } = params;
-    
-    switch (arrivalDistribution) {
-      case 'exponential':
-        return currentTime + generateExponentialTime(arrivalRate);
-      case 'constant':
-        return currentTime + (1 / arrivalRate);
-      case 'uniform':
-        // Tiempo aleatorio uniforme alrededor de la media (1/arrivalRate)
-        const mean = 1 / arrivalRate;
-        return currentTime + (Math.random() * mean * 2);
-      case 'normal':
-        // Aproximación de distribución normal
-        const stdDev = 0.3 / arrivalRate;
-        const u1 = Math.random();
-        const u2 = Math.random();
-        const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-        return currentTime + (1 / arrivalRate) + z * stdDev;
-      default:
-        return currentTime + generateExponentialTime(arrivalRate);
-    }
-  }, []);
-  
-  // Procesar eventos en la simulación
-  const processEvent = useCallback((event: Event) => {
-    const { 
-      currentTime, 
-      entities, 
-      eventQueue, 
-      params, 
-      serverCount, 
-      serversBusy, 
-      queueLength, 
-      queueCapacity 
-    } = simulationStore;
-    
-    switch (event.type) {
-      case 'arrival': {
-        // Crear nueva entidad
-        const newEntity: Entity = {
-          id: `entity-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
-          arrivalTime: currentTime,
-          status: 'arriving',
-          processingTime: 0,
-          waitingTime: 0,
-          serverId: null,
-          position: 0 // <--- Add this line
-        };
-        
-        // Programar la próxima llegada
-        eventQueue.push({
-          type: 'arrival',
-          time: getNextArrivalTime(currentTime, params),
-          entityId: null
-        });
-        
-        // Verificar si hay servidores disponibles
-        if (serversBusy < serverCount) {
-          // Asignar al primer servidor disponible
-          let serverId = 0;
-          while (serverId < serverCount) {
-            if (!entities.some(e => e.status === 'inService' && e.serverId === serverId)) {
-              break;
-            }
-            serverId++;
-          }
-          
-          // Establecer entidad en servicio
-          newEntity.status = 'inService';
-          newEntity.serverId = serverId;
-          
-          // Programar la salida de esta entidad
-          const serviceTime = generateServiceTime(params.serviceRate);
-          eventQueue.push({
-            type: 'departure',
-            time: currentTime + serviceTime,
-            entityId: newEntity.id,
-            serverId: serverId
-          });
-          
-          if (setState) {
-            setState({ 
-              entities: [...entities, newEntity],
-              serversBusy: serversBusy + 1,
-              simulationState: 'inProgress' // or whatever state you want to set
-            });
-          }
-        } else if (queueLength < queueCapacity) {
-          // Poner en cola si hay espacio
-          newEntity.status = 'queued';
-  setState?.({ 
-    entities: [...entities, newEntity],
-    queueLength: queueLength + 1
-          });
-        } else {
-          // Rechazar si no hay espacio en la cola
-          newEntity.status = 'rejected';
-          setState?.({ 
-            entities: [...entities, newEntity],
-            queueLength: queueLength + 1
-          });
-          // Las entidades rechazadas se eliminarán en el siguiente paso
-        }
-        break;
-      }
-      
-      case 'departure': {
-        // Encontrar la entidad que está dejando el servicio
-        const departingEntityIndex = entities.findIndex(e => e.id === event.entityId);
-        
-        if (departingEntityIndex !== -1) {
-          const departingEntity = { ...entities[departingEntityIndex] };
-          departingEntity.status = 'departed';
-          departingEntity.processingTime = currentTime - departingEntity.arrivalTime;
-          
-          // Liberar el servidor
-          const serverId = departingEntity.serverId;
-          
-          // Actualizar la lista de entidades
-          const updatedEntities = [...entities];
-          updatedEntities[departingEntityIndex] = departingEntity;
-          
-          // Verificar si hay entidades en la cola para asignar al servidor libre
-          const queuedEntityIndex = updatedEntities.findIndex(e => e.status === 'queued');
-          
-          if (queuedEntityIndex !== -1) {
-            // Mover la primera entidad en cola al servicio
-            const queuedEntity = { ...updatedEntities[queuedEntityIndex] };
-            queuedEntity.status = 'inService';
-            queuedEntity.serverId = serverId;
-            queuedEntity.waitingTime = currentTime - queuedEntity.arrivalTime;
-            
-            updatedEntities[queuedEntityIndex] = queuedEntity;
-            
-            // Programar la salida de esta entidad
-            const serviceTime = generateServiceTime(params.serviceRate);
-            eventQueue.push({
-              type: 'departure',
-              time: currentTime + serviceTime,
-              entityId: queuedEntity.id,
-              serverId: departingEntity.serverId ?? undefined
-            })
-            
-            setState?.({ 
-              entities: updatedEntities,
-              queueLength: queueLength - 1
-            });
-          } else {
-            // No hay entidades en la cola, solo liberar el servidor
-            setState?.({ 
-              entities: updatedEntities,
-              serversBusy: serversBusy - 1
-            });
-          }
-        }
-        break;
-      }
-      
-      default:
-        break;
-    }
-    
-    // Ordenar eventos por tiempo
-    const sortedEvents = [...eventQueue].sort((a, b) => a.time - b.time);
-    setState?.({ eventQueue: sortedEvents });
-    
-  }, [getNextArrivalTime]);
-  
-  // Ejecutar un paso de simulación
-  const runStep = useCallback(() => {
-    const { 
-      currentTime, 
-      eventQueue, 
-      entities, 
-      simulationState
-    } = simulationStore;
-    
-    if (simulationState !== 'running' || eventQueue.length === 0) {
-      return;
-    }
-    
-    // Obtener el próximo evento
-    const nextEvent = eventQueue[0];
-    
-    // Avanzar el tiempo
-    const newTime = nextEvent.time;
-    
-    // Eliminar eventos procesados
-    const newEventQueue = eventQueue.slice(1);
-    
-    // Actualizar estado de simulación
-    setState?.({ 
-      currentTime: newTime,
-      eventQueue: newEventQueue,
-      totalSteps: simulationStore.totalSteps + 1
-    });
-    
-    // Procesar el evento
-    processEvent(nextEvent);
-    
-    // Limpiar entidades que ya no están en el sistema
-    const currentEntities = entities.filter(e => 
-      e.status !== 'departed' && e.status !== 'rejected'
-    );
-    
-    setState?.({ entities: currentEntities });
-    
-  }, [processEvent]);
-  
-  // Iniciar la simulación
-  const startSimulation = useCallback(() => {
-    if (simulationStore.simulationState === 'running') {
-      return;
-    }
-    
-    // Si no hay eventos, programar la primera llegada
-    if (simulationStore.eventQueue.length === 0) {
-      const params = simulationStore.params;
-      const firstArrival = {
-        type: 'arrival' as const,
-        time: getNextArrivalTime(0, params),
-        entityId: null
-      };
-      
-      setState?.({ 
-        eventQueue: [firstArrival],
-        currentTime: 0,
-        totalSteps: 0,
-        entities: [],
-        serversBusy: 0,
-        queueLength: 0
-      });
-    }
-    
-    setState?.({ simulationState: 'running' });
-    
-    // Determinar el intervalo basado en la velocidad
-    const speed = simulationStore.simulationSpeed;
-    const interval = Math.max(50, 500 / speed);
-    
-    const intervalId = setInterval(() => {
-      runStep();
-    }, interval);
-    
-    setSimulationInterval(intervalId);
-  }, [getNextArrivalTime, runStep]);
-  
-  // Pausar la simulación
-  const pauseSimulation = useCallback(() => {
-    if (simulationInterval) {
-      clearInterval(simulationInterval);
-      setSimulationInterval(null);
-    }
-    setState?.({ simulationState: 'paused' });
-  }, [simulationInterval]);
-  
-  // Reiniciar la simulación
-  const resetSimulation = useCallback(() => {
-    if (simulationInterval) {
-      clearInterval(simulationInterval);
-      setSimulationInterval(null);
-    }
-    
-    setState?.({
-      simulationState: 'idle',
-      currentTime: 0,
-      totalSteps: 0,
-      entities: [],
-      eventQueue: [],
-      serversBusy: 0,
-      queueLength: 0
-    });
-  }, [simulationInterval]);
-  
-  // Cambiar velocidad de simulación
-  const changeSimulationSpeed = useCallback((speed: number) => {
-    setState?.({ simulationSpeed: speed });
-    
-    // Actualizar intervalo si la simulación está corriendo
-    if (simulationStore.simulationState === 'running' && simulationInterval) {
-      clearInterval(simulationInterval);
-      
-      const interval = Math.max(50, 500 / speed);
-      const newIntervalId = setInterval(() => {
-        runStep();
-      }, interval);
-      
-      setSimulationInterval(newIntervalId);
-    }
-  }, [runStep, simulationInterval]);
-  
-  // Actualizar parámetros de simulación
-  const updateParams = useCallback((newParams: SimulationParams) => {
-    setState?.({ params: newParams });
-    
-    // Actualizar contadores basados en los parámetros
-    setState?.({ 
-      serverCount: newParams.serverCount || 1,
-      queueCapacity: newParams.systemCapacity ? 
-        (newParams.systemCapacity - (newParams.serverCount || 1)) : 
-        Infinity
-    });
-  }, []);
-  
-  // Limpiar intervalo al desmontar
+  // Reset simulation when parameters change
+  useEffect(() => {
+    handleReset();
+  }, [params]);
+
+  // Clean up on unmount
   useEffect(() => {
     return () => {
-      if (simulationInterval) {
-        clearInterval(simulationInterval);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      if (metricsIntervalRef.current) {
+        clearInterval(metricsIntervalRef.current);
       }
     };
-  }, [simulationInterval]);
-  
-  // Obtener las entidades actuales en el sistema
-  const currentEntities = simulationStore.entities.filter(
-    e => e.status !== 'departed' && e.status !== 'rejected'
-  );
-  
+  }, []);
+
+  const scheduleArrival = () => {
+    const arrivalTime = params.arrivalDistribution === 'exponential'
+      ? generateExponential(params.arrivalRate)
+      : generatePoisson(params.arrivalRate);
+    
+    const newEntityId = idCounterRef.current++;
+    
+    eventsQueueRef.current.push({
+      time: simulationState.currentTime + arrivalTime,
+      type: 'arrival',
+      entityId: newEntityId
+    });
+    
+    // Keep events sorted by time
+    eventsQueueRef.current.sort((a, b) => a.time - b.time);
+  };
+
+  const scheduleDeparture = (entityId: number) => {
+    const serviceTime = params.serviceDistribution === 'exponential'
+      ? generateExponential(params.serviceRate)
+      : generatePoisson(params.serviceRate);
+    
+    eventsQueueRef.current.push({
+      time: simulationState.currentTime + serviceTime,
+      type: 'departure',
+      entityId
+    });
+    
+    // Keep events sorted by time
+    eventsQueueRef.current.sort((a, b) => a.time - b.time);
+  };
+
+  const processNextEvent = () => {
+    if (eventsQueueRef.current.length === 0) {
+      scheduleArrival(); // Always have at least one event
+      return;
+    }
+
+    const nextEvent = eventsQueueRef.current.shift();
+    if (!nextEvent) return;
+
+    // Update current time
+    setCurrentTime(nextEvent.time);
+
+    if (nextEvent.type === 'arrival') {
+      // Handle arrival event
+      const newEntity: SimulationEntity = {
+        id: nextEvent.entityId,
+        arrivalTime: nextEvent.time,
+        status: 'waiting',
+        position: { x: 0, y: 0 } // Initial position for animation
+      };
+
+      // Add to entities
+      const updatedEntities = [...entitiesRef.current, newEntity];
+      entitiesRef.current = updatedEntities;
+      setEntities(updatedEntities);
+
+      // Check if server is available (depends on model type)
+      const serversInUse = updatedEntities.filter(e => e.status === 'processing').length;
+      
+      if (serversInUse < params.servers) {
+        // Server available, start processing immediately
+        const entityToProcess = updatedEntities.find(e => e.id === newEntity.id);
+        if (entityToProcess) {
+          entityToProcess.status = 'processing';
+          entityToProcess.serviceStartTime = nextEvent.time;
+          scheduleDeparture(entityToProcess.id);
+        }
+      }
+
+      // Schedule next arrival
+      scheduleArrival();
+    } else if (nextEvent.type === 'departure') {
+      // Handle departure event
+      const entityIndex = entitiesRef.current.findIndex(e => e.id === nextEvent.entityId);
+      
+      if (entityIndex !== -1) {
+        // Remove the entity that finished service
+        const updatedEntities = [...entitiesRef.current];
+        updatedEntities.splice(entityIndex, 1);
+        entitiesRef.current = updatedEntities;
+        setEntities(updatedEntities);
+
+        // Find next entity to process if any in the queue
+        const waitingEntities = updatedEntities
+          .filter(e => e.status === 'waiting')
+          .sort((a, b) => a.arrivalTime - b.arrivalTime);
+        
+        if (waitingEntities.length > 0) {
+          const nextToProcess = waitingEntities[0];
+          nextToProcess.status = 'processing';
+          nextToProcess.serviceStartTime = nextEvent.time;
+          scheduleDeparture(nextToProcess.id);
+        }
+      }
+    }
+
+    // Update metrics after processing events
+    updateMetrics();
+  };
+
+  const updateMetrics = () => {
+    const currentEntities = entitiesRef.current;
+    const waiting = currentEntities.filter(e => e.status === 'waiting').length;
+    const processing = currentEntities.filter(e => e.status === 'processing').length;
+    
+    // Calculate waiting times, etc.
+    const metrics = calculateMetrics(
+      currentEntities,
+      simulationState.currentTime,
+      params
+    );
+    
+    setMetrics(metrics);
+  };
+
+  const handleStart = () => {
+    if (simulationState.state === 'running') return;
+    
+    setSimulationState('running');
+    
+    // Schedule initial arrivals if we're starting fresh
+    if (eventsQueueRef.current.length === 0) {
+      scheduleArrival();
+    }
+    
+    // Start animation loop
+    lastUpdateTimeRef.current = performance.now();
+    animationStep();
+    
+    // Set up metrics calculation interval
+    metricsIntervalRef.current = setInterval(updateMetrics, 1000);
+  };
+
+  const handlePause = () => {
+    if (simulationState.state !== 'running') return;
+    
+    setSimulationState('paused');
+    
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
+    
+    if (metricsIntervalRef.current) {
+      clearInterval(metricsIntervalRef.current);
+      metricsIntervalRef.current = null;
+    }
+  };
+
+  const handleReset = () => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
+    
+    if (metricsIntervalRef.current) {
+      clearInterval(metricsIntervalRef.current);
+      metricsIntervalRef.current = null;
+    }
+    
+    // Reset all refs and state
+    entitiesRef.current = [];
+    eventsQueueRef.current = [];
+    idCounterRef.current = 0;
+    lastUpdateTimeRef.current = 0;
+    
+    resetSimulation();
+  };
+
+  const animationStep = () => {
+    const now = performance.now();
+    const deltaTime = now - lastUpdateTimeRef.current;
+    lastUpdateTimeRef.current = now;
+    
+    // Process events based on simulation speed
+    const eventsToProcess = Math.max(1, Math.floor(params.speed * deltaTime / 1000));
+    
+    for (let i = 0; i < eventsToProcess; i++) {
+      if (simulationState.state === 'running') {
+        processNextEvent();
+      }
+    }
+    
+    // Update entities positions for animation
+    updateEntityPositions(deltaTime);
+    
+    // Continue animation loop
+    if (simulationState.state === 'running') {
+      animationRef.current = requestAnimationFrame(animationStep);
+    }
+  };
+
+  const updateEntityPositions = (deltaTime: number) => {
+    // Update positions for animation
+    const updatedEntities = entitiesRef.current.map(entity => {
+      const newEntity = { ...entity };
+      
+      // Update position based on status and target positions
+      // This is simplified - you'd have more complex animations
+      if (entity.status === 'waiting') {
+        // Move to queue position
+        newEntity.position = {
+          x: 100,
+          y: 100 + (entitiesRef.current.indexOf(entity) * 30)
+        };
+      } else if (entity.status === 'processing') {
+        // Move to server position
+        const processingEntities = entitiesRef.current.filter(e => e.status === 'processing');
+        const serverIndex = processingEntities.indexOf(entity);
+        newEntity.position = {
+          x: 300,
+          y: 100 + (serverIndex * 100)
+        };
+      }
+      
+      return newEntity;
+    });
+    
+    entitiesRef.current = updatedEntities;
+    setEntities(updatedEntities);
+  };
+
+  const updateParameters = (newParams: Partial<SimulationParameters>) => {
+    setParams(prev => ({ ...prev, ...newParams }));
+  };
+
   return {
-    simulationState: simulationStore.simulationState,
-    currentTime: simulationStore.currentTime,
-    entities: simulationStore.entities,
-    currentEntities,
-    totalSteps: simulationStore.totalSteps,
-    serverCount: simulationStore.serverCount,
-    queueCapacity: simulationStore.queueCapacity,
-    serversBusy: simulationStore.serversBusy,
-    queueLength: simulationStore.queueLength,
-    simulationSpeed: simulationStore.simulationSpeed,
-    params: simulationStore.params,
-    startSimulation,
-    pauseSimulation,
-    resetSimulation,
-    changeSimulationSpeed,
-    updateParams,
-    runStep
+    params,
+    updateParameters,
+    start: handleStart,
+    pause: handlePause,
+    reset: handleReset,
+    state: simulationState.state,
+    entities: simulationState.entities,
+    metrics: simulationState.metrics,
+    currentTime: simulationState.currentTime
   };
 }

@@ -1,5 +1,3 @@
-// src/lib/math/queueCalculations.ts
-
 type QueueModel = 'MM1' | 'MMc' | 'MMcK' | 'MG1' | 'GM1' | 'GG1' | 'MM1K' | 'MGcK';
 
 interface QueueParameters {

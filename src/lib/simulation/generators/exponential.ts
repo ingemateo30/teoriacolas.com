@@ -1,33 +1,11 @@
-import { RandomGenerator } from './random';
-
-export class ExponentialGenerator {
-  private randomGenerator: RandomGenerator;
-  private lambda: number;
-
-  constructor(lambda: number, seed?: number) {
-    this.lambda = lambda;
-    this.randomGenerator = new RandomGenerator(seed);
-  }
-
-  /**
-   * Genera un número aleatorio con distribución exponencial
-   */
-  public next(): number {
-    return -Math.log(this.randomGenerator.random()) / this.lambda;
-  }
-
-  /**
-   * Establece una nueva tasa lambda para la distribución
-   */
-  public setLambda(lambda: number): void {
-    this.lambda = lambda;
-  }
-
-  /**
-   * Establece una nueva semilla para el generador
-   */
-  public setSeed(seed: number): void {
-    this.randomGenerator.setSeed(seed);
-  }
+/**
+ * Genera un valor aleatorio de una distribución exponencial
+ * @param lambda Tasa promedio de ocurrencia (eventos por unidad de tiempo)
+ * @returns Tiempo entre eventos
+ */
+export function generateExponential(lambda: number): number {
+  // Para distribución exponencial, generamos con la fórmula:
+  // -ln(u) / lambda donde u es un número aleatorio uniforme en (0,1)
+  const u = Math.random();
+  return -Math.log(u) / lambda;
 }
-

@@ -113,7 +113,7 @@ export default function ModelsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {models.map((model, index) => (
               <Link
-                href={`/models/${model.id}`}
+                href={`/simulator/${model.id}`}
                 key={model.id}
                 className={`
               bg-white rounded-lg p-6 shadow-md transition-all duration-300 

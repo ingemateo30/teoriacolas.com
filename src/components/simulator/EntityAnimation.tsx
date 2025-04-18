@@ -1,73 +1,99 @@
-import React, { useEffect, useState } from 'react';
+"use client";
 
-interface EntityProps {
-  entity: {
-    id: number;
-    status: 'waiting' | 'service' | 'completed';
-    position: number;
-    arrivalTime: number;
-    serverIndex?: number;
-  };
-  isInService?: boolean;
-  isInQueue?: boolean;
-  position?: number;
-  totalEntities?: number;
-  containerWidth?: number;
-  size?: number;
+import React, { useEffect, useState } from 'react';
+import { SimulationEntity } from '@/types/simulation';
+
+interface EntityAnimationProps {
+  entity: SimulationEntity;
+  position?: { x: number, y: number };
 }
 
-export const EntityAnimation = ({ 
-  entity, 
-  isInService = false,
-  isInQueue = false,
-  position,
-  totalEntities,
-  containerWidth,
-  size = 30
-}: EntityProps) => {
-  const [animationState, setAnimationState] = useState('idle');
-  
+/**
+ * Componente EntityAnimation con Modo Oscuro
+ * 
+ * Muestra entidades de simulación con diferentes estados visuales
+ * Implementa animaciones suaves con colores optimizados para modo oscuro
+ * Compatible con el tema oscuro del navbar
+ */
+const EntityAnimation: React.FC<EntityAnimationProps> = ({ entity, position }) => {
+  const [pos, setPos] = useState(position || entity.position);
+ 
+  // Animate to new position when it changes
   useEffect(() => {
-    // Iniciar animación cuando cambia el estado de la entidad
-    if (entity.status === 'service' && !isInService) {
-      setAnimationState('moving');
-      setTimeout(() => setAnimationState('idle'), 500);
-    } else if (entity.status === 'completed') {
-      setAnimationState('exiting');
-      setTimeout(() => setAnimationState('done'), 500);
+    if (position) {
+      setPos(position);
+      return;
     }
-  }, [entity.status, isInService]);
-  
-  if (animationState === 'done') return null;
-  
-  const entityClasses = `entity ${animationState} ${isInService ? 'in-service' : ''}`;
-  
-  // Calcular estilos y posición basados en props
-  const styles: React.CSSProperties = {
-    '--entity-position': position || entity.position,
-    '--server-index': entity.serverIndex || 0,
-    width: `${size}px`,
-    height: `${size}px`,
-    position: 'absolute',
-    // Añadir más estilos según necesites para animaciones
-  } as React.CSSProperties;
-  
-  if (isInQueue && containerWidth && totalEntities) {
-    const spacing = Math.min(containerWidth / (totalEntities + 1), 50);
-    styles.left = `${spacing * (position || 0) + spacing}px`;
-    styles.bottom = '8px';
-  }
-  
+   
+    // If no position provided, animate to entity position
+    const targetPos = entity.position;
+    let animationFrame: number;
+   
+    const animate = () => {
+      console.log("Entidades en espera:");
+console.log("Entidades en servicio:");
+
+      setPos(currentPos => {
+        // Calculate new position with easing
+        const dx = (targetPos.x - currentPos.x) * 0.1;
+        const dy = (targetPos.y - currentPos.y) * 0.1;
+       
+        const newPos = {
+          x: currentPos.x + dx,
+          y: currentPos.y + dy
+        };
+       
+        // Continue animation if not close enough
+        if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) {
+          animationFrame = requestAnimationFrame(animate);
+        }
+       
+        return newPos;
+      });
+    };
+   
+    animationFrame = requestAnimationFrame(animate);
+   
+    return () => {
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [entity.position, position]);
+ 
+  // Determine color based on status - Dark mode color palette
+  const getEntityColor = () => {
+    switch (entity.status) {
+      case 'waiting': return 'bg-blue-600 shadow-md shadow-blue-500/20';
+      case 'processing': return 'bg-emerald-600 shadow-md shadow-emerald-500/20';
+      case 'completed': return 'bg-purple-600 shadow-md shadow-purple-500/20';
+      default: return 'bg-gray-700 shadow-md shadow-gray-600/20';
+    }
+  };
+
+  // Determine text color based on status
+  const getTextColor = () => {
+    switch (entity.status) {
+      case 'waiting': return 'text-blue-100';
+      case 'processing': return 'text-emerald-100';
+      case 'completed': return 'text-purple-100';
+      default: return 'text-gray-300';
+    }
+  };
+ 
   return (
-    <div className={entityClasses} style={styles}>
-      <div className="entity-icon" style={{ fontSize: `${size * 0.4}px` }}>
-        {entity.id}
-      </div>
-      {!isInService && (
-        <div className="waiting-time" style={{ fontSize: `${size * 0.3}px` }}>
-          {Math.max(0, Date.now() / 1000 - entity.arrivalTime).toFixed(1)}s
-        </div>
-      )}
+    
+    <div
+    
+      className={`absolute rounded-full flex items-center justify-center ${getTextColor()} text-xs font-bold ${getEntityColor()} transition-colors duration-300 hover:scale-105`}
+      style={{
+        width: 40,
+        height: 40,
+        transform: `translate(${pos.x}px, ${pos.y}px)`,
+        transition: 'transform 0.3s ease-out, box-shadow 0.2s ease'
+      }}
+    >
+      {entity.id % 100}
     </div>
   );
 };
+
+export default EntityAnimation;
