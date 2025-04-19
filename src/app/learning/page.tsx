@@ -60,16 +60,18 @@ export default function LearningPage() {
           </section>
 
           {/* Sección de Visión General */}
-          <section className="mb-16 max-w-6xl mx-auto">
-            <div
-              className="flex items-center justify-between cursor-pointer mb-6 bg-gray-800 px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
+          <section className="mb-16 max-w-6xl mx-auto px-4 md:px-0">
+            <button
+              className="w-full flex items-center justify-between mb-6 bg-gray-800 px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
               onClick={() => toggleSection('overview')}
+              aria-expanded={expandedSection === 'overview'}
+              aria-controls="overview-content"
             >
-              <h2 className="text-2xl font-semibold text-gray-100">
+              <h2 className="text-xl md:text-2xl font-semibold text-gray-100 text-left">
                 ¿Qué es la Teoría de Colas?
               </h2>
               <svg
-                className={`w-6 h-6 text-gray-400 transition-transform duration-200 ${expandedSection === 'overview' ? 'transform rotate-180' : ''
+                className={`w-5 h-5 md:w-6 md:h-6 text-gray-400 transition-transform duration-200 ${expandedSection === 'overview' ? 'transform rotate-180' : ''
                   }`}
                 fill="none"
                 stroke="currentColor"
@@ -78,16 +80,15 @@ export default function LearningPage() {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
-            </div>
+            </button>
 
             <div
-              className={`
-                overflow-hidden transition-all duration-500 ease-in-out
-                ${expandedSection === 'overview' ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
-              `}
+              id="overview-content"
+              className={`transition-all duration-300 ease-in-out ${expandedSection === 'overview' ? 'opacity-100' : 'opacity-0 hidden'
+                }`}
             >
-              <div className="bg-gray-800 rounded-xl shadow-md overflow-hidden p-6 md:p-8">
-                <div className="flex flex-col md:flex-row gap-8">
+              <div className="bg-gray-800 rounded-xl shadow-md overflow-hidden p-4 md:p-8">
+                <div className="flex flex-col md:flex-row gap-6 md:gap-8">
                   <div className="flex-1">
                     <p className="text-gray-300 mb-4">
                       La teoría de colas es una rama de las matemáticas que estudia las líneas de espera dentro de los sistemas.
@@ -106,8 +107,8 @@ export default function LearningPage() {
                       de capacidad y la mejora del servicio al cliente.
                     </p>
                   </div>
-                  <div className="flex-1 flex justify-center items-center">
-                    <div className="bg-gray-700 rounded-lg p-6 w-full max-w-md">
+                  <div className="flex-1 flex justify-center items-start md:items-center mt-4 md:mt-0">
+                    <div className="bg-gray-700 rounded-lg p-4 md:p-6 w-full">
                       <h3 className="text-lg font-medium text-gray-100 mb-4 text-center">Componentes de un Sistema de Colas</h3>
                       <ul className="space-y-3">
                         <li className="flex items-center gap-3">
@@ -157,18 +158,19 @@ export default function LearningPage() {
               </div>
             </div>
           </section>
-
           {/* Sección de Notación Kendall */}
-          <section className="mb-16 max-w-6xl mx-auto">
-            <div
-              className="flex items-center justify-between cursor-pointer mb-6 bg-gray-800 px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
+          <section className="mb-16 max-w-6xl mx-auto px-4 md:px-0">
+            <button
+              className="w-full flex items-center justify-between mb-6 bg-gray-800 px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
               onClick={() => toggleSection('kendall')}
+              aria-expanded={expandedSection === 'kendall'}
+              aria-controls="kendall-content"
             >
-              <h2 className="text-2xl font-semibold text-gray-100">
+              <h2 className="text-xl md:text-2xl font-semibold text-gray-100 text-left">
                 Notación de Kendall
               </h2>
               <svg
-                className={`w-6 h-6 text-gray-400 transition-transform duration-200 ${expandedSection === 'kendall' ? 'transform rotate-180' : ''
+                className={`w-5 h-5 md:w-6 md:h-6 text-gray-400 transition-transform duration-200 ${expandedSection === 'kendall' ? 'transform rotate-180' : ''
                   }`}
                 fill="none"
                 stroke="currentColor"
@@ -177,28 +179,27 @@ export default function LearningPage() {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
-            </div>
+            </button>
 
             <div
-              className={`
-                overflow-hidden transition-all duration-500 ease-in-out
-                ${expandedSection === 'kendall' ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
-              `}
+              id="kendall-content"
+              className={`transition-all duration-300 ease-in-out ${expandedSection === 'kendall' ? 'opacity-100' : 'opacity-0 hidden'
+                }`}
             >
               <div className="bg-gray-800 rounded-xl shadow-md overflow-hidden">
-                <div className="p-6 md:p-8">
+                <div className="p-4 md:p-8">
                   <p className="text-gray-300 mb-6">
                     La notación de Kendall es un sistema estandarizado para describir y clasificar los modelos de colas.
                     Fue introducida por David G. Kendall en 1953 y ampliada posteriormente por otros investigadores.
                     La forma estándar actual es:
                   </p>
 
-                  <div className="font-mono text-center bg-gray-700 py-4 px-6 rounded-lg border border-gray-600 mb-8 text-2xl shadow-sm text-blue-300">
+                  <div className="font-mono text-center bg-gray-700 py-4 px-4 md:px-6 rounded-lg border border-gray-600 mb-8 text-xl md:text-2xl shadow-sm text-blue-300">
                     A/B/c/K/N/D
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div className="bg-gray-700 p-5 rounded-lg border border-gray-600">
+                    <div className="bg-gray-700 p-4 md:p-5 rounded-lg border border-gray-600">
                       <h3 className="text-lg font-medium text-gray-100 mb-3">Distribuciones comunes (A y B)</h3>
                       <ul className="space-y-2 text-gray-300">
                         <li className="flex"><span className="font-medium w-8">M:</span> Markoviana (exponencial)</li>
@@ -236,18 +237,18 @@ export default function LearningPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="bg-gray-700 p-5 rounded-lg border border-gray-600 shadow-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                    <div className="bg-gray-700 p-4 md:p-5 rounded-lg border border-gray-600 shadow-sm">
                       <h4 className="font-medium text-gray-100 mb-2">K: Capacidad del sistema</h4>
                       <p className="text-gray-400 text-sm">Número máximo de clientes que pueden estar en el sistema (en cola + en servicio). Si se omite, se asume infinito.</p>
                     </div>
 
-                    <div className="bg-gray-700 p-5 rounded-lg border border-gray-600 shadow-sm">
+                    <div className="bg-gray-700 p-4 md:p-5 rounded-lg border border-gray-600 shadow-sm">
                       <h4 className="font-medium text-gray-100 mb-2">N: Tamaño de la población</h4>
                       <p className="text-gray-400 text-sm">Tamaño total de la población de clientes potenciales. Si se omite, se asume infinito.</p>
                     </div>
 
-                    <div className="bg-gray-700 p-5 rounded-lg border border-gray-600 shadow-sm">
+                    <div className="bg-gray-700 p-4 md:p-5 rounded-lg border border-gray-600 shadow-sm sm:col-span-2 md:col-span-1">
                       <h4 className="font-medium text-gray-100 mb-2">D: Disciplina de la cola</h4>
                       <p className="text-gray-400 text-sm">Regla que determina qué cliente será servido a continuación. Si se omite, se asume FIFO (primero en entrar, primero en salir).</p>
                     </div>
@@ -258,16 +259,18 @@ export default function LearningPage() {
           </section>
 
           {/* Sección de Modelos Comunes */}
-          <section className="mb-16 max-w-6xl mx-auto">
-            <div
-              className="flex items-center justify-between cursor-pointer mb-6 bg-gray-800 px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
+          <section className="mb-16 max-w-6xl mx-auto px-4 md:px-0">
+            <button
+              className="w-full flex items-center justify-between mb-6 bg-gray-800 px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
               onClick={() => toggleSection('models')}
+              aria-expanded={expandedSection === 'models'}
+              aria-controls="models-content"
             >
-              <h2 className="text-2xl font-semibold text-gray-100">
+              <h2 className="text-xl md:text-2xl font-semibold text-gray-100 text-left">
                 Modelos Comunes
               </h2>
               <svg
-                className={`w-6 h-6 text-gray-400 transition-transform duration-200 ${expandedSection === 'models' ? 'transform rotate-180' : ''
+                className={`w-5 h-5 md:w-6 md:h-6 text-gray-400 transition-transform duration-200 ${expandedSection === 'models' ? 'transform rotate-180' : ''
                   }`}
                 fill="none"
                 stroke="currentColor"
@@ -276,20 +279,19 @@ export default function LearningPage() {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
-            </div>
+            </button>
 
             <div
-              className={`
-                overflow-hidden transition-all duration-500 ease-in-out
-                ${expandedSection === 'models' ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}
-              `}
+              id="models-content"
+              className={`transition-all duration-300 ease-in-out ${expandedSection === 'models' ? 'opacity-100' : 'opacity-0 hidden'
+                }`}
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                 <div className="bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-700">
-                  <div className="bg-blue-900 p-4 border-b border-blue-800">
+                  <div className="bg-blue-900 p-3 md:p-4 border-b border-blue-800">
                     <h3 className="text-lg font-medium text-blue-100">M/M/1</h3>
                   </div>
-                  <div className="p-5">
+                  <div className="p-4 md:p-5">
                     <p className="text-gray-300 mb-3">
                       El modelo más simple y fundamental. Cuenta con un servidor, llegadas según distribución Poisson y tiempos de servicio exponenciales.
                     </p>
@@ -303,10 +305,10 @@ export default function LearningPage() {
                 </div>
 
                 <div className="bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-700">
-                  <div className="bg-blue-900 p-4 border-b border-blue-800">
+                  <div className="bg-blue-900 p-3 md:p-4 border-b border-blue-800">
                     <h3 className="text-lg font-medium text-blue-100">M/M/c</h3>
                   </div>
-                  <div className="p-5">
+                  <div className="p-4 md:p-5">
                     <p className="text-gray-300 mb-3">
                       Modelo con múltiples servidores en paralelo, todos atendiendo la misma cola con tasas de servicio idénticas.
                     </p>
@@ -320,10 +322,10 @@ export default function LearningPage() {
                 </div>
 
                 <div className="bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-700">
-                  <div className="bg-blue-900 p-4 border-b border-blue-800">
+                  <div className="bg-blue-900 p-3 md:p-4 border-b border-blue-800">
                     <h3 className="text-lg font-medium text-blue-100">M/M/c/K</h3>
                   </div>
-                  <div className="p-5">
+                  <div className="p-4 md:p-5">
                     <p className="text-gray-300 mb-3">
                       Extensión del modelo M/M/c con capacidad limitada (K), donde los clientes se rechazan si el sistema está lleno.
                     </p>
@@ -337,10 +339,10 @@ export default function LearningPage() {
                 </div>
 
                 <div className="bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-700">
-                  <div className="bg-blue-900 p-4 border-b border-blue-800">
+                  <div className="bg-blue-900 p-3 md:p-4 border-b border-blue-800">
                     <h3 className="text-lg font-medium text-blue-100">M/G/1</h3>
                   </div>
-                  <div className="p-5">
+                  <div className="p-4 md:p-5">
                     <p className="text-gray-300 mb-3">
                       Modelo con un servidor, llegadas según Poisson y tiempos de servicio con distribución general.
                     </p>
