@@ -13,7 +13,8 @@ export default function CalculatorPage() {
       <div className="flex flex-1 pt-16">
         <Sidebar />
         
-        <div className="flex-1 bg-gradient-to-b from-gray-900 to-gray-800 px-4 py-10 md:px-8 lg:px-16 lg:ml-10">
+        <div className="flex-1 overflow-y-auto px-4 py-10 md:px-8 lg:px-16 lg:ml-10">
+
           
           
           <Card className="mb-6 p-6 bg-gray-800 border border-gray-700 shadow-lg">
