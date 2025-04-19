@@ -17,7 +17,7 @@ export default function FundamentalsPage() {
   const one = 1;
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-900 text-gray-200">
+    <div className="flex flex-col min-h-screen bg-gray-950">
       {/* Navbar - Fijo en la parte superior */}
       <Navbar />
 
@@ -27,7 +27,7 @@ export default function FundamentalsPage() {
         <Sidebar />
 
         {/* Contenido principal - Ocupa el ancho restante */}
-        <main className="flex-1 bg-gradient-to-b from-gray-900 to-gray-950 px-4 py-10 md:px-8 lg:px-16 lg:ml-10 text-gray-300 min-h-screen">
+        <main className="flex-1 bg-gradient-to-b from-gray-950 to-gray-900 px-4 py-10 md:px-8 lg:px-16 lg:ml-10">
           {/* Encabezado de la sección */}
           <section className="mb-12 text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
