@@ -360,11 +360,11 @@ export default function Homepage() {
                 <div className="bg-gray-850 p-6 md:p-8 flex-1 border-t md:border-t-0 md:border-l border-gray-700">
                   <h4 className="font-medium text-center mb-4 text-lg text-gray-200">Notación de Kendall</h4>
                   <div className="font-mono text-center bg-gray-900 py-3 px-4 rounded-lg border border-gray-600 mb-5 text-xl shadow-sm text-blue-300">
-                    A/S/c/K/N/D
+                    A/B/c/K/N/D
                   </div>
                   <ul className="space-y-2 text-gray-300">
                     <li className="flex"><span className="font-medium w-8">A:</span> Distribución de llegadas</li>
-                    <li className="flex"><span className="font-medium w-8">S:</span> Distribución de servicio</li>
+                    <li className="flex"><span className="font-medium w-8">B:</span> Distribución de servicio</li>
                     <li className="flex"><span className="font-medium w-8">c:</span> Número de servidores</li>
                     <li className="flex"><span className="font-medium w-8">K:</span> Capacidad del sistema</li>
                     <li className="flex"><span className="font-medium w-8">N:</span> Tamaño de la población</li>
