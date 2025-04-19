@@ -5,11 +5,29 @@ import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
 import Footer from '@/components/layout/Footer';
+import { useEffect } from 'react';
 
 export default function Homepage() {
   // Estado para animación y efectos de UI
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+
+  const [windowWidth, setWindowWidth] = useState<number | null>(null);
+  
+  useEffect(() => {
+    // Solo ejecutar en el cliente
+    setWindowWidth(window.innerWidth);
+    
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  // Determinar si estamos en móvil
+  const isMobile = windowWidth && windowWidth < 640;
 
   // Modelos comunes de teoría de colas con descripciones
   const queueModels = [
@@ -119,94 +137,104 @@ export default function Homepage() {
             </div>
 
             {/* Ilustración animada de cola */}
-            <div className="relative h-64 bg-gray-800 rounded-lg shadow-inner overflow-hidden mx-auto max-w-3xl mb-4 border border-gray-700">
-              {/* Línea que representa el flujo */}
-              <div className="absolute inset-0 flex items-center">
-                <div className="h-px w-full bg-gray-600 z-0"></div>
-              </div>
+            <div className="relative h-64 md:h-80 bg-gray-800 rounded-lg shadow-inner overflow-hidden mx-auto max-w-3xl mb-4 border border-gray-700">
+      {/* Línea que representa el flujo */}
+      <div className="absolute inset-0 flex items-center">
+        <div className="h-px w-full bg-gray-600 z-0"></div>
+      </div>
 
-              {/* Zona de cola de espera */}
-              <div className="absolute left-0 top-0 bottom-0 w-1/3 flex items-center justify-end">
-                {[...Array(5)].map((_, i) => (
-                  <div
-                    key={`queue-${i}`}
-                    className="w-8 h-8 rounded-full bg-blue-500 opacity-80 shadow-md absolute"
-                    style={{
-                      left: `${i * 40}px`,
-                      animation: `moveInQueue 10s infinite ${i * 2}s linear`,
-                    }}
-                  ></div>
-                ))}
-              </div>
+      {/* Zona de cola de espera */}
+      <div className="absolute left-0 top-0 bottom-0 w-1/3 flex items-center justify-end">
+        {[...Array(isMobile ? 3 : 5)].map((_, i) => (
+          <div
+            key={`queue-${i}`}
+            className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-blue-500 opacity-80 shadow-md absolute"
+            style={{
+              left: isMobile ? `${i * 20}px` : `${i * 40}px`,
+              animation: `moveInQueue ${isMobile ? 8 : 10}s infinite ${i * (isMobile ? 1.5 : 2)}s linear`
+            }}
+          ></div>
+        ))}
+      </div>
 
-              {/* Servidor - Centrado */}
-              <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-lg bg-indigo-600 flex items-center justify-center shadow-lg z-10">
-                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-                </svg>
-              </div>
+      {/* Servidor - Centrado */}
+      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 md:w-20 md:h-20 rounded-lg bg-indigo-600 flex items-center justify-center shadow-lg z-10">
+        <svg className="w-6 h-6 md:w-10 md:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+        </svg>
+      </div>
 
-              {/* Cliente siendo atendido (parpadeando) */}
-              <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-yellow-400 shadow-lg opacity-80 z-20"
-                style={{ animation: 'blink 1s infinite ease-in-out' }}></div>
+      {/* Cliente siendo atendido (parpadeando) */}
+      <div 
+        className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 md:w-10 md:h-10 rounded-full bg-yellow-400 shadow-lg opacity-80 z-20"
+        style={{ animation: 'blink 1s infinite ease-in-out' }}>
+      </div>
 
-              {/* Clientes que salen del sistema */}
-              <div className="absolute right-0 top-0 bottom-0 w-1/3 flex items-center">
-                {[...Array(3)].map((_, i) => (
-                  <div
-                    key={`departed-${i}`}
-                    className="w-8 h-8 rounded-full bg-green-500 opacity-80 shadow-md absolute"
-                    style={{
-                      right: `${(2 - i) * 40 + 20}px`,
-                      animation: `moveOutQueue 10s infinite ${i * 3.3}s linear`,
-                    }}
-                  ></div>
-                ))}
-              </div>
+      {/* Clientes que salen del sistema */}
+      <div className="absolute right-0 top-0 bottom-0 w-1/3 flex items-center">
+        {[...Array(isMobile ? 2 : 3)].map((_, i) => (
+          <div
+            key={`departed-${i}`}
+            className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-green-500 opacity-80 shadow-md absolute"
+            style={{
+              right: isMobile 
+                ? `${(1 - i) * 20 + 10}px` 
+                : `${(2 - i) * 40 + 20}px`,
+              animation: `moveOutQueue ${isMobile ? 8 : 10}s infinite ${i * (isMobile ? 2.5 : 3.3)}s linear`
+            }}
+          ></div>
+        ))}
+      </div>
 
-              {/* Etiquetas */}
-              <div className="absolute bottom-4 left-6 text-sm font-medium text-gray-300 bg-gray-700 px-2 py-1 rounded shadow-sm">Cola de espera</div>
-              <div className="absolute bottom-4 right-6 text-sm font-medium text-gray-300 bg-gray-700 px-2 py-1 rounded shadow-sm">Servicio completado</div>
-              <div className="absolute top-4 left-1/2 transform -translate-x-1/2 text-sm font-medium text-gray-300 bg-gray-700 px-2 py-1 rounded shadow-sm">Servidor</div>
+      {/* Etiquetas - Ocultas en móvil o más pequeñas */}
+      <div className="absolute bottom-2 md:bottom-4 left-2 md:left-6 text-xs md:text-sm font-medium text-gray-300 bg-gray-700 px-1 md:px-2 py-0.5 md:py-1 rounded shadow-sm">
+        Cola
+      </div>
+      <div className="absolute bottom-2 md:bottom-4 right-2 md:right-6 text-xs md:text-sm font-medium text-gray-300 bg-gray-700 px-1 md:px-2 py-0.5 md:py-1 rounded shadow-sm">
+        Completado
+      </div>
+      <div className="absolute top-2 md:top-4 left-1/2 transform -translate-x-1/2 text-xs md:text-sm font-medium text-gray-300 bg-gray-700 px-1 md:px-2 py-0.5 md:py-1 rounded shadow-sm">
+        Servidor
+      </div>
 
-              {/* Flechas direccionales para mostrar el flujo FIFO */}
-              <div className="absolute top-1/2 left-1/4 transform -translate-y-1/2">
-                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </div>
-              <div className="absolute top-1/2 right-1/4 transform -translate-y-1/2">
-                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </div>
-            </div>
+      {/* Flechas direccionales para mostrar el flujo FIFO */}
+      <div className="absolute top-1/2 left-1/4 transform -translate-y-1/2">
+        <svg className="w-4 h-4 md:w-8 md:h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </div>
+      <div className="absolute top-1/2 right-1/4 transform -translate-y-1/2">
+        <svg className="w-4 h-4 md:w-8 md:h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </div>
 
-            {/* CSS para animaciones */}
-            <style jsx>{`
-              @keyframes moveInQueue {
-                0% { transform: translateX(-80px); opacity: 0; }
-                10% { transform: translateX(-40px); opacity: 0.7; }
-                50% { transform: translateX(120px); opacity: 1; }
-                60% { transform: translateX(160px); opacity: 0.7; }
-                70% { transform: translateX(200px); opacity: 0; }
-                100% { transform: translateX(200px); opacity: 0; }
-              }
-              
-              @keyframes moveOutQueue {
-                0% { transform: translateX(-200px); opacity: 0; }
-                30% { transform: translateX(-160px); opacity: 0; }
-                40% { transform: translateX(-120px); opacity: 0.7; }
-                80% { transform: translateX(0px); opacity: 1; }
-                100% { transform: translateX(40px); opacity: 0; }
-              }
-              
-              @keyframes blink {
-                0% { opacity: 1; }
-                50% { opacity: 0.3; }
-                100% { opacity: 1; }
-              }
-            `}</style>
+      {/* CSS para animaciones */}
+      <style jsx>{`
+        @keyframes moveInQueue {
+          0% { transform: translateX(${isMobile ? '-40px' : '-80px'}); opacity: 0; }
+          10% { transform: translateX(${isMobile ? '-20px' : '-40px'}); opacity: 0.7; }
+          50% { transform: translateX(${isMobile ? '60px' : '120px'}); opacity: 1; }
+          60% { transform: translateX(${isMobile ? '80px' : '160px'}); opacity: 0.7; }
+          70% { transform: translateX(${isMobile ? '100px' : '200px'}); opacity: 0; }
+          100% { transform: translateX(${isMobile ? '100px' : '200px'}); opacity: 0; }
+        }
+        
+        @keyframes moveOutQueue {
+          0% { transform: translateX(${isMobile ? '-100px' : '-200px'}); opacity: 0; }
+          30% { transform: translateX(${isMobile ? '-80px' : '-160px'}); opacity: 0; }
+          40% { transform: translateX(${isMobile ? '-60px' : '-120px'}); opacity: 0.7; }
+          80% { transform: translateX(0px); opacity: 1; }
+          100% { transform: translateX(${isMobile ? '20px' : '40px'}); opacity: 0; }
+        }
+        
+        @keyframes blink {
+          0% { opacity: 1; }
+          50% { opacity: 0.3; }
+          100% { opacity: 1; }
+        }
+      `}</style>
+    </div>
           </section>
 
           {/* Sección de Modelos */}
