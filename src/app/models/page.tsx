@@ -6,13 +6,7 @@ import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
 import Footer from '@/components/layout/Footer';
-
-export const metadata = {
-  title: "Conoce los modelos comunes de la teoria de cola",
-  description: "Aprende sobre la teoría de colas. Calcula tiempo de espera, longitud promedio de cola, y más.",
-  keywords: "modelo MM1, teoría de colas MM1, simulación MM1, sistemas de espera,modelo MMC, teoría de colas MMC, simulación MMC, sistemas de espera MMC, modelo MMCK, teoría de colas MMCK, simulación MMCK, sistemas de espera MMCK, modelo MG1, teoría de colas MG1, simulación MG1, sistemas de espera MG1, modelo GM1, teoría de colas GM1, simulación GM1, sistemas de espera GM1, modelo GG1, teoría de colas GG1, simulación GG1, sistemas de espera GG1",
-};  
-
+ 
 // Iconos para cada modelo de cola
 const modelIcons = {
   mm1: (

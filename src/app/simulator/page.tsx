@@ -7,11 +7,6 @@ import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
 import Footer from '@/components/layout/Footer';
 
-export const metadata = {
-  title: "Simula y aprende como funcionan los modelos de teoría de colas | Quequesim",
-  description: "Aprende sobre la teoría de colas. Calcula tiempo de espera, longitud promedio de cola, y más.",
-  keywords: "simulacion teoria de colas, teoria de colas, simulacion teoria colas, teoria colas,colas, calculadora colas, calculadora de colas, calculadora de sistemas de espera, calculadora de tiempo de espera, calculadora de longitud promedio de cola",
-};
 
 /**
  * Página Simulador con el mismo estilo del Navbar
