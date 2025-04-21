@@ -89,6 +89,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="alternate" href="https://teoriacolascom.vercel.app" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#ffffff" />
+        <meta name="google-adsense-account" content="ca-pub-7885333886424439"></meta>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
