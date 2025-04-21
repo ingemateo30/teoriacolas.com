@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/react"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -82,8 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" dir="ltr" className="scroll-smooth">
       <head>
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7885333886424439"
-     ></script>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7885333886424439"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="author" content="Mateo Salazar Ortiz" />
         <meta name="copyright" content="© 2025 Quequesim" />
@@ -119,6 +119,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </body>
+      <Analytics/>
     </html>
 
     
