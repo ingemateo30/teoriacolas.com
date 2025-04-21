@@ -82,6 +82,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" dir="ltr" className="scroll-smooth">
       <head>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7885333886424439"
+     ></script>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="author" content="Mateo Salazar Ortiz" />
         <meta name="copyright" content="© 2025 Quequesim" />
@@ -91,6 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="theme-color" content="#ffffff" />
         <meta name="google-adsense-account" content="ca-pub-7885333886424439"></meta>
       </head>
+      
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
@@ -117,5 +120,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </body>
     </html>
+
+    
   );
 }
