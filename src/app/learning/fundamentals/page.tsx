@@ -6,6 +6,11 @@ import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
 import Footer from '@/components/layout/Footer';
 
+export const metadata = {
+  title: "Aprende sobre los fundamentos de la teoria de colas",
+  description: "Aprende sobre la teoría de colas. Calcula tiempo de espera, longitud promedio de cola, y más.",
+  keywords: "modelo MM1, teoría de colas MM1, simulación MM1, sistemas de espera",
+};
 export default function FundamentalsPage() {
   // Estado para animación y efectos de UI
   const [expandedSection, setExpandedSection] = useState<string | null>('basic-concepts');

@@ -20,7 +20,7 @@ export const metadata = {
   title: "Quequesim - Teoría de Colas y Simulación",
   description: "Todo acerca de la teoría de colas. Encontrarás simulación de la teoría, calculadora, graficadora de resultados y toda la teoría relacionada.",
   keywords: "teoría de colas, simulación, calculadora, graficadora, modelos de colas, sistemas de espera",
-  
+
   // Configuración de robots
   robots: {
     index: true,
@@ -35,7 +35,7 @@ export const metadata = {
 
   // URL canónica
   canonical: siteUrl,
-  
+
   // Open Graph para redes sociales (Facebook, LinkedIn, etc)
   openGraph: {
     type: 'website',
@@ -53,7 +53,7 @@ export const metadata = {
       }
     ],
   },
-  
+
   // Twitter Card
   twitter: {
     card: 'summary_large_image',
@@ -61,17 +61,17 @@ export const metadata = {
     description: 'Todo acerca de la teoría de colas. Encontrarás simulación de la teoría, calculadora, graficadora de resultados y toda la teoría relacionada.',
     images: [`${siteUrl}/logosim.png`],
   },
-  
+
   // Favicon y otros íconos
   icons: {
     icon: "/logosim.png",
     apple: "/logosim.png",
     shortcut: "/logosim.png",
   },
-  
+
   // Información del autor
   authors: [{ name: 'Mateo Salazar ortiz', url: siteUrl }],
-  
+
   // Verificación de propiedad del sitio para Google
   verification: {
     google: 'tu-código-de-verificación', // Reemplazar con tu código de Google Search Console
@@ -83,6 +83,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es" dir="ltr" className="scroll-smooth">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="author" content="Mateo Salazar Ortiz" />
+        <meta name="copyright" content="© 2025 Quequesim" />
+        <meta name="distribution" content="global" />
+        <link rel="alternate" href="https://teoriacolascom.vercel.app" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#ffffff" />
       </head>
@@ -90,7 +94,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         {children}
-        
+
         {/* Schema.org JSON-LD para SEO */}
         <Script
           id="schema-org"

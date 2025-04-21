@@ -7,6 +7,7 @@ import Sidebar from '@/components/layout/Sidebar';
 import Footer from '@/components/layout/Footer';
 import { useEffect } from 'react';
 
+
 export default function Homepage() {
   // Estado para animación y efectos de UI
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);

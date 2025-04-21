@@ -6,6 +6,12 @@ import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
 import Footer from '@/components/layout/Footer';
 
+export const metadata = {
+  title: "Aprende sobre teoria de colas y sus fundamentos",
+  description: "Aprende sobre la teoría de colas. Calcula tiempo de espera, longitud promedio de cola, y más.",
+  keywords: "modelo MM1, teoría de colas MM1, simulación MM1, sistemas de espera",
+};
+
 export default function LearningPage() {
   // Estado para animación y efectos de UI
   const [activeTab, setActiveTab] = useState<string>('overview');
@@ -15,7 +21,7 @@ export default function LearningPage() {
   const toggleSection = (section: string) => {
     setExpandedSection(expandedSection === section ? null : section);
   };
-
+  // src/app/models/mm1/page.tsx
   return (
     <div className="flex flex-col min-h-screen bg-gray-950">
       {/* Navbar - Fijo en la parte superior */}

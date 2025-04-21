@@ -6,6 +6,12 @@ import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
 import Footer from '@/components/layout/Footer';
 
+export const metadata = {
+  title: "Calculadora modelos teoria de colas | Quequesim",
+  description: "Calcula tiempo de espera, longitud promedio de cola,graficos de p(n) y más.",
+  keywords: "calculadora teoria de colas, teoría de colas, simulación teoria colas, teoria colas,colas, calculadora colas, calculadora de colas, calculadora de sistemas de espera, calculadora de tiempo de espera, calculadora de longitud promedio de cola",
+};
+
 export default function CalculatorPage() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-gray-300">
