@@ -15,8 +15,8 @@ export const metadata = {
   title: "quequesim",
   description: "Todo acerca de la teoria de colas",
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: "/logosim.png",
+    apple: "/logosim.png",
   },
 };
 
