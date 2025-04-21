@@ -98,7 +98,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         {children}
-
+        <Analytics/>
         {/* Schema.org JSON-LD para SEO */}
         <Script
           id="schema-org"
@@ -119,7 +119,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </body>
-      <Analytics/>
+      
     </html>
 
     
