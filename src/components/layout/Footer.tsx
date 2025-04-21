@@ -100,7 +100,7 @@ export default function Footer({ darkMode = true }) {
         <div className={`border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} pt-4 pb-6`}>
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              © {currentYear} QueueSim | Simulador de Teoría de Colas
+              © {currentYear} QueueSim | Simulador de Teoría de Colas | Desarrollado por Mateo Salazar Ortiz
             </p>
             <div className="mt-2 md:mt-0 flex space-x-4">
             
