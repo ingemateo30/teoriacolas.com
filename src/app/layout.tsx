@@ -34,10 +34,8 @@ export const metadata = {
     },
   },
 
-  // URL canónica
   canonical: siteUrl,
 
-  // Open Graph para redes sociales (Facebook, LinkedIn, etc)
   openGraph: {
     type: 'website',
     locale: 'es_ES',
@@ -50,7 +48,7 @@ export const metadata = {
         url: `${siteUrl}/logosim.png`,
         width: 1200,
         height: 630,
-        alt: 'Quequesim - Teoría de Colas',
+        alt: 'Quequesim - Teoría de Colas,un sitio para aprender y simular la teoría de colas',
       }
     ],
   },
@@ -109,7 +107,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@type": "WebSite",
               "name": "Quequesim - Teoría de Colas",
               "url": siteUrl,
-              "description": "Todo acerca de la teoría de colas. Encontrarás simulación de la teoría, calculadora, graficadora de resultados y toda la teoría relacionada.",
+              "description": "Todo acerca de la teoría de colas. Encontrarás simulación de la teoría, calculadora, graficadora de resultados y toda la teoría fundamental y avanzada relacionada.",
               "potentialAction": {
                 "@type": "SearchAction",
                 "target": `${siteUrl}/buscar?q={search_term_string}`,

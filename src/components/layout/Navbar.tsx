@@ -3,26 +3,15 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-/**
- * Componente Navbar con Modo Oscuro
- * 
- * Un navbar responsivo compatible con Tailwind 4.1.4 en Next.js 15
- * Incluye transiciones suaves y efectos visuales optimizados
- * Implementa un diseño de modo oscuro con colores apropiados
- */
 export default function Navbar() {
-  // Estado para controlar la apertura/cierre del menú móvil
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
-  // Estado para manejar la transparencia del navbar al hacer scroll
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Estado para almacenar la ruta activa
   const [activePath, setActivePath] = useState("/");
 
-  // Efecto para detectar el scroll y cambiar el estilo del navbar
   useEffect(() => {
-    // Detectar scroll para cambiar estilos
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -63,7 +52,6 @@ export default function Navbar() {
             {/* Enlaces de navegación para desktop */}
             <div className="hidden md:ml-8 md:flex md:space-x-8">
               {[
-                { name: "Modelos", path: "/models" },
                 { name: "Simulador", path: "/simulator" },
                 { name: "Aprendizaje", path: "/learning" },
                 { name: "calculadora", path: "/calculator" }
@@ -127,7 +115,6 @@ export default function Navbar() {
       >
         <div className="pt-2 pb-3 space-y-1 px-4 bg-gray-800 shadow-inner">
           {[
-            { name: "Modelos", path: "/models" },
             { name: "Simulador", path: "/simulator" },
             { name: "Aprendizaje", path: "/learning" },
             { name: "Calculadora", path: "/calculator" }
