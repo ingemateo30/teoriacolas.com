@@ -1,4 +1,4 @@
-// src/components/educational/FormulaDisplay.tsx
+
 import React from 'react';
 import { Card } from '@/components/ui/Card';
 

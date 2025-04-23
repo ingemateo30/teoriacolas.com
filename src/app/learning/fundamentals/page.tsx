@@ -8,10 +8,10 @@ import Footer from '@/components/layout/Footer';
 
 
 export default function FundamentalsPage() {
-  // Estado para animación y efectos de UI
+
   const [expandedSection, setExpandedSection] = useState<string | null>('basic-concepts');
 
-  // Cambiar la sección expandida
+
   const toggleSection = (section: string) => {
     setExpandedSection(expandedSection === section ? null : section);
   };
@@ -19,17 +19,17 @@ export default function FundamentalsPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-950">
-      {/* Navbar - Fijo en la parte superior */}
+      
       <Navbar />
 
-      {/* Área de contenido principal con sidebar */}
-      <div className="flex flex-1 pt-16"> {/* Añadido pt-16 para compensar la altura del navbar fijo */}
-        {/* Sidebar - Fijo en la izquierda */}
+      
+      <div className="flex flex-1 pt-16"> 
+       
         <Sidebar />
 
-        {/* Contenido principal - Ocupa el ancho restante */}
+        
         <main className="flex-1 bg-gradient-to-b from-gray-950 to-gray-900 px-4 py-10 md:px-8 lg:px-16 lg:ml-10">
-          {/* Encabezado de la sección */}
+          
           <section className="mb-12 text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
               Fundamentos de Teoría de Colas
@@ -40,7 +40,6 @@ export default function FundamentalsPage() {
               aprenda a analizar sistemas de espera básicos.
             </p>
 
-            {/* Pestañas de navegación */}
             <div className="flex flex-wrap justify-center gap-4 mb-10">
               <Link href="/learning" className="px-6 py-3 rounded-md font-medium bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700 hover:text-blue-300 transition-all duration-300">
                 Visión General
@@ -250,408 +249,407 @@ export default function FundamentalsPage() {
             </div>
           </section>
 
-         {/* Sección: Distribuciones Estadísticas */}
-<section className="mb-16 max-w-6xl mx-auto">
-  <div
-    className="flex items-center justify-between cursor-pointer mb-6 bg-gray-800 px-4 py-3 rounded-lg shadow-md hover:bg-gray-750 border border-gray-700 transition-all duration-200"
-    onClick={() => toggleSection('distributions')}
-  >
-    <h2 className="text-2xl font-semibold text-gray-200">
-      Distribuciones Estadísticas
-    </h2>
-    <svg
-      className={`w-6 h-6 text-gray-400 transition-transform duration-200 ${expandedSection === 'distributions' ? 'transform rotate-180' : ''}`}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-    </svg>
-  </div>
+          {/* Sección: Distribuciones Estadísticas */}
+          <section className="mb-16 max-w-6xl mx-auto">
+            <div
+              className="flex items-center justify-between cursor-pointer mb-6 bg-gray-800 px-4 py-3 rounded-lg shadow-md hover:bg-gray-750 border border-gray-700 transition-all duration-200"
+              onClick={() => toggleSection('distributions')}
+            >
+              <h2 className="text-2xl font-semibold text-gray-200">
+                Distribuciones Estadísticas
+              </h2>
+              <svg
+                className={`w-6 h-6 text-gray-400 transition-transform duration-200 ${expandedSection === 'distributions' ? 'transform rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
 
-  <div
-    className={`
+            <div
+              className={`
       transition-all duration-300 ease-in-out
-      ${expandedSection === 'distributions' 
-        ? 'max-h-full opacity-100 visible' 
-        : 'max-h-0 opacity-0 invisible overflow-hidden'}
+      ${expandedSection === 'distributions'
+                  ? 'max-h-full opacity-100 visible'
+                  : 'max-h-0 opacity-0 invisible overflow-hidden'}
     `}
-  >
-    <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-700">
-      <div className="p-6 md:p-8">
-        <p className="text-gray-400 mb-6">
-          Las distribuciones estadísticas son fundamentales en la teoría de colas para modelar los tiempos
-          entre llegadas y los tiempos de servicio. Aquí presentamos las distribuciones más relevantes para
-          el análisis de sistemas de colas.
-        </p>
+            >
+              <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-700">
+                <div className="p-6 md:p-8">
+                  <p className="text-gray-400 mb-6">
+                    Las distribuciones estadísticas son fundamentales en la teoría de colas para modelar los tiempos
+                    entre llegadas y los tiempos de servicio. Aquí presentamos las distribuciones más relevantes para
+                    el análisis de sistemas de colas.
+                  </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {/* Distribución Exponencial */}
-          <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-md overflow-hidden">
-            <div className="bg-blue-900/40 px-4 py-3 border-b border-blue-800/50">
-              <h3 className="text-lg font-medium text-blue-300">Distribución Exponencial</h3>
-            </div>
-            <div className="p-5">
-              <p className="text-gray-400 mb-3">
-                La distribución más utilizada para modelar tiempos entre llegadas y tiempos de servicio
-                en sistemas de colas básicos. Se caracteriza por la propiedad de "falta de memoria".
-              </p>
-              <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
-                <h4 className="text-sm font-medium text-gray-300 mb-2">Función de densidad:</h4>
-                <p className="font-mono text-sm text-blue-300">f(x) = λe^(-λx) para x ≥ 0</p>
-                <h4 className="text-sm font-medium text-gray-300 mt-3 mb-2">Media:</h4>
-                <p className="font-mono text-sm text-blue-300">E[X] = 1/λ</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    {/* Distribución Exponencial */}
+                    <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-md overflow-hidden">
+                      <div className="bg-blue-900/40 px-4 py-3 border-b border-blue-800/50">
+                        <h3 className="text-lg font-medium text-blue-300">Distribución Exponencial</h3>
+                      </div>
+                      <div className="p-5">
+                        <p className="text-gray-400 mb-3">
+                          La distribución más utilizada para modelar tiempos entre llegadas y tiempos de servicio
+                          en sistemas de colas básicos. Se caracteriza por la propiedad de "falta de memoria".
+                        </p>
+                        <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
+                          <h4 className="text-sm font-medium text-gray-300 mb-2">Función de densidad:</h4>
+                          <p className="font-mono text-sm text-blue-300">f(x) = λe^(-λx) para x ≥ 0</p>
+                          <h4 className="text-sm font-medium text-gray-300 mt-3 mb-2">Media:</h4>
+                          <p className="font-mono text-sm text-blue-300">E[X] = 1/λ</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Distribución de Poisson */}
+                    <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-md overflow-hidden">
+                      <div className="bg-green-900/40 px-4 py-3 border-b border-green-800/50">
+                        <h3 className="text-lg font-medium text-green-300">Distribución de Poisson</h3>
+                      </div>
+                      <div className="p-5">
+                        <p className="text-gray-400 mb-3">
+                          Utilizada para modelar el número de eventos (llegadas) que ocurren en un intervalo fijo de tiempo.
+                          Es fundamental para el proceso de llegadas en muchos modelos de colas.
+                        </p>
+                        <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
+                          <h4 className="text-sm font-medium text-gray-300 mb-2">Función de masa de probabilidad:</h4>
+                          <p className="font-mono text-sm text-green-300">P(X = k) = (λ^k * e^(-λ)) / k! para k = 0,1,2,...</p>
+                          <h4 className="text-sm font-medium text-gray-300 mt-3 mb-2">Media y Varianza:</h4>
+                          <p className="font-mono text-sm text-green-300">E[X] = Var[X] = λ</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Distribución Erlang */}
+                    <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-md overflow-hidden">
+                      <div className="bg-purple-900/40 px-4 py-3 border-b border-purple-800/50">
+                        <h3 className="text-lg font-medium text-purple-300">Distribución Erlang</h3>
+                      </div>
+                      <div className="p-5">
+                        <p className="text-gray-400 mb-3">
+                          Utilizada para modelar la suma de variables aleatorias exponenciales independientes.
+                          Es útil para tiempos de servicio que consisten en múltiples fases.
+                        </p>
+                        <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
+                          <h4 className="text-sm font-medium text-gray-300 mb-2">Función de densidad:</h4>
+                          <p className="font-mono text-sm text-purple-300">f(x) = (λ^k * x^(k-1) * e^(-λx)) / (k-1)! para x ≥ 0</p>
+                          <h4 className="text-sm font-medium text-gray-300 mt-3 mb-2">Media:</h4>
+                          <p className="font-mono text-sm text-purple-300">E[X] = k/λ</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Distribución Determinística */}
+                    <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-md overflow-hidden">
+                      <div className="bg-amber-900/40 px-4 py-3 border-b border-amber-800/50">
+                        <h3 className="text-lg font-medium text-amber-300">Distribución Determinística</h3>
+                      </div>
+                      <div className="p-5">
+                        <p className="text-gray-400 mb-3">
+                          Representa tiempos constantes, sin variabilidad. Útil para modelar servicios automatizados o
+                          altamente estandarizados donde los tiempos son prácticamente invariables.
+                        </p>
+                        <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
+                          <h4 className="text-sm font-medium text-gray-300 mb-2">Características:</h4>
+                          <ul className="list-disc pl-5 text-sm text-gray-400">
+                            <li>Todos los valores son iguales a una constante</li>
+                            <li>Varianza igual a cero</li>
+                            <li>Notación: D</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-blue-900/20 p-5 rounded-lg border border-blue-800/40">
+                    <h3 className="text-lg font-medium text-blue-300 mb-3">Importancia en la Teoría de Colas</h3>
+                    <ul className="list-disc pl-5 text-gray-400 space-y-2">
+                      <li>La distribución de los tiempos entre llegadas y de servicio determina el tipo de modelo matemático a utilizar.</li>
+                      <li>El proceso de Poisson (llegadas exponenciales) permite el desarrollo de modelos analíticos tratables.</li>
+                      <li>La propiedad de "falta de memoria" de la distribución exponencial simplifica significativamente el análisis matemático.</li>
+                      <li>Distribuciones no exponenciales generalmente requieren métodos numéricos o de simulación para su análisis.</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          {/* Distribución de Poisson */}
-          <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-md overflow-hidden">
-            <div className="bg-green-900/40 px-4 py-3 border-b border-green-800/50">
-              <h3 className="text-lg font-medium text-green-300">Distribución de Poisson</h3>
+
+
+
+          <section className="mb-16 max-w-6xl mx-auto">
+            <div
+              className="flex items-center justify-between cursor-pointer mb-6 bg-gray-800 px-4 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
+              onClick={() => toggleSection('basic-models')}
+            >
+              <h2 className="text-2xl font-semibold text-gray-200">
+                Modelos Básicos
+              </h2>
+              <svg
+                className={`w-6 h-6 text-gray-300 transition-transform duration-200 ${expandedSection === 'basic-models' ? 'transform rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
             </div>
-            <div className="p-5">
-              <p className="text-gray-400 mb-3">
-                Utilizada para modelar el número de eventos (llegadas) que ocurren en un intervalo fijo de tiempo.
-                Es fundamental para el proceso de llegadas en muchos modelos de colas.
-              </p>
-              <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
-                <h4 className="text-sm font-medium text-gray-300 mb-2">Función de masa de probabilidad:</h4>
-                <p className="font-mono text-sm text-green-300">P(X = k) = (λ^k * e^(-λ)) / k! para k = 0,1,2,...</p>
-                <h4 className="text-sm font-medium text-gray-300 mt-3 mb-2">Media y Varianza:</h4>
-                <p className="font-mono text-sm text-green-300">E[X] = Var[X] = λ</p>
-              </div>
-            </div>
-          </div>
 
-          {/* Distribución Erlang */}
-          <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-md overflow-hidden">
-            <div className="bg-purple-900/40 px-4 py-3 border-b border-purple-800/50">
-              <h3 className="text-lg font-medium text-purple-300">Distribución Erlang</h3>
-            </div>
-            <div className="p-5">
-              <p className="text-gray-400 mb-3">
-                Utilizada para modelar la suma de variables aleatorias exponenciales independientes.
-                Es útil para tiempos de servicio que consisten en múltiples fases.
-              </p>
-              <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
-                <h4 className="text-sm font-medium text-gray-300 mb-2">Función de densidad:</h4>
-                <p className="font-mono text-sm text-purple-300">f(x) = (λ^k * x^(k-1) * e^(-λx)) / (k-1)! para x ≥ 0</p>
-                <h4 className="text-sm font-medium text-gray-300 mt-3 mb-2">Media:</h4>
-                <p className="font-mono text-sm text-purple-300">E[X] = k/λ</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Distribución Determinística */}
-          <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-md overflow-hidden">
-            <div className="bg-amber-900/40 px-4 py-3 border-b border-amber-800/50">
-              <h3 className="text-lg font-medium text-amber-300">Distribución Determinística</h3>
-            </div>
-            <div className="p-5">
-              <p className="text-gray-400 mb-3">
-                Representa tiempos constantes, sin variabilidad. Útil para modelar servicios automatizados o
-                altamente estandarizados donde los tiempos son prácticamente invariables.
-              </p>
-              <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
-                <h4 className="text-sm font-medium text-gray-300 mb-2">Características:</h4>
-                <ul className="list-disc pl-5 text-sm text-gray-400">
-                  <li>Todos los valores son iguales a una constante</li>
-                  <li>Varianza igual a cero</li>
-                  <li>Notación: D</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-blue-900/20 p-5 rounded-lg border border-blue-800/40">
-          <h3 className="text-lg font-medium text-blue-300 mb-3">Importancia en la Teoría de Colas</h3>
-          <ul className="list-disc pl-5 text-gray-400 space-y-2">
-            <li>La distribución de los tiempos entre llegadas y de servicio determina el tipo de modelo matemático a utilizar.</li>
-            <li>El proceso de Poisson (llegadas exponenciales) permite el desarrollo de modelos analíticos tratables.</li>
-            <li>La propiedad de "falta de memoria" de la distribución exponencial simplifica significativamente el análisis matemático.</li>
-            <li>Distribuciones no exponenciales generalmente requieren métodos numéricos o de simulación para su análisis.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
-
-    <section className="mb-16 max-w-6xl mx-auto">
-      <div
-        className="flex items-center justify-between cursor-pointer mb-6 bg-gray-800 px-4 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
-        onClick={() => toggleSection('basic-models')}
-      >
-        <h2 className="text-2xl font-semibold text-gray-200">
-          Modelos Básicos
-        </h2>
-        <svg
-          className={`w-6 h-6 text-gray-300 transition-transform duration-200 ${expandedSection === 'basic-models' ? 'transform rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
-
-      {/* Contenido de la sección */}
-      <div
-        className={`
+            {/* Contenido de la sección */}
+            <div
+              className={`
           overflow-hidden transition-all duration-500 ease-in-out
           ${expandedSection === 'basic-models' ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'}
         `}
-      >
-        {/* El contenido es el mismo que tenías */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {/* Modelo M/M/1 */}
-          <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700">
-            <div className="bg-gray-700 p-4 border-b border-gray-600">
-              <h3 className="text-lg font-medium text-blue-400">Modelo M/M/1</h3>
-              <p className="text-sm text-gray-300 mt-1">Un servidor, llegadas Poisson, tiempos de servicio exponenciales</p>
-            </div>
-            <div className="p-5">
-              <p className="text-gray-300 mb-4">
-                Este es el modelo más simple y fundamental de la teoría de colas. Representa un sistema con un solo servidor,
-                donde tanto las llegadas como los servicios siguen distribuciones exponenciales.
-              </p>
+            >
+              {/* El contenido es el mismo que tenías */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                {/* Modelo M/M/1 */}
+                <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700">
+                  <div className="bg-gray-700 p-4 border-b border-gray-600">
+                    <h3 className="text-lg font-medium text-blue-400">Modelo M/M/1</h3>
+                    <p className="text-sm text-gray-300 mt-1">Un servidor, llegadas Poisson, tiempos de servicio exponenciales</p>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-gray-300 mb-4">
+                      Este es el modelo más simple y fundamental de la teoría de colas. Representa un sistema con un solo servidor,
+                      donde tanto las llegadas como los servicios siguen distribuciones exponenciales.
+                    </p>
 
-              <h4 className="font-medium text-gray-200 mb-2">Condición de Estabilidad:</h4>
-              <p className="mb-3">
-                <span className="font-mono bg-gray-700 px-2 py-1 rounded text-blue-300">ρ = λ/μ {'<'} 1</span>
-              </p>
+                    <h4 className="font-medium text-gray-200 mb-2">Condición de Estabilidad:</h4>
+                    <p className="mb-3">
+                      <span className="font-mono bg-gray-700 px-2 py-1 rounded text-blue-300">ρ = λ/μ {'<'} 1</span>
+                    </p>
 
-              <h4 className="font-medium text-gray-200 mb-2">Fórmulas principales:</h4>
-              <div className="bg-gray-700 p-4 rounded-lg space-y-3 mb-4">
-                <div>
-                  <p className="text-sm text-gray-300">Número promedio de clientes en el sistema:</p>
-                  <p className="font-mono mt-1 text-blue-300">L = ρ/(1-ρ)</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-300">Número promedio de clientes en la cola:</p>
-                  <p className="font-mono mt-1 text-blue-300">Lq = ρ²/(1-ρ)</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-300">Tiempo promedio en el sistema:</p>
-                  <p className="font-mono mt-1 text-blue-300">W = 1/(μ-λ)</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-300">Tiempo promedio en la cola:</p>
-                  <p className="font-mono mt-1 text-blue-300">Wq = ρ/(μ-λ)</p>
-                </div>
-              </div>
+                    <h4 className="font-medium text-gray-200 mb-2">Fórmulas principales:</h4>
+                    <div className="bg-gray-700 p-4 rounded-lg space-y-3 mb-4">
+                      <div>
+                        <p className="text-sm text-gray-300">Número promedio de clientes en el sistema:</p>
+                        <p className="font-mono mt-1 text-blue-300">L = ρ/(1-ρ)</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-300">Número promedio de clientes en la cola:</p>
+                        <p className="font-mono mt-1 text-blue-300">Lq = ρ²/(1-ρ)</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-300">Tiempo promedio en el sistema:</p>
+                        <p className="font-mono mt-1 text-blue-300">W = 1/(μ-λ)</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-300">Tiempo promedio en la cola:</p>
+                        <p className="font-mono mt-1 text-blue-300">Wq = ρ/(μ-λ)</p>
+                      </div>
+                    </div>
 
-              <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
-                <h4 className="font-medium text-blue-300 mb-1">Aplicaciones típicas:</h4>
-                <ul className="list-disc pl-5 text-gray-300 text-sm">
-                  <li>Ventanillas únicas de atención</li>
-                  <li>Servicios técnicos con un solo técnico</li>
-                  <li>Sistemas de procesamiento de transacciones simples</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          {/* Modelo M/M/c */}
-          <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700">
-            <div className="bg-gray-700 p-4 border-b border-gray-600">
-              <h3 className="text-lg font-medium text-blue-400">Modelo M/M/c</h3>
-              <p className="text-sm text-gray-300 mt-1">Múltiples servidores, llegadas Poisson, tiempos de servicio exponenciales</p>
-            </div>
-            <div className="p-5">
-              <p className="text-gray-300 mb-4">
-                Extensión del modelo M/M/1 con múltiples servidores idénticos en paralelo. Todos los servidores
-                toman clientes de una única cola y tienen la misma tasa de servicio μ.
-              </p>
-
-              <h4 className="font-medium text-gray-200 mb-2">Condición de Estabilidad:</h4>
-              <p className="mb-3">
-                <span className="font-mono bg-gray-700 px-2 py-1 rounded text-blue-300">ρ = λ/(c·μ) {'<'} 1 </span>
-              </p>
-
-              <h4 className="font-medium text-gray-200 mb-2">Fórmulas principales:</h4>
-              <div className="bg-gray-700 p-4 rounded-lg space-y-3 mb-4">
-                <div>
-                  <p className="text-sm text-gray-300">Probabilidad de que el sistema esté vacío:</p>
-                  <p className="font-mono mt-1 text-blue-300">P₀ = 1/[∑(k=0 to c-1)((λ/μ)^k/k!) + ((λ/μ)^c/c!)·(c·μ/(c·μ-λ))]</p>
+                    <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
+                      <h4 className="font-medium text-blue-300 mb-1">Aplicaciones típicas:</h4>
+                      <ul className="list-disc pl-5 text-gray-300 text-sm">
+                        <li>Ventanillas únicas de atención</li>
+                        <li>Servicios técnicos con un solo técnico</li>
+                        <li>Sistemas de procesamiento de transacciones simples</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-300">Número promedio de clientes en la cola:</p>
-                  <p className="font-mono mt-1 text-blue-300">Lq = (P₀(λ/μ)^c·ρ)/(c!·(1-ρ)²)</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-300">Número promedio de clientes en el sistema:</p>
-                  <p className="font-mono mt-1 text-blue-300">L = Lq + λ/μ</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-300">Tiempo promedio en la cola:</p>
-                  <p className="font-mono mt-1 text-blue-300">Wq = Lq/λ</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-300">Tiempo promedio en el sistema:</p>
-                  <p className="font-mono mt-1 text-blue-300">W = Wq + 1/μ</p>
-                </div>
-              </div>
 
-              <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
-                <h4 className="font-medium text-blue-300 mb-1">Aplicaciones típicas:</h4>
-                <ul className="list-disc pl-5 text-gray-300 text-sm">
-                  <li>Call centers y centros de atención telefónica</li>
-                  <li>Ventanillas múltiples de bancos o servicios públicos</li>
-                  <li>Cajas de supermercados</li>
-                  <li>Estaciones de servicio con múltiples surtidores</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
+                {/* Modelo M/M/c */}
+                <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700">
+                  <div className="bg-gray-700 p-4 border-b border-gray-600">
+                    <h3 className="text-lg font-medium text-blue-400">Modelo M/M/c</h3>
+                    <p className="text-sm text-gray-300 mt-1">Múltiples servidores, llegadas Poisson, tiempos de servicio exponenciales</p>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-gray-300 mb-4">
+                      Extensión del modelo M/M/1 con múltiples servidores idénticos en paralelo. Todos los servidores
+                      toman clientes de una única cola y tienen la misma tasa de servicio μ.
+                    </p>
 
-        {/* La segunda fila de tarjetas de modelos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {/* Modelo M/M/1/K */}
-          <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700">
-            <div className="bg-gray-700 p-4 border-b border-gray-600">
-              <h3 className="text-lg font-medium text-blue-400">Modelo M/M/1/K</h3>
-              <p className="text-sm text-gray-300 mt-1">Un servidor, capacidad limitada K</p>
-            </div>
-            <div className="p-5">
-              <p className="text-gray-300 mb-4">
-                Variación del modelo M/M/1 donde el sistema tiene una capacidad máxima de K clientes (incluyendo el que está en servicio).
-                Los clientes que llegan cuando el sistema está lleno se rechazan.
-              </p>
+                    <h4 className="font-medium text-gray-200 mb-2">Condición de Estabilidad:</h4>
+                    <p className="mb-3">
+                      <span className="font-mono bg-gray-700 px-2 py-1 rounded text-blue-300">ρ = λ/(c·μ) {'<'} 1 </span>
+                    </p>
 
-              <h4 className="font-medium text-gray-200 mb-2">Características clave:</h4>
-              <ul className="list-disc pl-5 text-gray-300 mb-4">
-                <li>No requiere condición de estabilidad (ρ puede ser mayor que 1)</li>
-                <li>Tasa de llegadas efectiva: λₑ = λ(1-P_K) donde P_K es la probabilidad de que el sistema esté lleno</li>
-              </ul>
+                    <h4 className="font-medium text-gray-200 mb-2">Fórmulas principales:</h4>
+                    <div className="bg-gray-700 p-4 rounded-lg space-y-3 mb-4">
+                      <div>
+                        <p className="text-sm text-gray-300">Probabilidad de que el sistema esté vacío:</p>
+                        <p className="font-mono mt-1 text-blue-300">P₀ = 1/[∑(k=0 to c-1)((λ/μ)^k/k!) + ((λ/μ)^c/c!)·(c·μ/(c·μ-λ))]</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-300">Número promedio de clientes en la cola:</p>
+                        <p className="font-mono mt-1 text-blue-300">Lq = (P₀(λ/μ)^c·ρ)/(c!·(1-ρ)²)</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-300">Número promedio de clientes en el sistema:</p>
+                        <p className="font-mono mt-1 text-blue-300">L = Lq + λ/μ</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-300">Tiempo promedio en la cola:</p>
+                        <p className="font-mono mt-1 text-blue-300">Wq = Lq/λ</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-300">Tiempo promedio en el sistema:</p>
+                        <p className="font-mono mt-1 text-blue-300">W = Wq + 1/μ</p>
+                      </div>
+                    </div>
 
-              <h4 className="font-medium text-gray-200 mb-2">Fórmulas principales:</h4>
-              <div className="bg-gray-700 p-4 rounded-lg space-y-3 mb-4">
-                <div>
-                  <p className="text-sm text-gray-300">Probabilidad de que haya n clientes:</p>
-                  <p className="font-mono mt-1 text-blue-300">P_n = (ρ^n(1-ρ))/(1-ρ^(K+1)) para ρ≠1</p>
-                  <p className="font-mono mt-1 text-blue-300">P_n = 1/(K+1) para ρ=1</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-300">Número promedio de clientes en el sistema:</p>
-                  <p className="font-mono mt-1 text-blue-300">L = ρ/(1-ρ) - (K+1)ρ^(K+1)/(1-ρ^(K+1)) para ρ≠1</p>
-                  <p className="font-mono mt-1 text-blue-300">L = K/2 para ρ=1</p>
+                    <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
+                      <h4 className="font-medium text-blue-300 mb-1">Aplicaciones típicas:</h4>
+                      <ul className="list-disc pl-5 text-gray-300 text-sm">
+                        <li>Call centers y centros de atención telefónica</li>
+                        <li>Ventanillas múltiples de bancos o servicios públicos</li>
+                        <li>Cajas de supermercados</li>
+                        <li>Estaciones de servicio con múltiples surtidores</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
-                <h4 className="font-medium text-blue-300 mb-1">Aplicaciones típicas:</h4>
-                <ul className="list-disc pl-5 text-gray-300 text-sm">
-                  <li>Sistemas con espacio físico limitado</li>
-                  <li>Buffers o memoria en sistemas computacionales</li>
-                  <li>Líneas telefónicas con capacidad máxima</li>
-                </ul>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                {/* Modelo M/M/1/K */}
+                <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700">
+                  <div className="bg-gray-700 p-4 border-b border-gray-600">
+                    <h3 className="text-lg font-medium text-blue-400">Modelo M/M/1/K</h3>
+                    <p className="text-sm text-gray-300 mt-1">Un servidor, capacidad limitada K</p>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-gray-300 mb-4">
+                      Variación del modelo M/M/1 donde el sistema tiene una capacidad máxima de K clientes (incluyendo el que está en servicio).
+                      Los clientes que llegan cuando el sistema está lleno se rechazan.
+                    </p>
+
+                    <h4 className="font-medium text-gray-200 mb-2">Características clave:</h4>
+                    <ul className="list-disc pl-5 text-gray-300 mb-4">
+                      <li>No requiere condición de estabilidad (ρ puede ser mayor que 1)</li>
+                      <li>Tasa de llegadas efectiva: λₑ = λ(1-P_K) donde P_K es la probabilidad de que el sistema esté lleno</li>
+                    </ul>
+
+                    <h4 className="font-medium text-gray-200 mb-2">Fórmulas principales:</h4>
+                    <div className="bg-gray-700 p-4 rounded-lg space-y-3 mb-4">
+                      <div>
+                        <p className="text-sm text-gray-300">Probabilidad de que haya n clientes:</p>
+                        <p className="font-mono mt-1 text-blue-300">P_n = (ρ^n(1-ρ))/(1-ρ^(K+1)) para ρ≠1</p>
+                        <p className="font-mono mt-1 text-blue-300">P_n = 1/(K+1) para ρ=1</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-300">Número promedio de clientes en el sistema:</p>
+                        <p className="font-mono mt-1 text-blue-300">L = ρ/(1-ρ) - (K+1)ρ^(K+1)/(1-ρ^(K+1)) para ρ≠1</p>
+                        <p className="font-mono mt-1 text-blue-300">L = K/2 para ρ=1</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
+                      <h4 className="font-medium text-blue-300 mb-1">Aplicaciones típicas:</h4>
+                      <ul className="list-disc pl-5 text-gray-300 text-sm">
+                        <li>Sistemas con espacio físico limitado</li>
+                        <li>Buffers o memoria en sistemas computacionales</li>
+                        <li>Líneas telefónicas con capacidad máxima</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Modelo M/G/1 */}
+                <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700">
+                  <div className="bg-gray-700 p-4 border-b border-gray-600">
+                    <h3 className="text-lg font-medium text-blue-400">Modelo M/G/1</h3>
+                    <p className="text-sm text-gray-300 mt-1">Un servidor, llegadas Poisson, tiempo de servicio con distribución general</p>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-gray-300 mb-4">
+                      Modelo que generaliza el tiempo de servicio a cualquier distribución. Es útil cuando los tiempos de servicio
+                      no siguen una distribución exponencial, lo que es común en muchas aplicaciones prácticas.
+                    </p>
+
+                    <h4 className="font-medium text-gray-200 mb-2">Condición de Estabilidad:</h4>
+                    <p className="mb-3">
+                      <span className="font-mono bg-gray-700 px-2 py-1 rounded text-blue-300">ρ = λE[S] {'<'} 1</span> donde E[S] es el tiempo medio de servicio
+                    </p>
+
+                    <h4 className="font-medium text-gray-200 mb-2">Fórmulas de Pollaczek-Khinchin:</h4>
+                    <div className="bg-gray-700 p-4 rounded-lg space-y-3 mb-4">
+                      <div>
+                        <p className="text-sm text-gray-300">Número promedio de clientes en la cola:</p>
+                        <p className="font-mono mt-1 text-blue-300">Lq = (λ²E[S²])/(2(1-ρ))</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-300">Tiempo promedio en la cola:</p>
+                        <p className="font-mono mt-1 text-blue-300">Wq = Lq/λ = (λE[S²])/(2(1-ρ))</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-300">Tiempo promedio en el sistema:</p>
+                        <p className="font-mono mt-1 text-blue-300">W = Wq + E[S]</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-300">Número promedio de clientes en el sistema:</p>
+                        <p className="font-mono mt-1 text-blue-300">L = λW</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
+                      <h4 className="font-medium text-blue-300 mb-1">Aplicaciones típicas:</h4>
+                      <ul className="list-disc pl-5 text-gray-300 text-sm">
+                        <li>Servicios con alta variabilidad en el tiempo de atención</li>
+                        <li>Procesos de manufactura con tiempos variables</li>
+                        <li>Sistemas donde el tiempo de servicio depende del tipo de cliente</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sección de Notación de Kendall */}
+              <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8 border border-gray-700">
+                <h3 className="text-xl font-medium text-blue-400 mb-4">Notación de Kendall</h3>
+                <p className="text-gray-300 mb-4">
+                  La notación de Kendall es una forma estandarizada de describir y clasificar los sistemas de colas.
+                  La forma básica es A/B/c/K/N/D donde:
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div className="bg-gray-700 p-4 rounded-lg">
+                    <h4 className="font-medium text-blue-300 mb-2">Componentes principales:</h4>
+                    <ul className="space-y-2 text-gray-300">
+                      <li><strong className="text-blue-300">A:</strong> Distribución de los tiempos entre llegadas</li>
+                      <li><strong className="text-blue-300">B:</strong> Distribución de los tiempos de servicio</li>
+                      <li><strong className="text-blue-300">c:</strong> Número de servidores</li>
+                      <li><strong className="text-blue-300">K:</strong> Capacidad del sistema (opcional)</li>
+                      <li><strong className="text-blue-300">N:</strong> Tamaño de la población fuente (opcional)</li>
+                      <li><strong className="text-blue-300">D:</strong> Disciplina de la cola (opcional, FIFO por defecto)</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-gray-700 p-4 rounded-lg">
+                    <h4 className="font-medium text-blue-300 mb-2">Símbolos comunes para A y B:</h4>
+                    <ul className="space-y-2 text-gray-300">
+                      <li><strong className="text-blue-300">M:</strong> Distribución exponencial (Markoviana)</li>
+                      <li><strong className="text-blue-300">D:</strong> Distribución determinística (constante)</li>
+                      <li><strong className="text-blue-300">Ek:</strong> Distribución Erlang-k</li>
+                      <li><strong className="text-blue-300">G:</strong> Distribución general (cualquiera)</li>
+                      <li><strong className="text-blue-300">GI:</strong> Distribución general independiente</li>
+                      <li><strong className="text-blue-300">H:</strong> Distribución hiperexponencial</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-gray-900 p-4 rounded-lg border border-gray-700">
+                  <h4 className="font-medium text-blue-400 mb-2">Ejemplos de notación:</h4>
+                  <ul className="list-disc pl-5 text-gray-300 space-y-2">
+                    <li><strong className="text-blue-300">M/M/1:</strong> Llegadas y servicios exponenciales, un servidor, capacidad infinita, población infinita, FIFO</li>
+                    <li><strong className="text-blue-300">M/G/1:</strong> Llegadas exponenciales, servicios con distribución general, un servidor, capacidad infinita, población infinita, FIFO</li>
+                    <li><strong className="text-blue-300">M/M/c:</strong> Llegadas y servicios exponenciales, c servidores, capacidad infinita, población infinita, FIFO</li>
+                    <li><strong className="text-blue-300">M/D/1:</strong> Llegadas exponenciales, tiempo de servicio determinístico, un servidor, capacidad infinita, población infinita, FIFO</li>
+                    <li><strong className="text-blue-300">M/M/1/K:</strong> Llegadas y servicios exponenciales, un servidor, capacidad K, población infinita, FIFO</li>
+                  </ul>
+                </div>
               </div>
             </div>
-          </div>
-
-          {/* Modelo M/G/1 */}
-          <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700">
-            <div className="bg-gray-700 p-4 border-b border-gray-600">
-              <h3 className="text-lg font-medium text-blue-400">Modelo M/G/1</h3>
-              <p className="text-sm text-gray-300 mt-1">Un servidor, llegadas Poisson, tiempo de servicio con distribución general</p>
-            </div>
-            <div className="p-5">
-              <p className="text-gray-300 mb-4">
-                Modelo que generaliza el tiempo de servicio a cualquier distribución. Es útil cuando los tiempos de servicio
-                no siguen una distribución exponencial, lo que es común en muchas aplicaciones prácticas.
-              </p>
-
-              <h4 className="font-medium text-gray-200 mb-2">Condición de Estabilidad:</h4>
-              <p className="mb-3">
-                <span className="font-mono bg-gray-700 px-2 py-1 rounded text-blue-300">ρ = λE[S] {'<'} 1</span> donde E[S] es el tiempo medio de servicio
-              </p>
-
-              <h4 className="font-medium text-gray-200 mb-2">Fórmulas de Pollaczek-Khinchin:</h4>
-              <div className="bg-gray-700 p-4 rounded-lg space-y-3 mb-4">
-                <div>
-                  <p className="text-sm text-gray-300">Número promedio de clientes en la cola:</p>
-                  <p className="font-mono mt-1 text-blue-300">Lq = (λ²E[S²])/(2(1-ρ))</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-300">Tiempo promedio en la cola:</p>
-                  <p className="font-mono mt-1 text-blue-300">Wq = Lq/λ = (λE[S²])/(2(1-ρ))</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-300">Tiempo promedio en el sistema:</p>
-                  <p className="font-mono mt-1 text-blue-300">W = Wq + E[S]</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-300">Número promedio de clientes en el sistema:</p>
-                  <p className="font-mono mt-1 text-blue-300">L = λW</p>
-                </div>
-              </div>
-
-              <div className="bg-gray-900 p-3 rounded-md border border-gray-700">
-                <h4 className="font-medium text-blue-300 mb-1">Aplicaciones típicas:</h4>
-                <ul className="list-disc pl-5 text-gray-300 text-sm">
-                  <li>Servicios con alta variabilidad en el tiempo de atención</li>
-                  <li>Procesos de manufactura con tiempos variables</li>
-                  <li>Sistemas donde el tiempo de servicio depende del tipo de cliente</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Sección de Notación de Kendall */}
-        <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8 border border-gray-700">
-          <h3 className="text-xl font-medium text-blue-400 mb-4">Notación de Kendall</h3>
-          <p className="text-gray-300 mb-4">
-            La notación de Kendall es una forma estandarizada de describir y clasificar los sistemas de colas.
-            La forma básica es A/B/c/K/N/D donde:
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="bg-gray-700 p-4 rounded-lg">
-              <h4 className="font-medium text-blue-300 mb-2">Componentes principales:</h4>
-              <ul className="space-y-2 text-gray-300">
-                <li><strong className="text-blue-300">A:</strong> Distribución de los tiempos entre llegadas</li>
-                <li><strong className="text-blue-300">B:</strong> Distribución de los tiempos de servicio</li>
-                <li><strong className="text-blue-300">c:</strong> Número de servidores</li>
-                <li><strong className="text-blue-300">K:</strong> Capacidad del sistema (opcional)</li>
-                <li><strong className="text-blue-300">N:</strong> Tamaño de la población fuente (opcional)</li>
-                <li><strong className="text-blue-300">D:</strong> Disciplina de la cola (opcional, FIFO por defecto)</li>
-              </ul>
-            </div>
-
-            <div className="bg-gray-700 p-4 rounded-lg">
-              <h4 className="font-medium text-blue-300 mb-2">Símbolos comunes para A y B:</h4>
-              <ul className="space-y-2 text-gray-300">
-                <li><strong className="text-blue-300">M:</strong> Distribución exponencial (Markoviana)</li>
-                <li><strong className="text-blue-300">D:</strong> Distribución determinística (constante)</li>
-                <li><strong className="text-blue-300">Ek:</strong> Distribución Erlang-k</li>
-                <li><strong className="text-blue-300">G:</strong> Distribución general (cualquiera)</li>
-                <li><strong className="text-blue-300">GI:</strong> Distribución general independiente</li>
-                <li><strong className="text-blue-300">H:</strong> Distribución hiperexponencial</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="bg-gray-900 p-4 rounded-lg border border-gray-700">
-            <h4 className="font-medium text-blue-400 mb-2">Ejemplos de notación:</h4>
-            <ul className="list-disc pl-5 text-gray-300 space-y-2">
-              <li><strong className="text-blue-300">M/M/1:</strong> Llegadas y servicios exponenciales, un servidor, capacidad infinita, población infinita, FIFO</li>
-              <li><strong className="text-blue-300">M/G/1:</strong> Llegadas exponenciales, servicios con distribución general, un servidor, capacidad infinita, población infinita, FIFO</li>
-              <li><strong className="text-blue-300">M/M/c:</strong> Llegadas y servicios exponenciales, c servidores, capacidad infinita, población infinita, FIFO</li>
-              <li><strong className="text-blue-300">M/D/1:</strong> Llegadas exponenciales, tiempo de servicio determinístico, un servidor, capacidad infinita, población infinita, FIFO</li>
-              <li><strong className="text-blue-300">M/M/1/K:</strong> Llegadas y servicios exponenciales, un servidor, capacidad K, población infinita, FIFO</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
+          </section>
 
 
           {/* Sección: Métricas de Rendimiento */}

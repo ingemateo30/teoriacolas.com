@@ -2,7 +2,6 @@
 
 import React from 'react';
 
-// Tipo para las métricas que vamos a mostrar
 interface MetricsDisplayProps {
   metrics: {
     arrivalRate?: number;
@@ -17,21 +16,12 @@ interface MetricsDisplayProps {
   };
 }
 
-/**
- * Componente MetricsDisplay con Modo Oscuro
- * 
- * Muestra métricas clave de los sistemas de colas en un formato claro
- * Utiliza un diseño de modo oscuro con colores específicos por métrica
- * Compatible con el tema oscuro general de la aplicación
- */
 const MetricsDisplay: React.FC<MetricsDisplayProps> = ({ metrics }) => {
-  // Función para formatear los valores numéricos
   const formatValue = (value: number | undefined): string => {
     if (value === undefined) return 'N/A';
     return value.toFixed(3);
   };
 
-  // Obtener el color apropiado para cada métrica
   const getMetricColor = (metricKey: string): string => {
     switch (metricKey) {
       case 'arrivalRate': return 'text-blue-400';
@@ -47,7 +37,6 @@ const MetricsDisplay: React.FC<MetricsDisplayProps> = ({ metrics }) => {
     }
   };
 
-  // Estructura de datos para las métricas que queremos mostrar
   const metricsToDisplay = [
     { key: 'arrivalRate', label: 'Tasa de llegada (λ)', value: formatValue(metrics.arrivalRate) },
     { key: 'serviceRate', label: 'Tasa de servicio (μ)', value: formatValue(metrics.serviceRate) },

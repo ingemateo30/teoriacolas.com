@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// URL base de tu sitio para URLs absolutas
-const siteUrl = "https://teoriacolascom.vercel.app"; // Reemplaza con tu URL real
+
+const siteUrl = "https://teoriacolascom.vercel.app";
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
@@ -22,7 +22,7 @@ export const metadata = {
   description: "Todo acerca de la teoría de colas. Encontrarás simulación de la teoría, calculadora, graficadora de resultados y toda la teoría relacionada.",
   keywords: "teoría de colas, simulación, calculadora, graficadora, modelos de colas, sistemas de espera",
 
-  // Configuración de robots
+  
   robots: {
     index: true,
     follow: true,
@@ -53,7 +53,7 @@ export const metadata = {
     ],
   },
 
-  // Twitter Card
+  
   twitter: {
     card: 'summary_large_image',
     title: 'Quequesim - Teoría de Colas y Simulación',
@@ -61,19 +61,18 @@ export const metadata = {
     images: [`${siteUrl}/logosim.png`],
   },
 
-  // Favicon y otros íconos
+ 
   icons: {
     icon: "/logosim.png",
     apple: "/logosim.png",
     shortcut: "/logosim.png",
   },
 
-  // Información del autor
+ 
   authors: [{ name: 'Mateo Salazar ortiz', url: siteUrl }],
 
-  // Verificación de propiedad del sitio para Google
   verification: {
-    google: 'tu-código-de-verificación', // Reemplazar con tu código de Google Search Console
+    google: 'tu-código-de-verificación',
   },
 };
 
@@ -97,7 +96,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         {children}
         <Analytics/>
-        {/* Schema.org JSON-LD para SEO */}
         <Script
           id="schema-org"
           type="application/ld+json"

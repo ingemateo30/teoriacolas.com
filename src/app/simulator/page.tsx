@@ -7,30 +7,19 @@ import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
 import Footer from '@/components/layout/Footer';
 
-
-/**
- * Página Simulador con el mismo estilo del Navbar
- * 
- * Muestra diferentes modelos de teoría de colas
- * Implementa un diseño coherente con el tema oscuro y azul del navbar
- */
 export default function SimulatorPage() {
   const router = useRouter();
   
-  // Estado para efectos de transición al cargar la página
   const [isLoaded, setIsLoaded] = useState(false);
   
-  // Efecto para añadir una pequeña animación al cargar
   useEffect(() => {
     setIsLoaded(true);
   }, []);
   
-  // Función para navegar a la página específica del modelo
   const navigateToModel = (modelId: string) => {
     router.push(`/simulator/${modelId}`);
   };
   
-  // Definición de modelos de teoría de colas
   const queueModels = [
     {
       id: "mm1",
@@ -61,15 +50,15 @@ export default function SimulatorPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-950">
-      {/* Navbar - Fijo en la parte superior */}
+      
       <Navbar />
       
-      {/* Área de contenido principal con sidebar */}
-      <div className="flex flex-1 pt-16"> {/* Añadido pt-16 para compensar la altura del navbar fijo */}
-        {/* Sidebar - Fijo en la izquierda */}
+      
+      <div className="flex flex-1 pt-16">
+        
         <Sidebar />
         
-        {/* Contenido principal con estilo coherente al Navbar */}
+        
         <div className={`flex-1 min-h-screen bg-gray-900 text-white p-8 transition-opacity duration-500 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         }`}>
@@ -93,8 +82,6 @@ export default function SimulatorPage() {
           </div>
         </div>
       </div>
-      
-      {/* Footer */}
       <Footer />
     </div>
   );

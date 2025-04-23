@@ -5,25 +5,15 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from 'react';
 import React from 'react';
 
-/**
- * Componente Sidebar con Modo Oscuro
- * 
- * Un sidebar elegante y responsivo que se integra con el Navbar en modo oscuro
- * con animaciones fluidas y feedback visual para mejorar la experiencia de usuario.
- */
 export default function Sidebar() {
   const pathname = usePathname();
   
-  // Estado para controlar cuál submenú está expandido
   const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
   
-  // Estado para manejar si el sidebar está colapsado (para vista móvil)
   const [isCollapsed, setIsCollapsed] = useState(false);
   
-  // Estado para manejar efectos visuales en hover
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
-  // Efecto para expandir automáticamente el submenú activo al cargar
   useEffect(() => {
     menuItems.forEach(item => {
       if (item.submenu && item.submenu.some(subItem => pathname === subItem.href)) {
@@ -98,12 +88,12 @@ export default function Sidebar() {
     setExpandedMenu(expandedMenu === title ? null : title);
   };
 
-  // Determinar si un elemento de menú está activo
+  
   const isActive = (href: string) => {
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
-  // Maneja el hover de elementos
+  
   const handleItemHover = (title: string | null) => {
     setHoveredItem(title);
   };
@@ -115,7 +105,7 @@ export default function Sidebar() {
       transition-all duration-300 ease-in-out
       ${isCollapsed ? "lg:w-20" : "lg:w-64"}
     `}>
-      {/* Botón de colapsar sidebar */}
+      
       <button 
         className="absolute -right-3 top-20 bg-gray-800 text-gray-300 rounded-full p-1 shadow-md hover:shadow-lg transition-shadow duration-300 z-10"
         onClick={() => setIsCollapsed(!isCollapsed)}
@@ -133,7 +123,7 @@ export default function Sidebar() {
       </button>
 
       <div className="h-full px-3 py-4 overflow-y-auto">
-        {/* Lista de menú */}
+        
         <ul className="space-y-2">
           {menuItems.map((item, index) => (
             <li key={index}>
@@ -188,7 +178,7 @@ export default function Sidebar() {
                     )}
                   </button>
                   
-                  {/* Submenú con animación de expansión */}
+                  
                   <div
                     id={`submenu-${item.title}`}
                     className={`
@@ -212,7 +202,7 @@ export default function Sidebar() {
                             title={subItem.description}
                           >
                             <span className="font-medium">{subItem.title}</span>
-                            {/* Mini descripción con animación de aparición */}
+                           
                             {subItem.description && (
                               <span className="
                                 text-xs text-gray-400 mt-1 truncate max-w-full
@@ -260,7 +250,7 @@ export default function Sidebar() {
           ))}
         </ul>
         
-        {/* Pie del sidebar - Información educativa */}
+       
         <div className={`
           mt-10 pt-4 border-t border-gray-700 text-xs text-gray-400
           transition-opacity duration-300

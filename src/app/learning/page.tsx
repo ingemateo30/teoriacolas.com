@@ -9,28 +9,28 @@ import Footer from '@/components/layout/Footer';
 
 
 export default function LearningPage() {
-  // Estado para animación y efectos de UI
+  
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [expandedSection, setExpandedSection] = useState<string | null>('overview');
 
-  // Cambiar la sección expandida
+  
   const toggleSection = (section: string) => {
     setExpandedSection(expandedSection === section ? null : section);
   };
-  // src/app/models/mm1/page.tsx
+  
   return (
     <div className="flex flex-col min-h-screen bg-gray-950">
-      {/* Navbar - Fijo en la parte superior */}
+     
       <Navbar />
 
-      {/* Área de contenido principal con sidebar */}
-      <div className="flex flex-1 pt-16"> {/* Añadido pt-16 para compensar la altura del navbar fijo */}
-        {/* Sidebar - Fijo en la izquierda */}
+      
+      <div className="flex flex-1 pt-16"> 
+        
         <Sidebar />
 
-        {/* Contenido principal - Ocupa el ancho restante */}
+        
         <main className="flex-1 bg-gradient-to-b from-gray-950 to-gray-900 px-4 py-10 md:px-8 lg:px-16 lg:ml-10">
-          {/* Encabezado de la sección */}
+          
           <section className="mb-12 text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-blue-300 bg-clip-text text-transparent">
               Aprendizaje de Teoría de Colas
@@ -41,7 +41,7 @@ export default function LearningPage() {
               cómo analizar y optimizar los sistemas de espera en diversos entornos.
             </p>
 
-            {/* Pestañas de navegación */}
+            
             <div className="flex flex-wrap justify-center gap-4 mb-10">
               <button
                 onClick={() => setActiveTab('overview')}
@@ -61,7 +61,7 @@ export default function LearningPage() {
             </div>
           </section>
 
-          {/* Sección de Visión General */}
+          
           <section className="mb-16 max-w-6xl mx-auto px-4 md:px-0">
             <button
               className="w-full flex items-center justify-between mb-6 bg-gray-800 px-4 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200"
@@ -208,7 +208,6 @@ export default function LearningPage() {
                         <li className="flex"><span className="font-medium w-8">D:</span> Determinística</li>
                         <li className="flex"><span className="font-medium w-8">Ek:</span> Erlang-k</li>
                         <li className="flex"><span className="font-medium w-8">G:</span> General (cualquier distribución)</li>
-                        <li className="flex"><span className="font-medium w-8">GI:</span> General independiente</li>
                       </ul>
                     </div>
 
@@ -391,7 +390,7 @@ export default function LearningPage() {
             >
               <div className="bg-gray-800 rounded-xl shadow-md overflow-hidden">
                 <div className="relative">
-                  {/* Línea vertical para conectar los elementos */}
+                 
                   <div className="absolute left-8 top-0 bottom-0 w-1 bg-blue-900 z-0 ml-3 md:ml-6"></div>
 
                   <div className="p-6 md:p-8">

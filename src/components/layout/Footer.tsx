@@ -3,23 +3,16 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-/**
- * Componente Footer
- * 
- * Un footer elegante y responsivo que proporciona información
- * adicional y enlaces relevantes para la aplicación de Teoría de Colas.
- * Incluye soporte para modo oscuro.
- */
 export default function Footer({ darkMode = true }) {
-  // Estado para el efecto visual de scroll
+  
   const [isVisible, setIsVisible] = useState(false);
 
-  // Efecto para animación al cargar
+  
   useEffect(() => {
     setIsVisible(true);
   }, []);
 
-  // Año actual para el copyright
+  
   const currentYear = new Date().getFullYear();
 
   return (
@@ -32,7 +25,7 @@ export default function Footer({ darkMode = true }) {
     `}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-8 md:flex md:items-center md:justify-between">
-          {/* Sección izquierda - Logo e información */}
+          
           <div className="mb-6 md:mb-0 flex flex-col items-center md:items-start">
             <div className="flex items-center">
               <span className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-blue-400 bg-clip-text text-transparent">
@@ -47,7 +40,7 @@ export default function Footer({ darkMode = true }) {
             </p>
           </div>
 
-          {/* Sección central - Enlaces rápidos */}
+          
           <div className="grid grid-cols-2 gap-8 md:gap-16">
             <div className="mt-4 md:mt-0">
               <h2 className={`text-sm font-semibold ${darkMode ? 'text-gray-200' : 'text-gray-700'} tracking-wider uppercase mb-3`}>
@@ -96,7 +89,7 @@ export default function Footer({ darkMode = true }) {
           </div>
         </div>
 
-        {/* Línea divisoria */}
+       
         <div className={`border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} pt-4 pb-6`}>
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -108,7 +101,7 @@ export default function Footer({ darkMode = true }) {
           </div>
         </div>
         
-        {/* Decoración geométrica */}
+        
         <div className="flex justify-center py-2">
           <div className="flex space-x-1">
             {[...Array(5)].map((_, i) => (

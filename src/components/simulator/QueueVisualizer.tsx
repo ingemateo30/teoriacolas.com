@@ -12,13 +12,7 @@ interface QueueVisualizerProps {
   height?: number;
 }
 
-/**
- * Componente QueueVisualizer con Modo Oscuro
- * 
- * Visualiza sistemas de colas con servidores y entidades animadas
- * Implementa estilo oscuro con contrastes adecuados para mejor visualización
- * Compatible con el tema oscuro general de la aplicación
- */
+
 const QueueVisualizer: React.FC<QueueVisualizerProps> = ({
   entities,
   servers,
@@ -32,16 +26,16 @@ const QueueVisualizer: React.FC<QueueVisualizerProps> = ({
   const waitingEntities = entities.filter(e => e.status === 'waiting');
   const processingEntities = entities.filter(e => e.status === 'processing');
  
-  // Calculate dimensions
+  
   const queueWidth = width * 0.5;
   const serverWidth = width * 0.4;
   const serverHeight = height / Math.max(servers, 1);
  
   return (
     <div className="relative bg-gray-900 rounded-lg shadow-lg border border-gray-800" style={{ width, height }}>
-      {/* Canvas container with ref */}
+      
       <div ref={canvasRef} className="absolute top-0 left-0 w-full h-full">
-        {/* Queue section */}
+        
         <div className="absolute left-0 top-0 h-full border-r-2 border-dashed border-gray-700 flex flex-col items-center justify-center" style={{ width: queueWidth }}>
           <div className="text-center text-blue-400 font-medium mb-4">Cola de espera ({waitingEntities.length})</div>
           <div className="w-4/5 h-2/3 border-2 border-blue-600 rounded-lg bg-gray-800/70 flex items-center justify-center relative shadow-inner">
@@ -58,7 +52,7 @@ const QueueVisualizer: React.FC<QueueVisualizerProps> = ({
           </div>
         </div>
        
-        {/* Servers section */}
+       
         <div className="absolute right-0 top-0 h-full flex flex-col" style={{ width: serverWidth }}>
           <div className="text-center text-emerald-400 font-medium my-4">Servidores ({processingEntities.length}/{servers})</div>
           <div className="flex-1 flex flex-col">
@@ -85,7 +79,7 @@ const QueueVisualizer: React.FC<QueueVisualizerProps> = ({
         </div>
       </div>
      
-      {/* Decorations and labels */}
+     
       <div className="absolute bottom-2 left-2 text-xs text-gray-400">
         Entrada
       </div>

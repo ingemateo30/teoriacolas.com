@@ -8,24 +8,18 @@ interface EntityAnimationProps {
   position?: { x: number, y: number };
 }
 
-/**
- * Componente EntityAnimation con Modo Oscuro
- * 
- * Muestra entidades de simulación con diferentes estados visuales
- * Implementa animaciones suaves con colores optimizados para modo oscuro
- * Compatible con el tema oscuro del navbar
- */
+
 const EntityAnimation: React.FC<EntityAnimationProps> = ({ entity, position }) => {
   const [pos, setPos] = useState(position || entity.position);
  
-  // Animate to new position when it changes
+  
   useEffect(() => {
     if (position) {
       setPos(position);
       return;
     }
    
-    // If no position provided, animate to entity position
+
     const targetPos = entity.position;
     let animationFrame: number;
    
@@ -34,7 +28,7 @@ const EntityAnimation: React.FC<EntityAnimationProps> = ({ entity, position }) =
 console.log("Entidades en servicio:");
 
       setPos(currentPos => {
-        // Calculate new position with easing
+       
         const dx = (targetPos.x - currentPos.x) * 0.1;
         const dy = (targetPos.y - currentPos.y) * 0.1;
        
@@ -43,7 +37,7 @@ console.log("Entidades en servicio:");
           y: currentPos.y + dy
         };
        
-        // Continue animation if not close enough
+       
         if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) {
           animationFrame = requestAnimationFrame(animate);
         }
@@ -59,7 +53,7 @@ console.log("Entidades en servicio:");
     };
   }, [entity.position, position]);
  
-  // Determine color based on status - Dark mode color palette
+ 
   const getEntityColor = () => {
     switch (entity.status) {
       case 'waiting': return 'bg-blue-600 shadow-md shadow-blue-500/20';
@@ -69,7 +63,7 @@ console.log("Entidades en servicio:");
     }
   };
 
-  // Determine text color based on status
+  
   const getTextColor = () => {
     switch (entity.status) {
       case 'waiting': return 'text-blue-100';

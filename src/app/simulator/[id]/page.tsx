@@ -1,4 +1,3 @@
-// src/app/simulator/[id]/page.tsx
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -8,7 +7,7 @@ import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
 import Footer from '@/components/layout/Footer';
 
-// Definición de tipos para el estado de la simulación
+
 type Customer = {
   id: number;
   arrivalTime: number;
@@ -26,9 +25,9 @@ type Server = {
 };
 
 type SimulationParams = {
-  arrivalRate: number;  // λ (lambda) - tasa media de llegadas
-  serviceRate: number;  // μ (mu) - tasa media de servicio
-  numServers: number;   // c - número de servidores
+  arrivalRate: number;  // λ (lambda)
+  serviceRate: number;  // μ (mu)
+  numServers: number;   // c
   maxTime: number;      // tiempo máximo de simulación
   speed: number;        // velocidad de la simulación
 };
@@ -40,7 +39,7 @@ type SimulationStats = {
   totalCustomers: number;
   customersServed: number;
   customersInQueue: number;
-  queueSamples: { time: number; length: number }[] // Add this line
+  queueSamples: { time: number; length: number }[]
 };
 
 type DemoScenario = {
@@ -56,7 +55,7 @@ export default function ModelSimulator() {
   const modelId = urlParams.id as string;
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Definir escenarios de demostración para cada modelo - con velocidad reducida para mejor visualización
+  // Definir escenarios de demostración
   const getModelDemoScenarios = (): DemoScenario[] => {
     switch (modelId) {
       case 'mm1':
@@ -135,7 +134,6 @@ export default function ModelSimulator() {
 
   const [simulationParams, setSimulationParams] = useState<SimulationParams>(demoScenarios[0].params);
 
-  // Estado para la simulación
   const [isRunning, setIsRunning] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -151,7 +149,6 @@ export default function ModelSimulator() {
     queueSamples: [{ time: 0, length: 0 }]
   });
 
-  // Estado para animar las transiciones
   const [animationState, setAnimationState] = useState<{
     newCustomer: boolean;
     servingCustomer: boolean[];
@@ -162,15 +159,11 @@ export default function ModelSimulator() {
     completedService: false
   });
 
-  // Estado para fases de explicación
   const [explanationPhase, setExplanationPhase] = useState(0);
   const [phaseMessages, setPhaseMessages] = useState<string[]>([]);
-
-  // Estado para mensajes explicativos
   const [explanationMessage, setExplanationMessage] = useState("");
   const [simulationPhase, setSimulationPhase] = useState<"initial" | "running" | "conclusion">("initial");
 
-  // Obtener nombre del modelo
   const getModelName = () => {
     switch (modelId) {
       case 'mm1': return 'M/M/1';
@@ -182,7 +175,6 @@ export default function ModelSimulator() {
     }
   };
 
-  // Inicializar mensajes de fase según el modelo
   useEffect(() => {
     let messages: string[] = [];
     const scenario = demoScenarios[currentScenarioIndex];
@@ -287,12 +279,11 @@ export default function ModelSimulator() {
         setExplanationMessage(phaseMessages[newPhase]);
         return newPhase;
       });
-    }, 2500); // Mostrar un nuevo mensaje cada 1.8 segundos
+    }, 2500); // Mostrar un nuevo mensaje cada 2.5 segundos
 
     return () => clearInterval(interval);
   }, [isRunning, phaseMessages]);
 
-  // Cambiar el escenario de demostración
   const changeScenario = (index: number) => {
     if (isRunning) {
       stopSimulation();
@@ -302,7 +293,6 @@ export default function ModelSimulator() {
     initSimulation();
     setSimulationPhase("initial");
 
-    // Reiniciar explicaciones
     const scenario = demoScenarios[index];
     const rho = (scenario.params.arrivalRate / (scenario.params.serviceRate * scenario.params.numServers)).toFixed(2);
     setExplanationMessage(`Demostración: ${scenario.name}. ${scenario.description}. 
@@ -366,10 +356,10 @@ export default function ModelSimulator() {
       case 'md1':
         return 1 / simulationParams.serviceRate; // Determinístico
       case 'mg1':
-        // Para simular mejor una distribución general, usamos una mezcla de distribuciones
+        // Para simular mejor una distribución general, mezcla de distribuciones
         const mean = 1 / simulationParams.serviceRate;
         const randomFactor = Math.random();
-        // Esto genera una distribución más variable, con algunos servicios rápidos y otros lentos
+        
         if (randomFactor < 0.3) {
           return mean * 0.5; // Servicios rápidos
         } else if (randomFactor < 0.8) {
@@ -392,10 +382,8 @@ export default function ModelSimulator() {
   // Detener la simulación
   const stopSimulation = () => {
     setIsRunning(false);
-    if (currentTime > 5) { // Mostrar conclusión si ha pasado suficiente tiempo
+    if (currentTime > 5) { 
       setSimulationPhase("conclusion");
-
-      // Mensaje de conclusión personalizado
       const utilizationPercent = (simulationParams.arrivalRate / (simulationParams.serviceRate * simulationParams.numServers) * 100).toFixed(1);
       setExplanationMessage(`Conclusión: Con un factor de utilización del ${utilizationPercent}%, 
       el tiempo promedio de espera fue de ${stats.avgWaitTime.toFixed(2)} ut y 
@@ -404,7 +392,6 @@ export default function ModelSimulator() {
     }
   };
 
-  // Obtener conclusión específica según el modelo
   const getModelConclusion = () => {
     const rho = simulationParams.arrivalRate / (simulationParams.serviceRate * simulationParams.numServers);
 
@@ -430,20 +417,18 @@ export default function ModelSimulator() {
     }
   };
 
-  // Ejecutar un paso de la simulación con animaciones y timing mejorado
-  // Ejecutar un paso de la simulación con animaciones y timing mejorado
   const runSimulationStep = () => {
     if (currentTime >= simulationParams.maxTime) {
       stopSimulation();
       return;
     }
 
-    // Avanzar el tiempo más lentamente para mejor visualización
+    // tiempo más lento para mejor visualización
     const timeStep = 0.05 * simulationParams.speed;
     const nextTime = currentTime + timeStep;
     setCurrentTime(nextTime);
 
-    // Generar llegadas de clientes según proceso de Poisson
+    // Generar llegadas clientes según proceso de Poisson
     const arrivalProbability = simulationParams.arrivalRate * timeStep;
 
     if (Math.random() < arrivalProbability) {
@@ -491,7 +476,7 @@ export default function ModelSimulator() {
         setQueue(prev => [...prev, newCustomer]);
       }
 
-      // Agregamos solo clientes nuevos, no los que ya terminaron
+      // Agregamos solo clientes nuevos
       setCustomers(prev => [...prev, newCustomer]);
       setServers(updatedServers);
     }
@@ -553,14 +538,10 @@ export default function ModelSimulator() {
 
     setServers(updatedServers);
 
-    // Calcular estadísticas mejoradas
-    // 1. Clientes totales: solo contar los que han llegado (no duplicar)
     const totalCustomers = customers.length;
 
-    // 2. Clientes servidos: los que han completado su servicio
     const servedCustomers = customers.filter(c => c.endServiceTime !== null);
 
-    // 3. Tiempo promedio de espera: solo para clientes que han iniciado servicio
     const customersWithService = customers.filter(c => c.startServiceTime !== null);
     const waitTimes = customersWithService.map(c =>
       ((c.startServiceTime || 0) - c.arrivalTime) || 0
@@ -570,15 +551,13 @@ export default function ModelSimulator() {
       ? waitTimes.reduce((sum, time) => sum + time, 0) / waitTimes.length
       : 0;
 
-    // 4. Utilización de servidores más precisa
-    // Calculamos el tiempo total que cada servidor ha estado ocupado
     const serverUtilization = servers.map(server => {
-      // Si el servidor está actualmente ocupado, contamos hasta el tiempo actual
+  
       let totalBusyTime = server.totalServiceTime;
       if (server.busy && server.currentCustomer && server.currentCustomer.startServiceTime) {
         totalBusyTime += (nextTime - server.currentCustomer.startServiceTime);
       }
-      // Dividimos por el tiempo total transcurrido
+      
       return totalBusyTime / (nextTime > 0.001 ? nextTime : 0.001);
     });
 
@@ -587,12 +566,11 @@ export default function ModelSimulator() {
     const queueSamples = stats.queueSamples || [];
     queueSamples.push({ time: nextTime, length: queue.length });
 
-    // Mantenemos los últimos 100 samples para no sobrecargar la memoria
     if (queueSamples.length > 100) {
       queueSamples.shift();
     }
 
-    // Calculamos el promedio ponderado por tiempo
+   
     let totalQueueTimeProduct = 0;
     let totalTimeInterval = 0;
 
@@ -604,7 +582,7 @@ export default function ModelSimulator() {
 
     const avgQueueLength = totalTimeInterval > 0
       ? totalQueueTimeProduct / totalTimeInterval
-      : queue.length; // Si no hay suficientes muestras, usamos la longitud actual
+      : queue.length;
 
     const newStats = {
       avgWaitTime,
@@ -613,13 +591,13 @@ export default function ModelSimulator() {
       totalCustomers,
       customersServed: servedCustomers.length,
       customersInQueue: queue.length,
-      queueSamples // Añadimos esta propiedad para seguimiento
+      queueSamples
     };
 
     setStats(newStats);
   };
 
-  // Inicializar los servidores cuando cambia el escenario
+  
   useEffect(() => {
     const initialServers: Server[] = Array(simulationParams.numServers).fill(0).map((_, i) => ({
       id: i,
@@ -635,7 +613,7 @@ export default function ModelSimulator() {
       serverUtilization: Array(simulationParams.numServers).fill(0)
     }));
 
-    // Actualizar estado de animación
+    
     setAnimationState({
       newCustomer: false,
       servingCustomer: Array(simulationParams.numServers).fill(false),
@@ -643,7 +621,7 @@ export default function ModelSimulator() {
     });
   }, [simulationParams.numServers]);
 
-  // Efecto para ejecutar la simulación
+
   useEffect(() => {
     let animationId: number;
 
@@ -663,12 +641,12 @@ export default function ModelSimulator() {
     };
   }, [isRunning, currentTime, customers, queue, servers]);
 
-  // Resetear cuando cambia el modelo
+  
   useEffect(() => {
     changeScenario(0);
   }, [modelId]);
 
-  // Efecto para dibujar la simulación con animaciones mejoradas
+  
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -676,55 +654,55 @@ export default function ModelSimulator() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Ajustar el tamaño del canvas al contenedor
+   
     const container = canvas.parentElement;
     if (container) {
-      canvas.width = container.clientWidth - 4; // Restar el borde
-      canvas.height = 600; // Altura fija para mejor visualización
+      canvas.width = container.clientWidth - 4; 
+      canvas.height = 600;
     }
 
-    // Colores con mejor contraste y tema visual coherente
+    
     const colors = {
-      background: '#0f172a',        // Azul muy oscuro
-      grid: '#1e293b',              // Azul oscuro para cuadrícula
+      background: '#0f172a',        
+      grid: '#1e293b',              
       queue: {
-        bg: 'rgba(51, 65, 85, 0.8)', // Fondo semi-transparente
-        border: '#64748b'            // Borde gris azulado
+        bg: 'rgba(51, 65, 85, 0.8)', 
+        border: '#64748b'           
       },
       server: {
         idle: {
-          bg: '#334155',             // Azul grisáceo oscuro
-          border: '#64748b'          // Borde gris azulado
+          bg: '#334155',            
+          border: '#64748b'          
         },
         busy: {
-          bg: '#7e22ce',             // Morado para servidores ocupados
-          border: '#a855f7'          // Borde morado claro
+          bg: '#7e22ce',             
+          border: '#a855f7'          
         }
       },
       customer: {
-        normal: '#f97316',           // Naranja para clientes normales
-        highlight: '#fb923c',        // Naranja claro para resaltar clientes
-        new: '#fbbf24',              // Amarillo para nuevos clientes
-        completed: '#22c55e'         // Verde para clientes que terminaron
+        normal: '#f97316',           
+        highlight: '#fb923c',        
+        new: '#fbbf24',              
+        completed: '#22c55e'         
       },
       text: {
-        title: '#f8fafc',            // Blanco para títulos
-        subtitle: '#cbd5e1',         // Gris claro para subtítulos
-        label: '#94a3b8',            // Gris azulado para etiquetas
-        data: '#cbd5e1'              // Gris claro para datos
+        title: '#f8fafc',            
+        subtitle: '#cbd5e1',         
+        label: '#94a3b8',           
+        data: '#cbd5e1'              
       },
       animation: {
-        arrival: '#fbbf24',          // Amarillo para animación de llegadas
-        service: '#8b5cf6',          // Violeta para animación de servicio
-        completion: '#22c55e'        // Verde para animación de completado
+        arrival: '#fbbf24',         
+        service: '#8b5cf6',         
+        completion: '#22c55e'       
       }
     };
 
-    // Limpiar el lienzo
+    
     ctx.fillStyle = colors.background;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Dibujar cuadrícula de fondo sutil
+    
     ctx.strokeStyle = colors.grid;
     ctx.lineWidth = 1;
 
@@ -743,7 +721,7 @@ export default function ModelSimulator() {
       ctx.stroke();
     }
 
-    // Constantes para visualización
+    
     const padding = 40;
     const queueWidth = 200;
     const queueHeight = 300;
@@ -755,26 +733,26 @@ export default function ModelSimulator() {
     const serverSpacing = 40;
     const serverY = queueY + queueHeight / 2 - serverHeight / 2;
 
-    // Dibujar título del modelo
+    
     ctx.font = 'bold 20px Inter, sans-serif';
     ctx.fillStyle = colors.text.title;
     ctx.textAlign = 'center';
     ctx.fillText(`Simulación Modelo ${getModelName()}`, canvas.width / 2, 25);
 
-    // Dibujar cola de espera
+    
     ctx.fillStyle = colors.queue.bg;
     ctx.strokeStyle = colors.queue.border;
     ctx.lineWidth = 2;
     ctx.fillRect(queueX, queueY, queueWidth, queueHeight);
     ctx.strokeRect(queueX, queueY, queueWidth, queueHeight);
 
-    // Etiqueta de la cola
+    
     ctx.font = '16px Inter, sans-serif';
     ctx.fillStyle = colors.text.subtitle;
     ctx.textAlign = 'center';
     ctx.fillText(`Cola de espera (${queue.length})`, queueX + queueWidth / 2, queueY - 10);
 
-    // Dibujar los clientes en cola
+    
     const clientSize = 30;
     const clientsPerRow = Math.floor(queueWidth / (clientSize + 10));
 
@@ -796,19 +774,19 @@ export default function ModelSimulator() {
       ctx.fillText(`${client.id}`, x, y + 4);
     });
 
-    // Dibujar los servidores
+    
     const totalServersWidth = servers.length * serverWidth + (servers.length - 1) * serverSpacing;
     const serversStartX = queueX + queueWidth + 100;
 
     servers.forEach((server, index) => {
       const x = serversStartX + index * (serverWidth + serverSpacing);
 
-      // Dibujar el servidor con color según estado
+      
       ctx.fillStyle = server.busy ? colors.server.busy.bg : colors.server.idle.bg;
       ctx.strokeStyle = server.busy ? colors.server.busy.border : colors.server.idle.border;
       ctx.lineWidth = 2;
 
-      // Efecto de animación para servidor que acaba de recibir un cliente
+      
       if (animationState.servingCustomer[index]) {
         ctx.fillStyle = colors.animation.service;
         ctx.strokeStyle = colors.text.title;
@@ -818,19 +796,19 @@ export default function ModelSimulator() {
       ctx.fillRect(x, serverY, serverWidth, serverHeight);
       ctx.strokeRect(x, serverY, serverWidth, serverHeight);
 
-      // Etiqueta del servidor
+      
       ctx.font = '14px Inter, sans-serif';
       ctx.fillStyle = colors.text.subtitle;
       ctx.textAlign = 'center';
       ctx.fillText(`Servidor ${index + 1}`, x + serverWidth / 2, serverY - 10);
 
-      // Utilización del servidor
+      
       const utilization = stats.serverUtilization[index] || 0;
       ctx.fillStyle = colors.text.label;
       ctx.font = '12px Inter, sans-serif';
       ctx.fillText(`Util: ${(utilization * 100).toFixed(1)}%`, x + serverWidth / 2, serverY + serverHeight + 20);
 
-      // Dibujar el cliente actual si existe
+      
       if (server.currentCustomer) {
         const customerX = x + serverWidth / 2;
         const customerY = serverY + serverHeight / 2;
@@ -847,7 +825,7 @@ export default function ModelSimulator() {
       }
     });
 
-    // Dibujar flechas entre cola y servidores
+    
     const arrowStartX = queueX + queueWidth;
     const arrowStartY = queueY + queueHeight / 2;
     const arrowEndX = serversStartX;
@@ -864,8 +842,7 @@ export default function ModelSimulator() {
     ctx.lineTo(arrowEndX - 10, arrowEndY);
     ctx.stroke();
 
-    // Efectos de animación
-    // Llegada de nuevo cliente
+    
     if (animationState.newCustomer) {
       const x = queueX - 40;
       const y = queueY + queueHeight / 2;
@@ -875,7 +852,7 @@ export default function ModelSimulator() {
       ctx.arc(x, y, clientSize / 2, 0, Math.PI * 2);
       ctx.fill();
 
-      // Flecha de entrada
+      
       ctx.strokeStyle = colors.animation.arrival;
       ctx.lineWidth = 3;
       ctx.beginPath();
@@ -888,7 +865,7 @@ export default function ModelSimulator() {
       ctx.stroke();
     }
 
-    // Servicio completado
+    
     if (animationState.completedService) {
       const x = serversStartX + totalServersWidth + 50;
       const y = serverY + serverHeight / 2;
@@ -898,7 +875,7 @@ export default function ModelSimulator() {
       ctx.arc(x, y, clientSize / 2, 0, Math.PI * 2);
       ctx.fill();
 
-      // Flecha de salida
+      
       ctx.strokeStyle = colors.animation.completion;
       ctx.lineWidth = 3;
       ctx.beginPath();
@@ -911,7 +888,7 @@ export default function ModelSimulator() {
       ctx.stroke();
     }
 
-    // Dibujar panel de estadísticas
+    
     const statsX = queueX;
     const statsY = queueY + queueHeight + 40;
     const statsWidth = canvas.width - 2 * padding;
@@ -934,26 +911,25 @@ export default function ModelSimulator() {
     ctx.fillStyle = colors.text.data;
     ctx.textAlign = 'left';
 
-    // Crear dos columnas para las estadísticas
+    
     const col1X = statsX + 20;
     const col2X = statsX + statsWidth / 2 + 20;
     const row1Y = statsY + 50;
     const row2Y = statsY + 75;
 
-    // Columna 1
+   
     ctx.fillText(`Tiempo: ${currentTime.toFixed(2)} ut`, col1X, row1Y);
     ctx.fillText(`Clientes totales: ${stats.totalCustomers}`, col1X, row2Y);
 
-    // Columna 2
     ctx.fillText(`Tiempo espera prom: ${stats.avgWaitTime.toFixed(2)} ut`, col2X, row1Y);
     ctx.fillText(`Long. cola prom: ${stats.avgQueueLength.toFixed(2)}`, col2X, row2Y);
 
-    // Mostrar mensaje de explicación
+    
     ctx.font = '16px Inter, sans-serif';
     ctx.fillStyle = colors.text.subtitle;
     ctx.textAlign = 'center';
 
-    // Dividir el mensaje en múltiples líneas para mejor legibilidad
+    
     const maxLineLength = 80;
     const words = explanationMessage.split(' ');
     let lines = [''];
@@ -975,7 +951,7 @@ export default function ModelSimulator() {
 
   }, [currentTime, customers, queue, servers, stats, animationState, explanationMessage]);
 
-  // Esquema de navegación para el modelo actual
+  
   const modelInfo = {
     mm1: { name: 'M/M/1', description: 'Sistema de 1 servidor con llegadas y servicios exponenciales' },
     mm2: { name: 'M/M/2', description: 'Sistema de 2 servidores con llegadas y servicios exponenciales' },
@@ -986,7 +962,7 @@ export default function ModelSimulator() {
 
   const currentModel = modelInfo[modelId as keyof typeof modelInfo] || { name: 'Desconocido', description: 'Modelo no reconocido' };
 
-  // Función para formatear la tasa de utilización
+  
   const formatUtilization = () => {
     const rho = (simulationParams.arrivalRate / (simulationParams.serviceRate * simulationParams.numServers));
     return `${(rho * 100).toFixed(1)}%`;
@@ -995,12 +971,12 @@ export default function ModelSimulator() {
   return (
 
     <div className="flex flex-col min-h-screen bg-gray-950">
-    {/* Navbar - Fijo en la parte superior */}
+   
     <Navbar />
 
-    {/* Área de contenido principal con sidebar */}
-    <div className="flex flex-1 pt-16"> {/* Añadido pt-16 para compensar la altura del navbar fijo */}
-      {/* Sidebar - Fijo en la izquierda */}
+    
+    <div className="flex flex-1 pt-16"> 
+      
       <Sidebar />
       <div className="mx-auto px-4 py-8">
         <div className="mb-8">
@@ -1103,8 +1079,6 @@ export default function ModelSimulator() {
         </div>
       </div>
     </div>
-
-    {/* Footer */}
     <Footer />
   </div>
   );

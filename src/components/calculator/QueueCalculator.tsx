@@ -66,9 +66,8 @@ export default function QueueCalculator() {
     });
     const [metrics, setMetrics] = useState<QueueMetrics | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [maxN, setMaxN] = useState<number>(20); // Máximo número de clientes para el gráfico Pn
+    const [maxN, setMaxN] = useState<number>(20);
 
-    // Actualizar métricas cuando cambian los parámetros o el modelo
     useEffect(() => {
         try {
             const calculated = calculateQueueMetrics(selectedModel, parameters, maxN);
@@ -80,12 +79,12 @@ export default function QueueCalculator() {
         }
     }, [selectedModel, parameters, maxN]);
 
-    // Manejar cambios en los parámetros
+    
     const handleParameterChange = (param: keyof QueueParameters, value: number) => {
         setParameters(prev => ({ ...prev, [param]: value }));
     };
 
-    // Determinar qué campos mostrar según el modelo seleccionado
+    
     const showK = ['MMcK', 'MM1K', 'MGcK'].includes(selectedModel);
     const showC = ['MMc', 'MMcK', 'MGcK'].includes(selectedModel);
     const showSigma = ['MG1', 'GG1', 'MGcK'].includes(selectedModel);

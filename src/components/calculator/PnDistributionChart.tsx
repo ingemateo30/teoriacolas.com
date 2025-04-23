@@ -30,7 +30,6 @@ const PnDistributionChart: React.FC<PnDistributionChartProps> = ({ probabilities
         </p>
       </div>
 
-      {/* En móviles, los gráficos se apilan verticalmente */}
       <div className="flex flex-col space-y-8 md:space-y-0 md:grid md:grid-cols-2 md:gap-6">
         <div className="h-72 md:h-80">
           <h4 className="text-center font-medium mb-2 text-sm md:text-base">Gráfico de barras</h4>

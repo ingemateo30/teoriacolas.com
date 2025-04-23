@@ -9,14 +9,12 @@ import { useEffect } from 'react';
 
 
 export default function Homepage() {
-  // Estado para animación y efectos de UI
+  
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
-
   const [windowWidth, setWindowWidth] = useState<number | null>(null);
   
   useEffect(() => {
-    // Solo ejecutar en el cliente
     setWindowWidth(window.innerWidth);
     
     const handleResize = () => {
@@ -35,7 +33,7 @@ export default function Homepage() {
     {
       title: "M/M/1",
       description: "Modelo básico con llegadas Poisson, tiempos de servicio exponenciales y un solo servidor",
-      href: "/models/mm1",
+      href: "/simulator/mm1",
       icon: (
         <svg className="w-10 h-10 mb-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
@@ -45,7 +43,7 @@ export default function Homepage() {
     {
       title: "M/M/c",
       description: "Sistema con múltiples servidores en paralelo con distribuciones exponenciales",
-      href: "/models/mmc",
+      href: "/simulator/mmc",
       icon: (
         <svg className="w-10 h-10 mb-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -55,7 +53,7 @@ export default function Homepage() {
     {
       title: "M/M/c/K",
       description: "Sistema con capacidad limitada K y c servidores",
-      href: "/models/mmck",
+      href: "/simulator/mmc",
       icon: (
         <svg className="w-10 h-10 mb-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -65,7 +63,7 @@ export default function Homepage() {
     {
       title: "M/G/1",
       description: "Modelo con servicio de distribución general y llegadas Poisson",
-      href: "/models/mg1",
+      href: "/simulator/mg1",
       icon: (
         <svg className="w-10 h-10 mb-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -78,7 +76,7 @@ export default function Homepage() {
   const keyConcepts = [
     { title: "Tasa de llegada (λ)", description: "Número promedio de llegadas por unidad de tiempo" },
     { title: "Tasa de servicio (μ)", description: "Número promedio de clientes que pueden ser atendidos por unidad de tiempo" },
-    { title: "Factor de utilización (ρ)", description: "Proporción del tiempo que los servidores están ocupados (ρ = λ/cμ)" },
+    { title: "Factor de utilización (ρ)", description: "Proporción del tiempo que los servidores están ocupados (ρ = λ/c μ)" },
     { title: "Tiempo de espera (Wq)", description: "Tiempo promedio que un cliente espera en la cola antes de ser atendido" },
     { title: "Longitud de cola (Lq)", description: "Número promedio de clientes esperando en la cola" },
     { title: "Tiempo total en el sistema (W)", description: "Tiempo promedio total que un cliente pasa en el sistema" }
@@ -354,7 +352,7 @@ export default function Homepage() {
             >
               <div className="flex flex-col md:flex-row justify-between items-stretch bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-700">
                 <div className="flex-1 p-6 md:p-8">
-                  <h3 className="text-xl font-medium text-gray-100 mb-6">En 3 simples pasos:</h3>
+                  <h3 className="text-xl font-medium text-gray-100 mb-6">En 2 simples pasos:</h3>
                   <ul className="space-y-6">
                     <li className="flex items-start">
                       <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-900 text-blue-300 mr-4 flex-shrink-0 font-semibold">
@@ -365,18 +363,10 @@ export default function Homepage() {
                         <p className="text-gray-400">Escoge entre varios modelos según tus necesidades</p>
                       </div>
                     </li>
+                   
                     <li className="flex items-start">
                       <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-900 text-blue-300 mr-4 flex-shrink-0 font-semibold">
                         2
-                      </div>
-                      <div>
-                        <h4 className="font-medium text-lg mb-1 text-gray-200">Configura los parámetros</h4>
-                        <p className="text-gray-400">Ajusta tasas de llegada, servicio y otros parámetros</p>
-                      </div>
-                    </li>
-                    <li className="flex items-start">
-                      <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-900 text-blue-300 mr-4 flex-shrink-0 font-semibold">
-                        3
                       </div>
                       <div>
                         <h4 className="font-medium text-lg mb-1 text-gray-200">Inicia la simulación</h4>
